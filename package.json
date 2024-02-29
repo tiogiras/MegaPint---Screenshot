@@ -1,0 +1,12 @@
+{
+  "name": "com.tiogiras.megapint-screenshot",
+  "displayName": "Megapint - Screenshot",
+  "author": "Tiogiras",
+  "version": "1.0.0",
+  "unity": "2022.3",
+  "category": "Tools",
+  "description": "This package adds a function to render and save camera views and editor windows.",
+  "repository": {
+    "url": "https://github.com/tiogiras/MegaPint-Screenshot.git"
+  }
+}
