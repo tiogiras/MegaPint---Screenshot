@@ -1,0 +1,16 @@
+{
+    "name": "tiogiras.megapint-screenshot.editor.scripts",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0b69690fe249e844d91f888a5b5a27dd"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
