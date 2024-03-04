@@ -6,8 +6,9 @@ public static class Utility
     public static Texture2D RenderCamera(Camera camera, int width, int height, int depth)
     {
         RenderTexture cameraTarget = camera.targetTexture;
-        
+
         var myRenderTarget = new RenderTexture(width, height, depth);
+        
         camera.targetTexture = myRenderTarget;
         
         RenderTexture activeRenderTexture = RenderTexture.active;
@@ -21,7 +22,7 @@ public static class Utility
 
         RenderTexture.active = activeRenderTexture;
         camera.targetTexture = cameraTarget;
-        
+
         return image;
     }
 

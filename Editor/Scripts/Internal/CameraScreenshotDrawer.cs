@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,9 +21,10 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
 
     private IntegerField _width;
     private IntegerField _height;
-    private IntegerField _depth;
+    private DropdownField _depth;
 
     private EnumField _backgroundType;
+    private ColorField _backgroundColor;
 
     private CameraScreenshot _target;
 
@@ -41,9 +43,10 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
 
         _width = root.Q <IntegerField>("Width");
         _height = root.Q <IntegerField>("Height");
-        _depth = root.Q <IntegerField>("Depth");
+        _depth = root.Q <DropdownField>("Depth");
 
         _backgroundType = root.Q <EnumField>("BackgroundType");
+        _backgroundColor = root.Q <ColorField>("BackgroundColor");
 
         _target = (CameraScreenshot)target;
         
@@ -51,14 +54,22 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
 
         _width.value = _target.width;
         _height.value = _target.height;
-        _depth.value = _target.depth;
+        _depth.value = _target.depth.ToString();
         _backgroundType.value = _target.backgroundType;
+        _backgroundColor.value = _target.backgroundColor;
 
         _btnSave.style.display = DisplayStyle.None;
+
+        UpdateBackgroundColor();
         
         RegisterCallbacks();
 
         return root;
+    }
+
+    private void UpdateBackgroundColor()
+    {
+        _backgroundColor.style.display = _target.backgroundType == BackgroundType.SolidColor ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
     #endregion
@@ -85,20 +96,18 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
                 
                 _target.height = evt.newValue;
             });
-        
-        _depth.RegisterValueChangedCallback(
-            evt =>
-            {
-                if (evt.newValue < 0)
-                    _depth.SetValueWithoutNotify(0);
-                
-                _target.depth = evt.newValue;
-            });
 
-        _backgroundType.RegisterValueChangedCallback(evt => _target.backgroundType = (BackgroundType)evt.newValue);
+        _depth.RegisterValueChangedCallback(evt => {_target.depth = int.Parse(evt.newValue);});
+
+        _backgroundType.RegisterValueChangedCallback(evt =>
+        {
+            _target.backgroundType = (BackgroundType)evt.newValue;
+            UpdateBackgroundColor();
+        });
+
+        _backgroundColor.RegisterValueChangedCallback(evt => {_target.backgroundColor = evt.newValue;});
     }
 
-    
     private static void SaveTexture(Texture2D texture, string filePath) {
         var bytes = texture.EncodeToPNG();
         var stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
@@ -128,6 +137,8 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
 
     private void Render()
     {
+        PrepareCamera(out Color backgroundColor, out CameraClearFlags flags);
+
         var width = _target.width;
         var height = _target.height;
 
@@ -140,6 +151,42 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
         _preview.FitToParent();
 
         _btnSave.style.display = DisplayStyle.Flex;
+
+        ResetCamera(backgroundColor, flags);
+    }
+
+    private void PrepareCamera(out Color backgroundColor, out CameraClearFlags flags)
+    {
+        backgroundColor = _camera.backgroundColor;
+        flags = _camera.clearFlags;
+
+        switch (_target.backgroundType)
+        {
+            case BackgroundType.None:
+                _camera.clearFlags = CameraClearFlags.Skybox;
+                break;
+            
+            case BackgroundType.SolidColor:
+                _camera.clearFlags = CameraClearFlags.SolidColor;
+                _camera.backgroundColor = _target.backgroundColor;
+                break;
+            
+            case BackgroundType.Transparent: 
+                _camera.clearFlags = CameraClearFlags.Depth;
+                break;
+            
+            case BackgroundType.Image: 
+                _camera.clearFlags = CameraClearFlags.Depth;
+                break;
+            
+            default: throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private void ResetCamera(Color backgroundColor, CameraClearFlags flags)
+    {
+        _camera.backgroundColor = backgroundColor;
+        _camera.clearFlags = flags;
     }
 }
 

@@ -8,13 +8,17 @@ public class CameraScreenshot : MonoBehaviour
     
     [HideInInspector]
     public int height = 1080;
-    
-    [HideInInspector]
-    public int depth = 100;
 
+    [HideInInspector]
+    public int depth = 32;
+    
+    
     [HideInInspector]
     public BackgroundType backgroundType;
 
     [HideInInspector]
     public string lastPath;
+
+    [HideInInspector]
+    public Color backgroundColor;
 }

@@ -1,4 +1,5 @@
-﻿public enum BackgroundType
+﻿public 
+    enum BackgroundType
 {
     None, SolidColor, Transparent, Image
 }

@@ -6,8 +6,9 @@
             <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
             <ui:IntegerField label="Width" value="1920" name="Width" />
             <ui:IntegerField label="Height" value="1080" name="Height" />
-            <ui:IntegerField label="Depth" value="100" name="Depth" />
+            <ui:DropdownField label="Depth" index="3" choices="0, 16, 24, 32" name="Depth" />
             <ui:EnumField label="Background" type="BackgroundType, tiogiras.megapint-screenshot.runtime" name="BackgroundType" style="padding-top: 0; margin-top: 11px;" />
+            <uie:ColorField label="Color" value="#FFFFFFFF" name="BackgroundColor" />
         </ui:GroupBox>
         <ui:GroupBox style="background-image: resource(&apos;Images/Background/Background 2&apos;); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; height: auto; min-width: 200px; flex-direction: column-reverse; flex-basis: 0; flex-grow: 1;">
             <ui:Button text="Render Camera View" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Render" />
