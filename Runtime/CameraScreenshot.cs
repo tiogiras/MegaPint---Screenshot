@@ -21,4 +21,13 @@ public class CameraScreenshot : MonoBehaviour
 
     [HideInInspector]
     public Color backgroundColor;
+
+    [HideInInspector]
+    public Sprite backgroundImage;
+    
+    [HideInInspector]
+    public string imageType = "Simple";
+    
+    [HideInInspector]
+    public float pixelPerUnit = 1;
 }

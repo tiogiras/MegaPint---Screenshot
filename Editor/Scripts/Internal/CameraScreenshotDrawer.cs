@@ -1,10 +1,12 @@
 ﻿#if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 namespace Editor.Scripts.Internal
 {
@@ -25,7 +27,12 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
 
     private EnumField _backgroundType;
     private ColorField _backgroundColor;
+    private ObjectField _backgroundImage;
+    private Label _imageResolution;
 
+    private DropdownField _imageType;
+    private FloatField _pixelPerUnit;
+    
     private CameraScreenshot _target;
 
     private Texture2D _render;
@@ -47,6 +54,11 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
 
         _backgroundType = root.Q <EnumField>("BackgroundType");
         _backgroundColor = root.Q <ColorField>("BackgroundColor");
+        _backgroundImage = root.Q <ObjectField>("BackgroundImage");
+        _imageResolution = root.Q <Label>("ImageResolution");
+
+        _imageType = root.Q <DropdownField>("ImageType");
+        _pixelPerUnit = root.Q <FloatField>("PixelPerUnit");
 
         _target = (CameraScreenshot)target;
         
@@ -57,14 +69,31 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
         _depth.value = _target.depth.ToString();
         _backgroundType.value = _target.backgroundType;
         _backgroundColor.value = _target.backgroundColor;
-
+        _backgroundImage.value = _target.backgroundImage;
+        _imageType.value = _target.imageType;
+        _pixelPerUnit.value = _target.pixelPerUnit;
+        
         _btnSave.style.display = DisplayStyle.None;
 
         UpdateBackgroundColor();
-        
+        UpdateBackgroundImage();
+
         RegisterCallbacks();
 
         return root;
+    }
+
+    private void UpdateBackgroundImage()
+    {
+        var isImage = _target.backgroundType == BackgroundType.Image;
+        _backgroundImage.style.display = isImage ? DisplayStyle.Flex : DisplayStyle.None;
+        _imageType.style.display = isImage ? DisplayStyle.Flex : DisplayStyle.None;
+
+        Sprite image = _target.backgroundImage;
+        _imageResolution.style.display = isImage && image != null ? DisplayStyle.Flex : DisplayStyle.None;
+        _pixelPerUnit.style.display = isImage && _target.imageType.Equals("Tiled") ? DisplayStyle.Flex : DisplayStyle.None;
+        
+        _imageResolution.text = _target.backgroundImage == null ? "" : $"{image.rect.width} x {image.rect.height}";
     }
 
     private void UpdateBackgroundColor()
@@ -103,9 +132,33 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
         {
             _target.backgroundType = (BackgroundType)evt.newValue;
             UpdateBackgroundColor();
+            UpdateBackgroundImage();
         });
 
         _backgroundColor.RegisterValueChangedCallback(evt => {_target.backgroundColor = evt.newValue;});
+        
+        _imageType.RegisterValueChangedCallback(
+            evt =>
+            {
+                _target.imageType = evt.newValue;
+                UpdateBackgroundImage();
+            });
+        
+        _pixelPerUnit.RegisterValueChangedCallback(
+            evt =>
+            {
+                if (evt.newValue < 0)
+                    _pixelPerUnit.SetValueWithoutNotify(0);
+
+                _target.pixelPerUnit = evt.newValue;
+            });
+
+        _backgroundImage.RegisterValueChangedCallback(
+            evt =>
+            {
+                _target.backgroundImage = (Sprite)evt.newValue;
+                UpdateBackgroundImage();
+            });
     }
 
     private static void SaveTexture(Texture2D texture, string filePath) {
@@ -137,7 +190,7 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
 
     private void Render()
     {
-        PrepareCamera(out Color backgroundColor, out CameraClearFlags flags);
+        PrepareCamera(out Color backgroundColor, out CameraClearFlags flags, out List <GameObject> destroy);
 
         var width = _target.width;
         var height = _target.height;
@@ -152,13 +205,14 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
 
         _btnSave.style.display = DisplayStyle.Flex;
 
-        ResetCamera(backgroundColor, flags);
+        ResetCamera(backgroundColor, flags, destroy);
     }
 
-    private void PrepareCamera(out Color backgroundColor, out CameraClearFlags flags)
+    private void PrepareCamera(out Color backgroundColor, out CameraClearFlags flags, out List<GameObject> destroy)
     {
         backgroundColor = _camera.backgroundColor;
         flags = _camera.clearFlags;
+        destroy = new List <GameObject>();
 
         switch (_target.backgroundType)
         {
@@ -177,16 +231,44 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
             
             case BackgroundType.Image: 
                 _camera.clearFlags = CameraClearFlags.Depth;
+
+                var canvas = new GameObject("RenderCanvas").AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.worldCamera = _camera;
+
+                var image = new GameObject("bgImage").AddComponent <Image>();
+                image.sprite = _target.backgroundImage;
+                image.type = _target.imageType.Equals("Simple") ? Image.Type.Simple : Image.Type.Tiled;
+                image.pixelsPerUnitMultiplier = _target.pixelPerUnit;
+
+                RectTransform rect = image.rectTransform;
+                Transform parent = canvas.transform;
+                
+                rect.pivot = new Vector2(0.5f, 0.5f);
+                rect.sizeDelta = new Vector2(_target.width, _target.height);
+                rect.transform.SetParent(parent);
+
+                rect.localPosition = Vector3.zero;
+                rect.localScale = Vector3.one;
+                
+                destroy.Add(canvas.gameObject);
+                destroy.Add(image.gameObject);
                 break;
             
             default: throw new ArgumentOutOfRangeException();
         }
     }
 
-    private void ResetCamera(Color backgroundColor, CameraClearFlags flags)
+    private void ResetCamera(Color backgroundColor, CameraClearFlags flags, IReadOnlyList <GameObject> destroy)
     {
         _camera.backgroundColor = backgroundColor;
         _camera.clearFlags = flags;
+
+        for (var i = destroy.Count - 1; i >= 0; i--)
+        {
+            GameObject obj = destroy[i];
+            DestroyImmediate(obj);
+        }
     }
 }
 

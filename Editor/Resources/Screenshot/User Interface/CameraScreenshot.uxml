@@ -9,6 +9,10 @@
             <ui:DropdownField label="Depth" index="3" choices="0, 16, 24, 32" name="Depth" />
             <ui:EnumField label="Background" type="BackgroundType, tiogiras.megapint-screenshot.runtime" name="BackgroundType" style="padding-top: 0; margin-top: 11px;" />
             <uie:ColorField label="Color" value="#FFFFFFFF" name="BackgroundColor" />
+            <uie:ObjectField label="Sprite" type="UnityEngine.Sprite, UnityEngine.CoreModule" name="BackgroundImage" />
+            <ui:Label tabindex="-1" text="1920 x 1080" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ImageResolution" style="margin-left: 15px; font-size: 10px; color: rgba(210, 210, 210, 0.59);" />
+            <ui:DropdownField label="Image Type" index="0" choices="Simple, Tiled" name="ImageType" />
+            <ui:FloatField label="Pixel Per Unit" value="1" name="PixelPerUnit" />
         </ui:GroupBox>
         <ui:GroupBox style="background-image: resource(&apos;Images/Background/Background 2&apos;); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; height: auto; min-width: 200px; flex-direction: column-reverse; flex-basis: 0; flex-grow: 1;">
             <ui:Button text="Render Camera View" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Render" />
