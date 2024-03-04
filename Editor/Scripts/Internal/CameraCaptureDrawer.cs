@@ -11,10 +11,10 @@ using Image = UnityEngine.UI.Image;
 namespace Editor.Scripts.Internal
 {
 
-[CustomEditor(typeof(CameraScreenshot))]
-internal class CameraScreenshotDrawer : UnityEditor.Editor
+[CustomEditor(typeof(CameraCapture))]
+internal class CameraCaptureDrawer : UnityEditor.Editor
 {
-    private const string Path = "Screenshot/User Interface/CameraScreenshot";
+    private const string Path = "Screenshot/User Interface/CameraCapture";
 
     private Camera _camera;
     private AspectRatioPanel _preview;
@@ -33,7 +33,7 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
     private DropdownField _imageType;
     private FloatField _pixelPerUnit;
     
-    private CameraScreenshot _target;
+    private CameraCapture _target;
 
     private Texture2D _render;
 
@@ -60,7 +60,7 @@ internal class CameraScreenshotDrawer : UnityEditor.Editor
         _imageType = root.Q <DropdownField>("ImageType");
         _pixelPerUnit = root.Q <FloatField>("PixelPerUnit");
 
-        _target = (CameraScreenshot)target;
+        _target = (CameraCapture)target;
         
         _camera = _target.gameObject.GetComponent <Camera>();
 

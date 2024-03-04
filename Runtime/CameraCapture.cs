@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
-public class CameraScreenshot : MonoBehaviour
+public class CameraCapture : MonoBehaviour
 {
     [HideInInspector]
     public int width = 1920;
@@ -11,7 +11,6 @@ public class CameraScreenshot : MonoBehaviour
 
     [HideInInspector]
     public int depth = 32;
-    
     
     [HideInInspector]
     public BackgroundType backgroundType;
@@ -30,4 +29,7 @@ public class CameraScreenshot : MonoBehaviour
     
     [HideInInspector]
     public float pixelPerUnit = 1;
+
+    [HideInInspector]
+    public bool listenToShortcut;
 }
