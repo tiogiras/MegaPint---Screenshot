@@ -1,3 +1,5 @@
+using System;
+using PlasticGui.Configuration.CloudEdition.Welcome;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
@@ -32,4 +34,9 @@ public class CameraCapture : MonoBehaviour
 
     [HideInInspector]
     public bool listenToShortcut;
+
+    public void Capture()
+    {
+        Debug.Log("Capturing");
+    }
 }

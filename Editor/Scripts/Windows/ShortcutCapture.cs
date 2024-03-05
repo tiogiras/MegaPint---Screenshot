@@ -1,6 +1,10 @@
 ﻿#if UNITY_EDITOR
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -45,11 +49,18 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
         _cameras = content.Q <ListView>("Cameras");
         _placeholder = content.Q <Label>("Placeholder");
+        
+        _shortcut = content.Q <Label>("Shortcut");
+        _shortcutHelp = content.Q <Label>("ShortcutHelp");
 
         _btnAll = content.Q <Button>("BTN_All");
         _btnNone = content.Q <Button>("BTN_None");
         _btnRefresh = content.Q <Button>("BTN_Refresh");
+        _btnShortcut = content.Q <Button>("BTN_Shortcut");
 
+        _shortcut.text = ScreenshotData.Shortcut();
+        _shortcutHelp.style.display = DisplayStyle.None;
+        
         RegisterCallbacks();
 
         _cameras.makeItem += () => _listItem.Instantiate();
@@ -80,11 +91,6 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
                 });
         };
 
-        _cameras.unbindItem += (element, i) =>
-        {
-            element.Clear();
-        };
-        
         RefreshCameras();
 
         root.Add(content);
@@ -125,16 +131,107 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
     protected override void RegisterCallbacks()
     {
+        _btnShortcut.clicked += ListenForShortcut;
+        _btnRefresh.clicked += RefreshCameras;
 
+        _btnAll.clicked += SelectAll;
+        _btnNone.clicked += SelectNone;
+        
+        rootVisualElement.RegisterCallback <KeyDownEvent>(KeyDown);
+    }
+
+    private void ListenForShortcut()
+    {
+        _shortcutHelp.style.display = DisplayStyle.Flex;
+        _listeningForInput = true;
+    }
+
+    private void SelectNone()
+    {
+        SetAllCameraListeners(false);
+    }
+
+    private void SelectAll()
+    {
+        SetAllCameraListeners(true);
+    }
+
+    private void SetAllCameraListeners(bool listening)
+    {
+        if (_cams is not {Count: > 0})
+            return;
+
+        foreach (CameraCapture cam in _cams)
+        {
+            cam.listenToShortcut = listening;
+        }
+        
+        _cameras.RefreshItems();
     }
 
     protected override void UnRegisterCallbacks()
     {
+        _btnShortcut.clicked -= ListenForShortcut;
+        _btnRefresh.clicked -= RefreshCameras;
 
+        _btnAll.clicked -= SelectAll;
+        _btnNone.clicked -= SelectNone;
+
+        rootVisualElement.UnregisterCallback<KeyDownEvent>(KeyDown);
+    }
+
+    private void KeyDown(KeyDownEvent evt)
+    {
+        Debug.Log("Input");
+        
+        if (!_listeningForInput)
+            return;
+
+        Debug.Log(evt.keyCode);
+        
+        switch (evt.keyCode)
+        {
+            case KeyCode.None:
+                return;
+
+            case KeyCode.Escape:
+                _listeningForInput = false;
+                _shortcutHelp.style.display = DisplayStyle.None;
+                return;
+
+            case KeyCode.Return:
+                return;
+
+            default:
+                if (!_keys.Contains(evt.keyCode))
+                    _keys.Add(evt.keyCode);
+
+                _shortcut.text = KeysToString();
+                return;
+        }
     }
 
     #endregion
 
+    // TODO make it work
+    private string KeysToString()
+    {
+        var str = new StringBuilder("");
+
+        if (_keys.Count == 0)
+            return str.ToString();
+
+        foreach (KeyCode key in _keys)
+        {
+            str.Append($"{key} + ");
+        }
+
+        return str.ToString()[..^3];
+    }
+    
+    private List <KeyCode> _keys = new();
+    private bool _listeningForInput;
+    
     #region Private
 
     private VisualTreeAsset _baseWindow;
@@ -142,10 +239,14 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
     private ListView _cameras;
     private Label _placeholder;
+    
+    private Label _shortcut;
+    private Label _shortcutHelp;
 
     private Button _btnAll;
     private Button _btnNone;
     private Button _btnRefresh;
+    private Button _btnShortcut;
 
     #endregion
 
