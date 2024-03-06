@@ -1,22 +1,34 @@
 ﻿#if UNITY_EDITOR
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Editor.Scripts.Windows
 {
 
-/// <summary> Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the shortcut capture feature </summary>
+/// <summary>
+///     Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the shortcut capture
+///     feature
+/// </summary>
 internal class ShortcutCapture : MegaPintEditorWindowBase
 {
+    private const string FolderBasePath = "Screenshot/User Interface/";
     private static readonly Color s_onColor = new(.8196078431372549f, 0f, .4470588235294118f);
     private static readonly Color s_offColor = new(.34f, .34f, .34f);
-    
+
+    private VisualTreeAsset _baseWindow;
+
+    private Button _btnAll;
+    private Button _btnNone;
+    private Button _btnRefresh;
+
+    private ListView _cameras;
+
+    private List <CameraCapture> _cams = new();
+    private VisualTreeAsset _listItem;
+    private Label _placeholder;
+
     #region Public Methods
 
     /// <summary> Show the window </summary>
@@ -31,8 +43,6 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
     #endregion
 
     #region Protected Methods
-
-    private const string FolderBasePath = "Screenshot/User Interface/";
 
     protected override string BasePath()
     {
@@ -49,18 +59,11 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
         _cameras = content.Q <ListView>("Cameras");
         _placeholder = content.Q <Label>("Placeholder");
-        
-        _shortcut = content.Q <Label>("Shortcut");
-        _shortcutHelp = content.Q <Label>("ShortcutHelp");
 
         _btnAll = content.Q <Button>("BTN_All");
         _btnNone = content.Q <Button>("BTN_None");
         _btnRefresh = content.Q <Button>("BTN_Refresh");
-        _btnShortcut = content.Q <Button>("BTN_Shortcut");
 
-        _shortcut.text = ScreenshotData.Shortcut();
-        _shortcutHelp.style.display = DisplayStyle.None;
-        
         RegisterCallbacks();
 
         _cameras.makeItem += () => _listItem.Instantiate();
@@ -82,7 +85,7 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
                     camera.listenToShortcut = true;
                     UpdateListItem(onButton, offButton, true);
                 });
-            
+
             offButton.clickable = new Clickable(
                 () =>
                 {
@@ -95,6 +98,34 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
         root.Add(content);
     }
+
+    protected override bool LoadResources()
+    {
+        _baseWindow = Resources.Load <VisualTreeAsset>(BasePath());
+        _listItem = Resources.Load <VisualTreeAsset>(FolderBasePath + "ShortcutCaptureItem");
+
+        return _baseWindow != null && _listItem != null;
+    }
+
+    protected override void RegisterCallbacks()
+    {
+        _btnRefresh.clicked += RefreshCameras;
+
+        _btnAll.clicked += SelectAll;
+        _btnNone.clicked += SelectNone;
+    }
+
+    protected override void UnRegisterCallbacks()
+    {
+        _btnRefresh.clicked -= RefreshCameras;
+
+        _btnAll.clicked -= SelectAll;
+        _btnNone.clicked -= SelectNone;
+    }
+
+    #endregion
+
+    #region Private Methods
 
     private static void UpdateListItem(VisualElement onButton, VisualElement offButton, bool on)
     {
@@ -121,39 +152,14 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
         _placeholder.style.display = hasCams ? DisplayStyle.None : DisplayStyle.Flex;
     }
 
-    protected override bool LoadResources()
+    private void SelectAll()
     {
-        _baseWindow = Resources.Load <VisualTreeAsset>(BasePath());
-        _listItem = Resources.Load <VisualTreeAsset>(FolderBasePath + "ShortcutCaptureItem");
-
-        return _baseWindow != null && _listItem != null;
-    }
-
-    protected override void RegisterCallbacks()
-    {
-        _btnShortcut.clicked += ListenForShortcut;
-        _btnRefresh.clicked += RefreshCameras;
-
-        _btnAll.clicked += SelectAll;
-        _btnNone.clicked += SelectNone;
-        
-        rootVisualElement.RegisterCallback <KeyDownEvent>(KeyDown);
-    }
-
-    private void ListenForShortcut()
-    {
-        _shortcutHelp.style.display = DisplayStyle.Flex;
-        _listeningForInput = true;
+        SetAllCameraListeners(true);
     }
 
     private void SelectNone()
     {
         SetAllCameraListeners(false);
-    }
-
-    private void SelectAll()
-    {
-        SetAllCameraListeners(true);
     }
 
     private void SetAllCameraListeners(bool listening)
@@ -162,95 +168,12 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
             return;
 
         foreach (CameraCapture cam in _cams)
-        {
             cam.listenToShortcut = listening;
-        }
-        
+
         _cameras.RefreshItems();
     }
 
-    protected override void UnRegisterCallbacks()
-    {
-        _btnShortcut.clicked -= ListenForShortcut;
-        _btnRefresh.clicked -= RefreshCameras;
-
-        _btnAll.clicked -= SelectAll;
-        _btnNone.clicked -= SelectNone;
-
-        rootVisualElement.UnregisterCallback<KeyDownEvent>(KeyDown);
-    }
-
-    private void KeyDown(KeyDownEvent evt)
-    {
-        Debug.Log("Input");
-        
-        if (!_listeningForInput)
-            return;
-
-        Debug.Log(evt.keyCode);
-        
-        switch (evt.keyCode)
-        {
-            case KeyCode.None:
-                return;
-
-            case KeyCode.Escape:
-                _listeningForInput = false;
-                _shortcutHelp.style.display = DisplayStyle.None;
-                return;
-
-            case KeyCode.Return:
-                return;
-
-            default:
-                if (!_keys.Contains(evt.keyCode))
-                    _keys.Add(evt.keyCode);
-
-                _shortcut.text = KeysToString();
-                return;
-        }
-    }
-
     #endregion
-
-    // TODO make it work
-    private string KeysToString()
-    {
-        var str = new StringBuilder("");
-
-        if (_keys.Count == 0)
-            return str.ToString();
-
-        foreach (KeyCode key in _keys)
-        {
-            str.Append($"{key} + ");
-        }
-
-        return str.ToString()[..^3];
-    }
-    
-    private List <KeyCode> _keys = new();
-    private bool _listeningForInput;
-    
-    #region Private
-
-    private VisualTreeAsset _baseWindow;
-    private VisualTreeAsset _listItem;
-
-    private ListView _cameras;
-    private Label _placeholder;
-    
-    private Label _shortcut;
-    private Label _shortcutHelp;
-
-    private Button _btnAll;
-    private Button _btnNone;
-    private Button _btnRefresh;
-    private Button _btnShortcut;
-
-    #endregion
-
-    private List <CameraCapture> _cams = new();
 }
 
 }

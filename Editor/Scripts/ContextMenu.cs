@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Editor.Scripts.Windows;
 using UnityEditor;
+using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 namespace Editor.Scripts
