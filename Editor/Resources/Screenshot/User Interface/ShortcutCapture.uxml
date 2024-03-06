@@ -1,13 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=2f2b50e0e132e3a4989e6dbb646711fa&amp;type=3#MegaPint" />
-    <ui:VisualElement style="flex-grow: 1; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);">
+    <ui:VisualElement name="Root" focusable="true" style="flex-grow: 1; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);">
         <ui:Label text="Render Camera Captures" display-tooltip-when-elided="true" style="font-size: 16px; -unity-text-align: upper-center; padding-left: 0; padding-right: 0; padding-top: 3px; padding-bottom: 3px; margin-top: 0; margin-bottom: 0; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); -unity-font-definition: initial; -unity-font-style: bold; color: rgb(210, 210, 210); background-image: resource(&apos;Images/Background/Background 2&apos;); margin-right: 0; margin-left: 0;" />
         <ui:Label tabindex="-1" text="No [CameraCapture] components found in the opened scene!" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Placeholder" style="white-space: normal; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
         <ui:GroupBox style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; justify-content: space-between;">
-            <ui:Button text="Refresh" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Refresh" class="megapint-button-nomargin" style="margin-right: 5px;" />
+            <ui:Button text="Refresh" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Refresh" tooltip="Refresh the CameraCapture components found in the scene." class="megapint-button-nomargin" style="margin-right: 5px;" />
             <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
-                <ui:Button text="All" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_All" class="megapint-button-nomargin" style="margin-right: 5px;" />
-                <ui:Button text="None" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_None" class="megapint-button-nomargin" style="margin-right: 0;" />
+                <ui:Button text="All" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_All" tooltip="Activate listeners of all components." class="megapint-button-nomargin" style="margin-right: 5px;" />
+                <ui:Button text="None" parse-escape-sequences="true" name="BTN_None" tooltip="Deactivate all listeners off all components." display-tooltip-when-elided="true" class="megapint-button-nomargin" style="margin-right: 0;" />
             </ui:GroupBox>
         </ui:GroupBox>
         <ui:ListView focusable="true" virtualization-method="DynamicHeight" name="Cameras" style="flex-grow: 1; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />

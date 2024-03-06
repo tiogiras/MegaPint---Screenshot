@@ -7,12 +7,28 @@ using UnityEngine.UIElements;
 namespace Editor.Scripts.Windows
 {
 
-/// <summary> Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the shortcut capture feature </summary>
+/// <summary>
+///     Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the shortcut capture
+///     feature
+/// </summary>
 internal class ShortcutCapture : MegaPintEditorWindowBase
 {
+    private const string FolderBasePath = "Screenshot/User Interface/";
     private static readonly Color s_onColor = new(.8196078431372549f, 0f, .4470588235294118f);
     private static readonly Color s_offColor = new(.34f, .34f, .34f);
-    
+
+    private VisualTreeAsset _baseWindow;
+
+    private Button _btnAll;
+    private Button _btnNone;
+    private Button _btnRefresh;
+
+    private ListView _cameras;
+
+    private List <CameraCapture> _cams = new();
+    private VisualTreeAsset _listItem;
+    private Label _placeholder;
+
     #region Public Methods
 
     /// <summary> Show the window </summary>
@@ -27,8 +43,6 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
     #endregion
 
     #region Protected Methods
-
-    private const string FolderBasePath = "Screenshot/User Interface/";
 
     protected override string BasePath()
     {
@@ -71,7 +85,7 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
                     camera.listenToShortcut = true;
                     UpdateListItem(onButton, offButton, true);
                 });
-            
+
             offButton.clickable = new Clickable(
                 () =>
                 {
@@ -80,15 +94,38 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
                 });
         };
 
-        _cameras.unbindItem += (element, i) =>
-        {
-            element.Clear();
-        };
-        
         RefreshCameras();
 
         root.Add(content);
     }
+
+    protected override bool LoadResources()
+    {
+        _baseWindow = Resources.Load <VisualTreeAsset>(BasePath());
+        _listItem = Resources.Load <VisualTreeAsset>(FolderBasePath + "ShortcutCaptureItem");
+
+        return _baseWindow != null && _listItem != null;
+    }
+
+    protected override void RegisterCallbacks()
+    {
+        _btnRefresh.clicked += RefreshCameras;
+
+        _btnAll.clicked += SelectAll;
+        _btnNone.clicked += SelectNone;
+    }
+
+    protected override void UnRegisterCallbacks()
+    {
+        _btnRefresh.clicked -= RefreshCameras;
+
+        _btnAll.clicked -= SelectAll;
+        _btnNone.clicked -= SelectNone;
+    }
+
+    #endregion
+
+    #region Private Methods
 
     private static void UpdateListItem(VisualElement onButton, VisualElement offButton, bool on)
     {
@@ -115,41 +152,28 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
         _placeholder.style.display = hasCams ? DisplayStyle.None : DisplayStyle.Flex;
     }
 
-    protected override bool LoadResources()
+    private void SelectAll()
     {
-        _baseWindow = Resources.Load <VisualTreeAsset>(BasePath());
-        _listItem = Resources.Load <VisualTreeAsset>(FolderBasePath + "ShortcutCaptureItem");
-
-        return _baseWindow != null && _listItem != null;
+        SetAllCameraListeners(true);
     }
 
-    protected override void RegisterCallbacks()
+    private void SelectNone()
     {
-
+        SetAllCameraListeners(false);
     }
 
-    protected override void UnRegisterCallbacks()
+    private void SetAllCameraListeners(bool listening)
     {
+        if (_cams is not {Count: > 0})
+            return;
 
+        foreach (CameraCapture cam in _cams)
+            cam.listenToShortcut = listening;
+
+        _cameras.RefreshItems();
     }
 
     #endregion
-
-    #region Private
-
-    private VisualTreeAsset _baseWindow;
-    private VisualTreeAsset _listItem;
-
-    private ListView _cameras;
-    private Label _placeholder;
-
-    private Button _btnAll;
-    private Button _btnNone;
-    private Button _btnRefresh;
-
-    #endregion
-
-    private List <CameraCapture> _cams = new();
 }
 
 }
