@@ -1,10 +1,11 @@
 ﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Editor.Scripts.Windows;
 using UnityEditor;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Editor.Scripts
 {
@@ -34,11 +35,16 @@ internal static partial class ContextMenu
             EditorUtility.DisplayDialog("Missing Cameras", "No CameraCapture components selected for rendering.", "Ok");
             return;
         }
-
+        
         foreach (CameraCapture cam in activeCams)
         {
-            cam.Capture();
+            var timestamp = $"{DateTime.Now:yy-MM-dd})({DateTime.Now:HH-mm-ss}";
+            var camName = $"/{cam.gameObject.name}[{cam.GetHashCode()}]({timestamp}).png";
+            var path = $"{cam.lastPath}{camName}";
+            cam.RenderAndSave(path);
         }
+        
+        Debug.Log($"{activeCams.Count} CameraCapture components rendered.");
     }
 
     #endregion
