@@ -27,7 +27,7 @@
             </ui:GroupBox>
             <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: center;">
-                <Editor.Scripts.Internal.AspectRatioPanel name="Preview" />
+                <Editor.Scripts.AspectRatioPanel name="Preview" />
             </ui:VisualElement>
         </ui:GroupBox>
     </ui:TwoPaneSplitView>
