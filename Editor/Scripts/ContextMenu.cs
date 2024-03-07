@@ -14,13 +14,19 @@ internal static partial class ContextMenu
 {
     #region Private Methods
 
-    [MenuItem(MenuItemPackages + "/Screenshot/Shortcut Capture", false, 100)]
+    [MenuItem(MenuItemPackages + "/Screenshot/Window Capture", false, 100)]
+    private static void OpenWindowCapture()
+    {
+        TryOpen <WindowCapture>(false);
+    }
+    
+    [MenuItem(MenuItemPackages + "/Screenshot/Shortcut Capture", false, 101)]
     private static void OpenShortcutCapture()
     {
         TryOpen <ShortcutCapture>(false);
     }
     
-    [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 101)]
+    [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 102)]
     private static void CaptureNow()
     {
         List <CameraCapture> cams = Object.FindObjectsOfType <CameraCapture>().ToList();
@@ -45,6 +51,13 @@ internal static partial class ContextMenu
         }
         
         Debug.Log($"{activeCams.Count} CameraCapture components rendered.");
+    }
+
+    
+    [MenuItem("Window/MegaPint/Test", false, 0)]
+    private static void Test()
+    {
+        Debug.Log("EXECUTE TEST");
     }
 
     #endregion

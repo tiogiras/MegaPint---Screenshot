@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Editor.Scripts.Settings;
-using UnityEngine;
+﻿using Editor.Scripts.Settings;
 
 namespace Editor.Scripts
 {
@@ -14,41 +9,19 @@ internal static class ScreenshotData
 
     #region Public Methods
     
-    public static List <KeyCode> Shortcut
+    public static string LastEditorWindowPath
     {
         get
         {
             s_settings ??= MegaPintSettings.instance.GetSetting("Shortcut");
-            
-            var keyCodeString = s_settings.GetValue("shortcut", "");
-            List <KeyCode> output = new();
 
-            if (string.IsNullOrEmpty(keyCodeString))
-                return output;
-
-            var keys = keyCodeString.Split(",");
-            output.AddRange(keys.Select(Enum.Parse <KeyCode>));
-
-            return output;
+            return s_settings.GetValue("lastEditorWindowPath", "Assets");
         }
         set
         {
             s_settings ??= MegaPintSettings.instance.GetSetting("Shortcut");
 
-            var input = new StringBuilder("");
-
-            if (value is not {Count: > 0})
-            {
-                s_settings.SetValue("shortcut", input.ToString());
-                return;
-            }
-
-            foreach (KeyCode keyCode in value)
-            {
-                input.Append($"{keyCode},");
-            }
-
-            s_settings.SetValue("shortcut", input.ToString()[..^1]);
+            s_settings.SetValue("lastEditorWindowPath", value);
         }
     }
 

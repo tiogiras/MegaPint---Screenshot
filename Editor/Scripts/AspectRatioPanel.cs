@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace Editor.Scripts.Internal
+namespace Editor.Scripts
 {
 
 [Preserve]
-public class AspectRatioPanel : VisualElement
+internal class AspectRatioPanel : VisualElement
 {
     [Preserve]
     public new class UxmlFactory : UxmlFactory <AspectRatioPanel, UxmlTraits>

@@ -4,7 +4,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.Scripts.Internal
+namespace Editor.Scripts
 {
 
 [CustomEditor(typeof(CameraCapture))]
