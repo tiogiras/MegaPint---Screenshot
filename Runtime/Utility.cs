@@ -2,6 +2,8 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering;
 
 public static class Utility
 {
@@ -24,7 +26,11 @@ public static class Utility
     {
         RenderTexture cameraTarget = camera.targetTexture;
 
-        var myRenderTarget = new RenderTexture(width, height, depth);
+        var myRenderTarget = new RenderTexture(width, height, depth, RenderTextureFormat.Default, RenderTextureReadWrite.Default);
+
+#if USING_URP
+        //myRenderTarget.graphicsFormat = GraphicsFormat.R16G16B16A16_SFloat;
+#endif
 
         camera.targetTexture = myRenderTarget;
 
@@ -59,6 +65,12 @@ public static class Utility
         AssetDatabase.Refresh();
 #endif
     }
+
+    /*public static bool IsUrp()
+    {
+        Debug.Log(GraphicsSettings.renderPipelineAsset.def);
+        return false;
+    }*/
 
     #endregion
 }

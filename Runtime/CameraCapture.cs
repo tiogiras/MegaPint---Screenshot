@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -61,6 +62,19 @@ public class CameraCapture : MonoBehaviour
 
         lastPath = path[..path.LastIndexOf("/", StringComparison.Ordinal)];
         Utility.SaveTexture(texture, path);
+        
+#if USING_URP
+        if (backgroundType == BackgroundType.Transparent)
+        {
+            var exporter = (TextureImporter)AssetImporter.GetAtPath(path);
+            exporter.textureType = TextureImporterType.Sprite;
+            exporter.SaveAndReimport();   
+        }
+#endif
+
+#if USING_HDRP
+        Debug.Log("Using HDRP")
+#endif
     }
 
     #endregion
