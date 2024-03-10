@@ -113,6 +113,7 @@ public class CameraCapture : MonoBehaviour
                 rect.transform.SetParent(parent);
 
                 rect.localPosition = Vector3.zero;
+                rect.localRotation = Quaternion.identity;
                 rect.localScale = Vector3.one;
 
                 destroy.Add(canvas.gameObject);
