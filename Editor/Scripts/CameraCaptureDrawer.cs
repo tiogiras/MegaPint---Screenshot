@@ -15,17 +15,17 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
     private ObjectField _backgroundImage;
 
     private EnumField _backgroundType;
+
+    private Button _btnExportPath;
     private Button _btnRender;
     private Button _btnSave;
-    
-    private Button _btnExportPath;
-    private Label _path;
-    
+
     private DropdownField _depth;
     private IntegerField _height;
     private Label _imageResolution;
 
     private DropdownField _imageType;
+    private Label _path;
     private FloatField _pixelPerUnit;
     private AspectRatioPanel _preview;
 
@@ -45,7 +45,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _preview = root.Q <AspectRatioPanel>("Preview");
         _btnRender = root.Q <Button>("BTN_Render");
         _btnSave = root.Q <Button>("BTN_Save");
-        
+
         _btnExportPath = root.Q <Button>("BTN_ExportPath");
         _path = root.Q <Label>("Path");
 
@@ -83,24 +83,35 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         return root;
     }
 
-    private void UpdatePath()
-    {
-        _path.text = _target.lastPath;
-        _path.tooltip = _target.lastPath;
-    }
-
     #endregion
 
     #region Private Methods
 
+    private void ChangePath()
+    {
+        var path = EditorUtility.OpenFolderPanel("Choose Path", _target.lastPath, "");
+
+        if (!path.StartsWith(Application.dataPath))
+        {
+            EditorUtility.DisplayDialog("Folder not in project", "The folder must be within the Assets folder", "ok");
+
+            return;
+        }
+
+        _target.lastPath = path.Remove(0, Application.dataPath.Length - 6);
+        UpdatePath();
+    }
+
     private void RegisterCallbacks()
     {
         _btnRender.clicked += Render;
-        _btnSave.clickable = new Clickable(() =>
-        {
-            var path = EditorUtility.SaveFilePanelInProject("Save Screenshot", "", "png", "", _target.lastPath);
-            _target.Save(_render, path);
-        });
+
+        _btnSave.clickable = new Clickable(
+            () =>
+            {
+                var path = EditorUtility.SaveFilePanelInProject("Save Screenshot", "", "png", "", _target.lastPath);
+                _target.Save(_render, path);
+            });
 
         _width.RegisterValueChangedCallback(
             evt =>
@@ -158,20 +169,6 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _btnExportPath.clicked += ChangePath;
     }
 
-    private void ChangePath()
-    {
-        var path = EditorUtility.OpenFolderPanel("Choose Path", _target.lastPath, "");
-
-        if (!path.StartsWith(Application.dataPath))
-        {
-            EditorUtility.DisplayDialog("Folder not in project", "The folder must be within the Assets folder", "ok");
-            return;   
-        }
-
-        _target.lastPath = path.Remove(0, Application.dataPath.Length - 6);
-        UpdatePath();
-    }
-
     private void Render()
     {
         var width = _target.width;
@@ -205,6 +202,12 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _pixelPerUnit.style.display = isImage && _target.imageType.Equals("Tiled") ? DisplayStyle.Flex : DisplayStyle.None;
 
         _imageResolution.text = _target.backgroundImage == null ? "" : $"{image.rect.width} x {image.rect.height}";
+    }
+
+    private void UpdatePath()
+    {
+        _path.text = _target.lastPath;
+        _path.tooltip = _target.lastPath;
     }
 
     #endregion

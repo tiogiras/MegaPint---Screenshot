@@ -55,7 +55,9 @@ public static class Utility
         writer.Close();
         stream.Close();
 
+#if UNITY_EDITOR
         AssetDatabase.Refresh();
+#endif
     }
 
     #endregion

@@ -11,12 +11,12 @@ namespace Editor.Scripts
 internal class AspectRatioPanel : VisualElement
 {
     [Preserve]
-    public new class UxmlFactory : UxmlFactory <AspectRatioPanel, UxmlTraits>
+    internal new class UxmlFactory : UxmlFactory <AspectRatioPanel, UxmlTraits>
     {
     }
 
     [Preserve]
-    public new class UxmlTraits : VisualElement.UxmlTraits
+    internal new class UxmlTraits : VisualElement.UxmlTraits
     {
         public override IEnumerable <UxmlChildElementDescription> uxmlChildElementsDescription
         {
@@ -72,7 +72,7 @@ internal class AspectRatioPanel : VisualElement
         RegisterCallback <AttachToPanelEvent>(OnAttachToPanelEvent);
     }
 
-    #region Private Methods
+    #region Public Methods
 
     public void FitToParent()
     {
@@ -99,6 +99,10 @@ internal class AspectRatioPanel : VisualElement
         style.width = targetW * _scale;
         style.height = targetH * _scale;
     }
+
+    #endregion
+
+    #region Private Methods
 
     private void OnAttachToPanelEvent(AttachToPanelEvent e)
     {
