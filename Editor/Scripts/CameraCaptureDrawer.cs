@@ -174,7 +174,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         var width = _target.width;
         var height = _target.height;
 
-        var gcd = Utility.Gcd((ulong)width, (ulong)height);
+        var gcd = ScreenshotUtility.Gcd((ulong)width, (ulong)height);
 
         _render = _target.Render();
 
