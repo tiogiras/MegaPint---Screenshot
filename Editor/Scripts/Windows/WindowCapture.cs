@@ -151,7 +151,7 @@ internal class WindowCapture : MegaPintEditorWindowBase
         result.SetPixels(colors);
         result.Apply();
 
-        var gcd = Utility.Gcd((ulong)width, (ulong)height);
+        var gcd = ScreenshotUtility.Gcd((ulong)width, (ulong)height);
 
         _render = result;
 
@@ -172,7 +172,7 @@ internal class WindowCapture : MegaPintEditorWindowBase
 
         ScreenshotData.LastEditorWindowPath = path;
 
-        Utility.SaveTexture(_render, path);
+        ScreenshotUtility.SaveTexture(_render, path);
     }
 
     private void WindowSelected(ChangeEvent <string> evt)

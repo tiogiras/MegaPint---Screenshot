@@ -3,7 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public static class Utility
+public static class ScreenshotUtility
 {
     #region Public Methods
 

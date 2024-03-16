@@ -66,7 +66,7 @@ public class CameraCapture : MonoBehaviour
 /*#endif*/
         PrepareCamera(cam, out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy);
 
-        Texture2D render = Utility.RenderCamera(cam, width, height, depth);
+        Texture2D render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
 
         ResetCamera(cam, bgColor, flags, destroy);
 
@@ -90,7 +90,7 @@ return render;
             return;
 
         lastPath = path[..path.LastIndexOf("/", StringComparison.Ordinal)];
-        Utility.SaveTexture(texture, path);
+        ScreenshotUtility.SaveTexture(texture, path);
 
 /*#if USING_URP
         if (backgroundType == BackgroundType.Transparent)

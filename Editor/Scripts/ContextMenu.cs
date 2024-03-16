@@ -14,18 +14,26 @@ internal static partial class ContextMenu
 {
     #region Private Methods
 
-    [MenuItem("Assets/LogGUID")]
-    private static void LogGuid()
+    // [MenuItem("Assets/LogGUID")]
+    // private static void LogGuid()
+    // {
+    //     Object[] objs = Selection.objects;
+    //
+    //     foreach (Object o in objs)
+    //     {
+    //         Debug.Log($"{o.name}: [{AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(o))}]");
+    //     }
+    // }
+
+#if USING_URP
+    [MenuItem(MenuItemPackages + "/Screenshot/Transparency Wizard", false, 140)]
+    private static void TransparencyWizard()
     {
-        Object[] objs = Selection.objects;
-
-        foreach (Object o in objs)
-        {
-            Debug.Log($"{o.name}: [{AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(o))}]");
-        }
+        TryOpen <TransparencyWizard>(true);
     }
+#endif
 
-    [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 102)]
+    [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 100)]
     private static void CaptureNow()
     {
         List <CameraCapture> cams = Object.FindObjectsOfType <CameraCapture>().ToList();
@@ -53,13 +61,13 @@ internal static partial class ContextMenu
         Debug.Log($"{activeCams.Count} CameraCapture components rendered.");
     }
 
-    [MenuItem(MenuItemPackages + "/Screenshot/Shortcut Capture", false, 101)]
+    [MenuItem(MenuItemPackages + "/Screenshot/Shortcut Capture", false, 121)]
     private static void OpenShortcutCapture()
     {
         TryOpen <ShortcutCapture>(false);
     }
 
-    [MenuItem(MenuItemPackages + "/Screenshot/Window Capture", false, 100)]
+    [MenuItem(MenuItemPackages + "/Screenshot/Window Capture", false, 120)]
     private static void OpenWindowCapture()
     {
         TryOpen <WindowCapture>(false);
