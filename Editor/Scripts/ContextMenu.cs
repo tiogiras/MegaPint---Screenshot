@@ -14,6 +14,17 @@ internal static partial class ContextMenu
 {
     #region Private Methods
 
+    [MenuItem("Assets/LogGUID")]
+    private static void LogGuid()
+    {
+        Object[] objs = Selection.objects;
+
+        foreach (Object o in objs)
+        {
+            Debug.Log($"{o.name}: [{AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(o))}]");
+        }
+    }
+
     [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 102)]
     private static void CaptureNow()
     {

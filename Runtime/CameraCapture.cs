@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Camera))]
@@ -40,13 +42,41 @@ public class CameraCapture : MonoBehaviour
 
     public Texture2D Render()
     {
-        PrepareCamera(out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy);
+/*#if USING_URP
+        var parentCam = GetComponent<Camera>();
+        var cam = new GameObject("Cam").AddComponent <Camera>();
 
-        Texture2D render = Utility.RenderCamera(GetComponent <Camera>(), width, height, depth);
+        Transform camTransform = cam.gameObject.transform;
+        camTransform.SetParent(parentCam.gameObject.transform);
+        
+        camTransform.localPosition = Vector3.zero;
+        camTransform.localRotation = Quaternion.identity;
+        camTransform.localScale = Vector3.one;
 
-        ResetCamera(bgColor, flags, destroy);
+        var camData = cam.GetUniversalAdditionalCameraData();
+        camData.renderType = CameraRenderType.Overlay;
+        
+        var parentData = parentCam.GetUniversalAdditionalCameraData();
+        var parentRenderType = parentData.renderType;
+        parentData.renderType = CameraRenderType.Base;
+        
+        parentData.cameraStack.Add(cam);
+#else*/
+        var cam = GetComponent <Camera>();
+/*#endif*/
+        PrepareCamera(cam, out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy);
 
-        return render;
+        Texture2D render = Utility.RenderCamera(cam, width, height, depth);
+
+        ResetCamera(cam, bgColor, flags, destroy);
+
+/*#if USING_URP
+        parentData.renderType = parentRenderType;
+        parentData.cameraStack.Remove(cam);
+        DestroyImmediate(cam.gameObject);
+#endif*/
+
+return render;
     }
 
     public void RenderAndSave(string path)
@@ -61,16 +91,23 @@ public class CameraCapture : MonoBehaviour
 
         lastPath = path[..path.LastIndexOf("/", StringComparison.Ordinal)];
         Utility.SaveTexture(texture, path);
+
+/*#if USING_URP
+        if (backgroundType == BackgroundType.Transparent)
+        {
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            importer.textureType = TextureImporterType.Sprite;
+            importer.SaveAndReimport();
+        }
+#endif*/
     }
 
     #endregion
 
     #region Private Methods
 
-    private void PrepareCamera(out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy)
+    private void PrepareCamera(Camera cam, out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy)
     {
-        var cam = GetComponent <Camera>();
-
         bgColor = cam.backgroundColor;
         flags = cam.clearFlags;
         destroy = new List <GameObject>();
@@ -89,8 +126,18 @@ public class CameraCapture : MonoBehaviour
                 break;
 
             case BackgroundType.Transparent:
-                cam.clearFlags = CameraClearFlags.Depth;
-
+               
+/*#if USING_URP
+                if (cam.GetUniversalAdditionalCameraData().renderPostProcessing)
+                {
+                    cam.clearFlags = CameraClearFlags.SolidColor;
+                    cam.backgroundColor = new Color(0, 0, 0, 0);
+                }
+                else
+                    cam.clearFlags = CameraClearFlags.Depth;
+#else*/
+                cam.clearFlags = CameraClearFlags.Depth;      
+/*#endif*/
                 break;
 
             case BackgroundType.Image:
@@ -126,10 +173,8 @@ public class CameraCapture : MonoBehaviour
         }
     }
 
-    private void ResetCamera(Color bgColor, CameraClearFlags flags, IReadOnlyList <GameObject> destroy)
+    private static void ResetCamera(Camera cam, Color bgColor, CameraClearFlags flags, IReadOnlyList <GameObject> destroy)
     {
-        var cam = GetComponent <Camera>();
-
         cam.backgroundColor = bgColor;
         cam.clearFlags = flags;
 
