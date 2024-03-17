@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 #if USING_URP
 using UnityEngine.Rendering.Universal;
@@ -65,6 +68,7 @@ public static class ScreenshotUtility
     }
 
 #if USING_URP
+#if UNITY_EDITOR
     public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, GUID renderer, out int index)
     {
         EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(renderPipelineAssetPath));
@@ -117,7 +121,7 @@ public static class ScreenshotUtility
 
         return false;
     }
-    
+#endif
 #endif
 
     #endregion
