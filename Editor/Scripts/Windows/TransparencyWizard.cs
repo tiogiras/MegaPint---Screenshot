@@ -162,7 +162,7 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
 
 
         var uberShader = Utility.CopyAndLoadAsset <Shader>(
-            "Packages/com.tiogiras.megapint-screenshot/Editor/Scripts/UberPost_Alpha.shader",
+            "Packages/com.tiogiras.megapint-screenshot/Editor/Scripts/UberPost_Alpha.txt",
             Path.Combine(path, "UberPost_Alpha.shader"));
 
         rendererData.postProcessData = postProcessData;
