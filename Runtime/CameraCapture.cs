@@ -38,47 +38,49 @@ public class CameraCapture : MonoBehaviour
     [HideInInspector]
     public bool listenToShortcut;
 
+#if USING_URP
+    private string _renderPipelineAssetPath;
+    private GUID _transparencyRenderer;
+#endif
+
     #region Public Methods
 
+    public Texture2D RenderUrp(string renderPipelineAssetPath, GUID transparencyRenderer)
+    {
+        _renderPipelineAssetPath = renderPipelineAssetPath;
+        _transparencyRenderer = transparencyRenderer;
+
+        return Render();
+    }
+    
     public Texture2D Render()
     {
-/*#if USING_URP
-        var parentCam = GetComponent<Camera>();
-        var cam = new GameObject("Cam").AddComponent <Camera>();
-
-        Transform camTransform = cam.gameObject.transform;
-        camTransform.SetParent(parentCam.gameObject.transform);
-        
-        camTransform.localPosition = Vector3.zero;
-        camTransform.localRotation = Quaternion.identity;
-        camTransform.localScale = Vector3.one;
-
-        var camData = cam.GetUniversalAdditionalCameraData();
-        camData.renderType = CameraRenderType.Overlay;
-        
-        var parentData = parentCam.GetUniversalAdditionalCameraData();
-        var parentRenderType = parentData.renderType;
-        parentData.renderType = CameraRenderType.Base;
-        
-        parentData.cameraStack.Add(cam);
-#else*/
         var cam = GetComponent <Camera>();
-/*#endif*/
+
         PrepareCamera(cam, out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy);
+
+#if USING_URP
+        UniversalAdditionalCameraData camData = cam.GetUniversalAdditionalCameraData();
+        
+        PrepareCameraData(camData, out var rendererIndex);
+#endif
 
         Texture2D render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
 
         ResetCamera(cam, bgColor, flags, destroy);
 
-/*#if USING_URP
-        parentData.renderType = parentRenderType;
-        parentData.cameraStack.Remove(cam);
-        DestroyImmediate(cam.gameObject);
-#endif*/
+#if USING_URP
+        ResetCameraData(camData, rendererIndex);
+#endif
 
-return render;
+        return render;
     }
 
+    public void RenderAndSaveUrp(string path, string renderPipelineAssetPath, GUID transparencyRenderer)
+    {
+        Save(RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
+    }
+    
     public void RenderAndSave(string path)
     {
         Save(Render(), path);
@@ -92,14 +94,12 @@ return render;
         lastPath = path[..path.LastIndexOf("/", StringComparison.Ordinal)];
         ScreenshotUtility.SaveTexture(texture, path);
 
-/*#if USING_URP
-        if (backgroundType == BackgroundType.Transparent)
+        if (backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor)
         {
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             importer.textureType = TextureImporterType.Sprite;
             importer.SaveAndReimport();
         }
-#endif*/
     }
 
     #endregion
@@ -126,18 +126,7 @@ return render;
                 break;
 
             case BackgroundType.Transparent:
-               
-/*#if USING_URP
-                if (cam.GetUniversalAdditionalCameraData().renderPostProcessing)
-                {
-                    cam.clearFlags = CameraClearFlags.SolidColor;
-                    cam.backgroundColor = new Color(0, 0, 0, 0);
-                }
-                else
-                    cam.clearFlags = CameraClearFlags.Depth;
-#else*/
-                cam.clearFlags = CameraClearFlags.Depth;      
-/*#endif*/
+                cam.clearFlags = CameraClearFlags.Depth;
                 break;
 
             case BackgroundType.Image:
@@ -173,6 +162,22 @@ return render;
         }
     }
 
+#if USING_URP
+    private void PrepareCameraData(UniversalAdditionalCameraData camData, out int rendererIndex)
+    {
+        rendererIndex = -1;
+
+        if (backgroundType is not (BackgroundType.Transparent or BackgroundType.SolidColor))
+            return;
+
+        if (!ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath, camData.scriptableRenderer, out rendererIndex))
+            return;
+
+        if (ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath, _transparencyRenderer, out var index))
+            camData.SetRenderer(index);
+    }
+#endif
+
     private static void ResetCamera(Camera cam, Color bgColor, CameraClearFlags flags, IReadOnlyList <GameObject> destroy)
     {
         cam.backgroundColor = bgColor;
@@ -184,6 +189,16 @@ return render;
             DestroyImmediate(obj);
         }
     }
+
+#if USING_URP
+    private void ResetCameraData(UniversalAdditionalCameraData camData, int rendererIndex)
+    {
+        if (backgroundType is not (BackgroundType.Transparent or BackgroundType.SolidColor))
+            return;
+        
+        camData.SetRenderer(rendererIndex);
+    }
+#endif
 
     #endregion
 }

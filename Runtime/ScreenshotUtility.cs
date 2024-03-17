@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public static class ScreenshotUtility
 {
@@ -59,6 +60,62 @@ public static class ScreenshotUtility
         AssetDatabase.Refresh();
 #endif
     }
+
+#if USING_URP
+    public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, GUID renderer, out int index)
+    {
+        EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(renderPipelineAssetPath));
+        AssetDatabase.SaveAssets();
+        
+        var guid = renderer.ToString();
+        var lines = File.ReadAllLines(renderPipelineAssetPath);
+
+        var foundRenderers = false;
+
+        index = 0;
+        
+        foreach (var line in lines)
+        {
+            if (!foundRenderers)
+            {
+                foundRenderers = line.StartsWith("  m_RendererDataList:");
+                continue;
+            }
+            
+            if (!line.StartsWith("  - {fileID:"))
+                break;
+
+            if (line.Contains(guid))
+                return true;
+
+            index++;
+        }
+
+        return false;
+    }
+
+    public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, ScriptableRenderer renderer, out int index)
+    {
+        var pipelineAsset = AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(renderPipelineAssetPath);
+
+        index = 0;
+        while (true)
+        {
+            ScriptableRenderer scriptableRenderer = pipelineAsset.GetRenderer(index);
+
+            if (scriptableRenderer == null)
+                break;
+
+            if (scriptableRenderer == renderer)
+                return true;
+
+            index++;
+        }
+
+        return false;
+    }
+    
+#endif
 
     #endregion
 }

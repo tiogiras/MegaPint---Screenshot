@@ -142,7 +142,10 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
             Path.Combine(path, "UberPost_Alpha.shader"));
         
         rendererData.postProcessData = postProcessData;
+        EditorUtility.SetDirty(rendererData);
+
         postProcessData.shaders.uberPostPS = uberShader;
+        EditorUtility.SetDirty(postProcessData);
 
         List <string> lines = File.ReadAllLines(ScreenshotData.RenderPipelineAssetPath).ToList();
 
@@ -170,6 +173,8 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         lines.Insert(index, $"  - {{fileID: 11400000, guid: {guid}, type: 2}}");
         
         File.WriteAllLines(ScreenshotData.RenderPipelineAssetPath, lines);
+        
+        AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         
         Close();

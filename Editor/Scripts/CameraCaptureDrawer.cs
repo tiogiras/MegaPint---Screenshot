@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
 namespace Editor.Scripts
@@ -33,7 +34,13 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
     private CameraCapture _target;
 
+#if USING_URP
+    private UniversalAdditionalCameraData _camData;
+#endif
+
     private IntegerField _width;
+
+    private VisualElement _transparencyHint;
 
     #region Public Methods
 
@@ -61,7 +68,13 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _imageType = root.Q <DropdownField>("ImageType");
         _pixelPerUnit = root.Q <FloatField>("PixelPerUnit");
 
+        _transparencyHint = root.Q <VisualElement>("TransparencyHint");
+
         _target = (CameraCapture)target;
+        
+#if USING_URP
+        _camData = _target.GetComponent <Camera>().GetUniversalAdditionalCameraData();
+#endif
 
         _width.value = _target.width;
         _height.value = _target.height;
@@ -74,6 +87,8 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
         _btnSave.style.display = DisplayStyle.None;
 
+        UpdateTransparencyHint();
+
         UpdatePath();
         UpdateBackgroundColor();
         UpdateBackgroundImage();
@@ -81,6 +96,18 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         RegisterCallbacks();
 
         return root;
+    }
+
+    private void UpdateTransparencyHint()
+    {
+#if USING_URP
+        if (_target.backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor)
+            _transparencyHint.style.display = _camData.renderPostProcessing ? DisplayStyle.Flex : DisplayStyle.None;   
+        else
+            _transparencyHint.style.display = DisplayStyle.None;
+#else
+      _transparencyHint.style.display = DisplayStyle.None;  
+#endif
     }
 
     #endregion
@@ -139,6 +166,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                 _target.backgroundType = (BackgroundType)evt.newValue;
                 UpdateBackgroundColor();
                 UpdateBackgroundImage();
+                UpdateTransparencyHint();
             });
 
         _backgroundColor.RegisterValueChangedCallback(evt => {_target.backgroundColor = evt.newValue;});
@@ -176,7 +204,11 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
         var gcd = ScreenshotUtility.Gcd((ulong)width, (ulong)height);
 
+#if USING_URP
+        _render = _target.RenderUrp(ScreenshotData.RenderPipelineAssetPath, AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
+#else
         _render = _target.Render();
+#endif
 
         _preview.style.backgroundImage = _render;
         _preview.aspectRatioX = width / gcd;
