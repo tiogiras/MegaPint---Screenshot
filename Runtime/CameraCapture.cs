@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-
 #if USING_URP
 using UnityEngine.Rendering.Universal;
 #endif
@@ -40,37 +39,22 @@ public class CameraCapture : MonoBehaviour
 
     [HideInInspector]
     public bool listenToShortcut;
-    
+
     private string _renderPipelineAssetPath;
     private GUID _transparencyRenderer;
-
+    
     #region Public Methods
 
-    public Texture2D RenderUrp(string renderPipelineAssetPath, GUID transparencyRenderer)
-    {
-        if (QualitySettings.renderPipeline is UniversalRenderPipelineAsset)
-        {
-            _renderPipelineAssetPath = renderPipelineAssetPath;
-            _transparencyRenderer = transparencyRenderer;
-
-            return Render();
-        }
-
-        Debug.LogWarning(
-            "You have no UniversalRenderPipelineAsset selected in you Quality settings. Therefor the camera can't render modes with possible transparency.");
-        
-        return null;
-    }
-    
     public Texture2D Render()
     {
         var cam = GetComponent <Camera>();
 
-        PrepareCamera(cam, out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy);
+        PrepareCamera(cam, out Color bgColor, out CameraClearFlags flags,
+            out List <GameObject> destroy);
 
 #if USING_URP
         UniversalAdditionalCameraData camData = cam.GetUniversalAdditionalCameraData();
-        
+
         PrepareCameraData(camData, out var rendererIndex);
 #endif
 
@@ -85,14 +69,36 @@ public class CameraCapture : MonoBehaviour
         return render;
     }
 
-    public void RenderAndSaveUrp(string path, string renderPipelineAssetPath, GUID transparencyRenderer)
-    {
-        Save(RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
-    }
-    
     public void RenderAndSave(string path)
     {
         Save(Render(), path);
+    }
+
+    public void RenderAndSaveUrp(
+        string path,
+        string renderPipelineAssetPath,
+        GUID transparencyRenderer)
+    {
+        Save(RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
+    }
+
+    public Texture2D RenderUrp(string renderPipelineAssetPath, GUID transparencyRenderer)
+    {
+        var isUrpAsset = QualitySettings.renderPipeline is UniversalRenderPipelineAsset;
+
+        if (!isUrpAsset &&
+            backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor)
+        {
+            Debug.LogWarning(
+                "You have no UniversalRenderPipelineAsset selected in you Quality settings. Therefor the camera can't render modes with possible transparency.");
+
+            return null;
+        }
+
+        _renderPipelineAssetPath = renderPipelineAssetPath;
+        _transparencyRenderer = transparencyRenderer;
+
+        return Render();
     }
 
     public void Save(Texture2D texture, string path)
@@ -112,10 +118,30 @@ public class CameraCapture : MonoBehaviour
     }
 
     #endregion
-
+    
     #region Private Methods
 
-    private void PrepareCamera(Camera cam, out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy)
+    private static void ResetCamera(
+        Camera cam,
+        Color bgColor,
+        CameraClearFlags flags,
+        IReadOnlyList <GameObject> destroy)
+    {
+        cam.backgroundColor = bgColor;
+        cam.clearFlags = flags;
+
+        for (var i = destroy.Count - 1; i >= 0; i--)
+        {
+            GameObject obj = destroy[i];
+            DestroyImmediate(obj);
+        }
+    }
+
+    private void PrepareCamera(
+        Camera cam,
+        out Color bgColor,
+        out CameraClearFlags flags,
+        out List <GameObject> destroy)
     {
         bgColor = cam.backgroundColor;
         flags = cam.clearFlags;
@@ -180,33 +206,23 @@ public class CameraCapture : MonoBehaviour
             return;
 
 #if UNITY_EDITOR
-        if (!ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath, camData.scriptableRenderer, out rendererIndex))
+        if (!ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath,
+                camData.scriptableRenderer, out rendererIndex))
             return;
 
-        if (ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath, _transparencyRenderer, out var index))
+        if (ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath,
+                _transparencyRenderer, out var index))
             camData.SetRenderer(index);
 #endif
     }
 #endif
-
-    private static void ResetCamera(Camera cam, Color bgColor, CameraClearFlags flags, IReadOnlyList <GameObject> destroy)
-    {
-        cam.backgroundColor = bgColor;
-        cam.clearFlags = flags;
-
-        for (var i = destroy.Count - 1; i >= 0; i--)
-        {
-            GameObject obj = destroy[i];
-            DestroyImmediate(obj);
-        }
-    }
 
 #if USING_URP
     private void ResetCameraData(UniversalAdditionalCameraData camData, int rendererIndex)
     {
         if (backgroundType is not (BackgroundType.Transparent or BackgroundType.SolidColor))
             return;
-        
+
         camData.SetRenderer(rendererIndex);
     }
 #endif
