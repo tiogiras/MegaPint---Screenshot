@@ -171,11 +171,13 @@ public class CameraCapture : MonoBehaviour
         if (backgroundType is not (BackgroundType.Transparent or BackgroundType.SolidColor))
             return;
 
+#if UNITY_EDITOR
         if (!ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath, camData.scriptableRenderer, out rendererIndex))
             return;
 
         if (ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath, _transparencyRenderer, out var index))
             camData.SetRenderer(index);
+#endif
     }
 #endif
 
