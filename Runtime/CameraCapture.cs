@@ -48,6 +48,11 @@ public class CameraCapture : MonoBehaviour
 
     public Texture2D RenderUrp(string renderPipelineAssetPath, GUID transparencyRenderer)
     {
+
+        Debug.Log(QualitySettings.renderPipeline);
+
+        return null;
+        
         _renderPipelineAssetPath = renderPipelineAssetPath;
         _transparencyRenderer = transparencyRenderer;
 
