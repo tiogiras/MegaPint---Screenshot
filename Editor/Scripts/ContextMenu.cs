@@ -56,7 +56,7 @@ internal static partial class ContextMenu
             var path = $"{cam.lastPath}{camName}";
 
 #if USING_URP
-            cam.RenderAndSaveUrp(path, ScreenshotData.RenderPipelineAssetPath, ScreenshotData.RendererData());
+            cam.RenderAndSaveUrp(path, ScreenshotData.RenderPipelineAssetPath, AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
 #else
             cam.RenderAndSave(path);
 #endif

@@ -62,15 +62,17 @@ public static class ScreenshotUtility
     }
 
 #if USING_URP
-    /*public static int ScriptableRendererIndex(string renderPipelineAssetPath, GUID renderer)
+    public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, GUID renderer, out int index)
     {
+        EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(renderPipelineAssetPath));
+        AssetDatabase.SaveAssets();
+        
         var guid = renderer.ToString();
         var lines = File.ReadAllLines(renderPipelineAssetPath);
 
         var foundRenderers = false;
-        var index = 0;
 
-        Debug.Log($"looking for {guid}");
+        index = 0;
         
         foreach (var line in lines)
         {
@@ -79,40 +81,38 @@ public static class ScreenshotUtility
                 foundRenderers = line.StartsWith("  m_RendererDataList:");
                 continue;
             }
-
-            Debug.Log($"renderer {index} | {line}");
+            
+            if (!line.StartsWith("  - {fileID:"))
+                break;
 
             if (line.Contains(guid))
-                break;
+                return true;
 
             index++;
         }
 
-        return index;
-    }*/
+        return false;
+    }
 
-    public static int ScriptableRendererIndex(string renderPipelineAssetPath, ScriptableRenderer renderer)
+    public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, ScriptableRenderer renderer, out int index)
     {
         var pipelineAsset = AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(renderPipelineAssetPath);
 
-        // TODO  currently being endless due to renderer being null
-        // TODO somehow get what renderer is used for transparency and convert them into a scriptableRenderer
-        
-        /*var index = 0;
+        index = 0;
         while (true)
         {
             ScriptableRenderer scriptableRenderer = pipelineAsset.GetRenderer(index);
 
             if (scriptableRenderer == null)
-                return -1;
-
-            if (scriptableRenderer == renderer)
                 break;
 
-            index++;
-        }*/
+            if (scriptableRenderer == renderer)
+                return true;
 
-        return 0;
+            index++;
+        }
+
+        return false;
     }
     
 #endif

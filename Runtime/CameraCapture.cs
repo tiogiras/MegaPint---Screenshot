@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
@@ -42,12 +40,12 @@ public class CameraCapture : MonoBehaviour
 
 #if USING_URP
     private string _renderPipelineAssetPath;
-    private ScriptableRenderer _transparencyRenderer;
+    private GUID _transparencyRenderer;
 #endif
 
     #region Public Methods
 
-    public Texture2D RenderUrp(string renderPipelineAssetPath, ScriptableRenderer transparencyRenderer)
+    public Texture2D RenderUrp(string renderPipelineAssetPath, GUID transparencyRenderer)
     {
         _renderPipelineAssetPath = renderPipelineAssetPath;
         _transparencyRenderer = transparencyRenderer;
@@ -64,17 +62,21 @@ public class CameraCapture : MonoBehaviour
 #if USING_URP
         UniversalAdditionalCameraData camData = cam.GetUniversalAdditionalCameraData();
         
-        PrepareCameraData(cam, camData, out var rendererIndex);
+        PrepareCameraData(camData, out var rendererIndex);
 #endif
 
         Texture2D render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
 
         ResetCamera(cam, bgColor, flags, destroy);
 
+#if USING_URP
+        ResetCameraData(camData, rendererIndex);
+#endif
+
         return render;
     }
 
-    public void RenderAndSaveUrp(string path, string renderPipelineAssetPath, ScriptableRenderer transparencyRenderer)
+    public void RenderAndSaveUrp(string path, string renderPipelineAssetPath, GUID transparencyRenderer)
     {
         Save(RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
     }
@@ -92,7 +94,7 @@ public class CameraCapture : MonoBehaviour
         lastPath = path[..path.LastIndexOf("/", StringComparison.Ordinal)];
         ScreenshotUtility.SaveTexture(texture, path);
 
-        if (backgroundType == BackgroundType.Transparent)
+        if (backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor)
         {
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             importer.textureType = TextureImporterType.Sprite;
@@ -161,16 +163,18 @@ public class CameraCapture : MonoBehaviour
     }
 
 #if USING_URP
-    private void PrepareCameraData(Camera cam, UniversalAdditionalCameraData camData, out int rendererIndex)
+    private void PrepareCameraData(UniversalAdditionalCameraData camData, out int rendererIndex)
     {
-        rendererIndex = ScreenshotUtility.ScriptableRendererIndex(_renderPipelineAssetPath, camData.scriptableRenderer);
+        rendererIndex = -1;
 
-        if (backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor)
-        {
-            var index = ScreenshotUtility.ScriptableRendererIndex(_renderPipelineAssetPath, _transparencyRenderer);
+        if (backgroundType is not (BackgroundType.Transparent or BackgroundType.SolidColor))
+            return;
 
+        if (!ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath, camData.scriptableRenderer, out rendererIndex))
+            return;
+
+        if (ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath, _transparencyRenderer, out var index))
             camData.SetRenderer(index);
-        }
     }
 #endif
 
@@ -185,6 +189,16 @@ public class CameraCapture : MonoBehaviour
             DestroyImmediate(obj);
         }
     }
+
+#if USING_URP
+    private void ResetCameraData(UniversalAdditionalCameraData camData, int rendererIndex)
+    {
+        if (backgroundType is not (BackgroundType.Transparent or BackgroundType.SolidColor))
+            return;
+        
+        camData.SetRenderer(rendererIndex);
+    }
+#endif
 
     #endregion
 }
