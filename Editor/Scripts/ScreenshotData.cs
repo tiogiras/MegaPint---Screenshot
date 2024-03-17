@@ -2,6 +2,8 @@
 using Editor.Scripts.Settings;
 using UnityEditor;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Windows;
+using File = System.IO.File;
 
 namespace Editor.Scripts
 {
@@ -61,6 +63,11 @@ internal static class ScreenshotData
     public static UniversalRenderPipelineAsset RenderPipelineAsset()
     {
         return AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(RenderPipelineAssetPath);
+    }
+
+    public static ScriptableRenderer RendererData()
+    {
+        return null;
     }
 }
 

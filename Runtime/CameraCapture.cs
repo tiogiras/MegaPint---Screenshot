@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
@@ -38,13 +40,32 @@ public class CameraCapture : MonoBehaviour
     [HideInInspector]
     public bool listenToShortcut;
 
+#if USING_URP
+    private string _renderPipelineAssetPath;
+    private ScriptableRenderer _transparencyRenderer;
+#endif
+
     #region Public Methods
 
+    public Texture2D RenderUrp(string renderPipelineAssetPath, ScriptableRenderer transparencyRenderer)
+    {
+        _renderPipelineAssetPath = renderPipelineAssetPath;
+        _transparencyRenderer = transparencyRenderer;
+
+        return Render();
+    }
+    
     public Texture2D Render()
     {
         var cam = GetComponent <Camera>();
 
         PrepareCamera(cam, out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy);
+
+#if USING_URP
+        UniversalAdditionalCameraData camData = cam.GetUniversalAdditionalCameraData();
+        
+        PrepareCameraData(cam, camData, out var rendererIndex);
+#endif
 
         Texture2D render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
 
@@ -53,6 +74,11 @@ public class CameraCapture : MonoBehaviour
         return render;
     }
 
+    public void RenderAndSaveUrp(string path, string renderPipelineAssetPath, ScriptableRenderer transparencyRenderer)
+    {
+        Save(RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
+    }
+    
     public void RenderAndSave(string path)
     {
         Save(Render(), path);
@@ -98,18 +124,7 @@ public class CameraCapture : MonoBehaviour
                 break;
 
             case BackgroundType.Transparent:
-               
-/*#if USING_URP
-                if (cam.GetUniversalAdditionalCameraData().renderPostProcessing)
-                {
-                    cam.clearFlags = CameraClearFlags.SolidColor;
-                    cam.backgroundColor = new Color(0, 0, 0, 0);
-                }
-                else
-                    cam.clearFlags = CameraClearFlags.Depth;
-#else*/
-                cam.clearFlags = CameraClearFlags.Depth;      
-/*#endif*/
+                cam.clearFlags = CameraClearFlags.Depth;
                 break;
 
             case BackgroundType.Image:
@@ -144,6 +159,20 @@ public class CameraCapture : MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
     }
+
+#if USING_URP
+    private void PrepareCameraData(Camera cam, UniversalAdditionalCameraData camData, out int rendererIndex)
+    {
+        rendererIndex = ScreenshotUtility.ScriptableRendererIndex(_renderPipelineAssetPath, camData.scriptableRenderer);
+
+        if (backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor)
+        {
+            var index = ScreenshotUtility.ScriptableRendererIndex(_renderPipelineAssetPath, _transparencyRenderer);
+
+            camData.SetRenderer(index);
+        }
+    }
+#endif
 
     private static void ResetCamera(Camera cam, Color bgColor, CameraClearFlags flags, IReadOnlyList <GameObject> destroy)
     {

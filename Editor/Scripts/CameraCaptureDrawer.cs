@@ -204,7 +204,11 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
         var gcd = ScreenshotUtility.Gcd((ulong)width, (ulong)height);
 
+#if USING_URP
+        _render = _target.RenderUrp(ScreenshotData.RenderPipelineAssetPath, ScreenshotData.RendererData());
+#else
         _render = _target.Render();
+#endif
 
         _preview.style.backgroundImage = _render;
         _preview.aspectRatioX = width / gcd;

@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public static class ScreenshotUtility
 {
@@ -59,6 +60,62 @@ public static class ScreenshotUtility
         AssetDatabase.Refresh();
 #endif
     }
+
+#if USING_URP
+    /*public static int ScriptableRendererIndex(string renderPipelineAssetPath, GUID renderer)
+    {
+        var guid = renderer.ToString();
+        var lines = File.ReadAllLines(renderPipelineAssetPath);
+
+        var foundRenderers = false;
+        var index = 0;
+
+        Debug.Log($"looking for {guid}");
+        
+        foreach (var line in lines)
+        {
+            if (!foundRenderers)
+            {
+                foundRenderers = line.StartsWith("  m_RendererDataList:");
+                continue;
+            }
+
+            Debug.Log($"renderer {index} | {line}");
+
+            if (line.Contains(guid))
+                break;
+
+            index++;
+        }
+
+        return index;
+    }*/
+
+    public static int ScriptableRendererIndex(string renderPipelineAssetPath, ScriptableRenderer renderer)
+    {
+        var pipelineAsset = AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(renderPipelineAssetPath);
+
+        // TODO  currently being endless due to renderer being null
+        // TODO somehow get what renderer is used for transparency and convert them into a scriptableRenderer
+        
+        /*var index = 0;
+        while (true)
+        {
+            ScriptableRenderer scriptableRenderer = pipelineAsset.GetRenderer(index);
+
+            if (scriptableRenderer == null)
+                return -1;
+
+            if (scriptableRenderer == renderer)
+                break;
+
+            index++;
+        }*/
+
+        return 0;
+    }
+    
+#endif
 
     #endregion
 }
