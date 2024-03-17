@@ -40,11 +40,9 @@ public class CameraCapture : MonoBehaviour
 
     [HideInInspector]
     public bool listenToShortcut;
-
-#if USING_URP
+    
     private string _renderPipelineAssetPath;
     private GUID _transparencyRenderer;
-#endif
 
     #region Public Methods
 
