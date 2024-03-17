@@ -14,6 +14,12 @@
                 <ui:Label tabindex="-1" text="1920 x 1080" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ImageResolution" style="margin-left: 15px; font-size: 10px; color: rgba(210, 210, 210, 0.59);" />
                 <ui:DropdownField label="Image Type" index="0" choices="Simple, Tiled" name="ImageType" />
                 <ui:FloatField label="Pixel Per Unit" value="1" name="PixelPerUnit" />
+                <ui:VisualElement name="TransparencyHint" style="flex-grow: 1; margin-top: 10px;">
+                    <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
+                    <ui:Foldout text="Hint: Transparency" value="false" style="background-color: rgba(255, 255, 255, 0.08); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; -unity-font-style: bold; margin-left: 0; margin-top: 2px; padding-left: 20px;">
+                        <ui:Label tabindex="-1" text="You are using urp and post processing is enabled on this camera if you notice issues rendering transparency run the transparency wizard." parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal; font-size: 12px; margin-right: 3px; margin-bottom: 3px;" />
+                    </ui:Foldout>
+                </ui:VisualElement>
             </ui:GroupBox>
             <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
                 <ui:Button text="Export Path" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_ExportPath" />

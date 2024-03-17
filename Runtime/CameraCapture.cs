@@ -42,41 +42,15 @@ public class CameraCapture : MonoBehaviour
 
     public Texture2D Render()
     {
-/*#if USING_URP
-        var parentCam = GetComponent<Camera>();
-        var cam = new GameObject("Cam").AddComponent <Camera>();
-
-        Transform camTransform = cam.gameObject.transform;
-        camTransform.SetParent(parentCam.gameObject.transform);
-        
-        camTransform.localPosition = Vector3.zero;
-        camTransform.localRotation = Quaternion.identity;
-        camTransform.localScale = Vector3.one;
-
-        var camData = cam.GetUniversalAdditionalCameraData();
-        camData.renderType = CameraRenderType.Overlay;
-        
-        var parentData = parentCam.GetUniversalAdditionalCameraData();
-        var parentRenderType = parentData.renderType;
-        parentData.renderType = CameraRenderType.Base;
-        
-        parentData.cameraStack.Add(cam);
-#else*/
         var cam = GetComponent <Camera>();
-/*#endif*/
+
         PrepareCamera(cam, out Color bgColor, out CameraClearFlags flags, out List <GameObject> destroy);
 
         Texture2D render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
 
         ResetCamera(cam, bgColor, flags, destroy);
 
-/*#if USING_URP
-        parentData.renderType = parentRenderType;
-        parentData.cameraStack.Remove(cam);
-        DestroyImmediate(cam.gameObject);
-#endif*/
-
-return render;
+        return render;
     }
 
     public void RenderAndSave(string path)
@@ -92,14 +66,12 @@ return render;
         lastPath = path[..path.LastIndexOf("/", StringComparison.Ordinal)];
         ScreenshotUtility.SaveTexture(texture, path);
 
-/*#if USING_URP
         if (backgroundType == BackgroundType.Transparent)
         {
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             importer.textureType = TextureImporterType.Sprite;
             importer.SaveAndReimport();
         }
-#endif*/
     }
 
     #endregion
