@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+
+#if USING_URP
+using UnityEngine.Rendering.Universal;
+#endif
 
 [RequireComponent(typeof(Camera))]
 public class CameraCapture : MonoBehaviour

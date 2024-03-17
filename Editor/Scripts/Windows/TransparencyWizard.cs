@@ -1,20 +1,25 @@
-﻿#if UNITY_EDITOR
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.UIElements;
+#endif
+#if USING_URP
+using UnityEngine.Rendering.Universal;
+#endif
 
+#if UNITY_EDITOR
 namespace Editor.Scripts.Windows
 {
 
 /// <summary>
-///     Window based on the <see cref="MegaPintEditorWindowBase" /> to display a window that fixes an issue regarding transparency in urp
+///     Window based on the <see cref="MegaPintEditorWindowBase" /> to display a window that fixes an issue regarding
+///     transparency in urp
 /// </summary>
 internal class TransparencyWizard : MegaPintEditorWindowBase
 {
@@ -24,17 +29,16 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
 
     private Button _btnFinish;
     private Button _btnNext;
+    private ObjectField _pipelineAsset;
 
     private ObjectField _rendererData;
-    private ObjectField _pipelineAsset;
+
+    private int _state;
 
     private GroupBox _step0;
     private GroupBox _step1;
     private GroupBox _step2;
     private GroupBox _step3;
-
-    private int _state;
-
     #region Public Methods
 
     /// <summary> Show the window </summary>
@@ -47,7 +51,6 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
     }
 
     #endregion
-
     #region Protected Methods
 
     protected override string BasePath()
@@ -75,13 +78,15 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         _step1 = content.Q <GroupBox>("Step1");
         _step2 = content.Q <GroupBox>("Step2");
         _step3 = content.Q <GroupBox>("Step3");
-        
-        _pipelineAsset.value = ScreenshotData.RenderPipelineAsset();
-        
+
+#if USING_URP
+        _pipelineAsset.value = ScreenshotData.RenderPipelineAsset();  
+#endif
+
         RegisterCallbacks();
 
         ChangeState(0);
-        
+
         root.Add(content);
     }
 
@@ -108,104 +113,13 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         _pipelineAsset.UnregisterValueChangedCallback(PipelineAssetChanged);
     }
 
+    #endregion
+    #region Private Methods
+
     private static void PipelineAssetChanged(ChangeEvent <Object> evt)
     {
-        ScreenshotData.RenderPipelineAssetPath = evt.newValue == null ? "" : AssetDatabase.GetAssetPath(evt.newValue);
-    }
-
-    private void Finish()
-    {
-        var path = EditorUtility.SaveFolderPanel("Target folder for settings", "Assets", "");
-
-        if (!path.IsPathInProject(out var pathInProject))
-        {
-            EditorUtility.DisplayDialog("Not in project", "The selected folder is not in the project.", "Ok");
-            return;
-        }
-        
-        ExecuteWizard(pathInProject);
-    }
-
-    private void ExecuteWizard(string path)
-    {
-        var rendererDataTemplate = (UniversalRendererData)_rendererData.value;
-
-        ScreenshotData.RendererDataPath = Path.Combine(path, "Transparency Renderer Data.asset");
-        UniversalRendererData rendererData = Utility.CopyAndLoadAsset(rendererDataTemplate, ScreenshotData.RendererDataPath);
-
-        PostProcessData postProcessData = Utility.CopyAndLoadAsset(
-            rendererData.postProcessData,
-            Path.Combine(path, "Transparency PostProcess Data.asset"));
-
-        var uberShader = Utility.CopyAndLoadAsset<Shader>(
-            "Packages/com.tiogiras.megapint-screenshot/Editor/Scripts/UberPost_Alpha.shader",
-            Path.Combine(path, "UberPost_Alpha.shader"));
-        
-        rendererData.postProcessData = postProcessData;
-        EditorUtility.SetDirty(rendererData);
-
-        postProcessData.shaders.uberPostPS = uberShader;
-        EditorUtility.SetDirty(postProcessData);
-
-        List <string> lines = File.ReadAllLines(ScreenshotData.RenderPipelineAssetPath).ToList();
-
-        var foundRenderers = false;
-        var index = -1;
-        
-        for (var i = 0; i < lines.Count; i++)
-        {
-            var line = lines[i];
-
-            if (foundRenderers)
-            {
-                if (line.StartsWith("  - {fileID:"))
-                    continue;
-
-                index = i;
-                break;
-            }
-            
-            if (line.Equals("  m_RendererDataList:"))
-                foundRenderers = true;
-        }
-
-        GUID guid = AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath);
-        lines.Insert(index, $"  - {{fileID: 11400000, guid: {guid}, type: 2}}");
-        
-        File.WriteAllLines(ScreenshotData.RenderPipelineAssetPath, lines);
-        
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-        
-        Close();
-    }
-
-    #endregion
-
-    private void Next()
-    {
-        if (!CanChange())
-        {
-            EditorUtility.DisplayDialog("Missing Reference", "You must set all required references to continue the setup.", "Ok");
-            return;   
-        }
-
-        ChangeState(_state + 1);
-    }
-    
-    private void ChangeState(int state)
-    {
-        _state = state;
-        
-        _step0.style.display = state == 0 ? DisplayStyle.Flex : DisplayStyle.None;
-        _step1.style.display = state == 1 ? DisplayStyle.Flex : DisplayStyle.None;
-        _step2.style.display = state == 2 ? DisplayStyle.Flex : DisplayStyle.None;
-        _step3.style.display = state == 3 ? DisplayStyle.Flex : DisplayStyle.None;
-
-        _btnNext.style.display = state != 3 ? DisplayStyle.Flex : DisplayStyle.None;
-        _btnFinish.style.display = state == 3 ? DisplayStyle.Flex : DisplayStyle.None;
-        
-        SetSize();
+        ScreenshotData.RenderPipelineAssetPath =
+            evt.newValue == null ? "" : AssetDatabase.GetAssetPath(evt.newValue);
     }
 
     private bool CanChange()
@@ -219,12 +133,109 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
                };
     }
 
+    private void ChangeState(int state)
+    {
+        _state = state;
+
+        _step0.style.display = state == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        _step1.style.display = state == 1 ? DisplayStyle.Flex : DisplayStyle.None;
+        _step2.style.display = state == 2 ? DisplayStyle.Flex : DisplayStyle.None;
+        _step3.style.display = state == 3 ? DisplayStyle.Flex : DisplayStyle.None;
+
+        _btnNext.style.display = state != 3 ? DisplayStyle.Flex : DisplayStyle.None;
+        _btnFinish.style.display = state == 3 ? DisplayStyle.Flex : DisplayStyle.None;
+
+        SetSize();
+    }
+
+    private void ExecuteWizard(string path)
+    {
+#if USING_URP
+        var rendererDataTemplate = (UniversalRendererData)_rendererData.value;
+
+        ScreenshotData.RendererDataPath = Path.Combine(path, "Transparency Renderer Data.asset");
+        UniversalRendererData rendererData =
+            Utility.CopyAndLoadAsset(rendererDataTemplate, ScreenshotData.RendererDataPath);
+
+        PostProcessData postProcessData = Utility.CopyAndLoadAsset(rendererData.postProcessData,
+            Path.Combine(path, "Transparency PostProcess Data.asset"));
+#endif
+
+        var uberShader = Utility.CopyAndLoadAsset <Shader>(
+            "Packages/com.tiogiras.megapint-screenshot/Editor/Scripts/UberPost_Alpha.shader",
+            Path.Combine(path, "UberPost_Alpha.shader"));
+
+        rendererData.postProcessData = postProcessData;
+        EditorUtility.SetDirty(rendererData);
+
+        postProcessData.shaders.uberPostPS = uberShader;
+        EditorUtility.SetDirty(postProcessData);
+
+        List <string> lines = File.ReadAllLines(ScreenshotData.RenderPipelineAssetPath).ToList();
+
+        var foundRenderers = false;
+        var index = -1;
+
+        for (var i = 0; i < lines.Count; i++)
+        {
+            var line = lines[i];
+
+            if (foundRenderers)
+            {
+                if (line.StartsWith("  - {fileID:"))
+                    continue;
+
+                index = i;
+                break;
+            }
+
+            if (line.Equals("  m_RendererDataList:"))
+                foundRenderers = true;
+        }
+
+        GUID guid = AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath);
+        lines.Insert(index, $"  - {{fileID: 11400000, guid: {guid}, type: 2}}");
+
+        File.WriteAllLines(ScreenshotData.RenderPipelineAssetPath, lines);
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        Close();
+    }
+
+    private void Finish()
+    {
+        var path = EditorUtility.SaveFolderPanel("Target folder for settings", "Assets", "");
+
+        if (!path.IsPathInProject(out var pathInProject))
+        {
+            EditorUtility.DisplayDialog("Not in project",
+                "The selected folder is not in the project.", "Ok");
+            return;
+        }
+
+        ExecuteWizard(pathInProject);
+    }
+
+    private void Next()
+    {
+        if (!CanChange())
+        {
+            EditorUtility.DisplayDialog("Missing Reference",
+                "You must set all required references to continue the setup.", "Ok");
+            return;
+        }
+
+        ChangeState(_state + 1);
+    }
+
     private void SetSize()
     {
         maxSize = Size();
         minSize = Size();
     }
-    
+
     private Vector2 Size()
     {
         return _state switch
@@ -236,6 +247,8 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
                    var _ => throw new ArgumentOutOfRangeException()
                };
     }
+
+    #endregion
 }
 
 }
