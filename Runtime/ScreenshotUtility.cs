@@ -105,8 +105,6 @@ public static class ScreenshotUtility
     {
         var pipelineAsset = AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(renderPipelineAssetPath);
 
-        Debug.Log("Starting loop");
-        
         index = 0;
         while (true)
         {
