@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+
+#if USING_URP
+using UnityEngine.Rendering.Universal;
+#endif
 
 [RequireComponent(typeof(Camera))]
 public class CameraCapture : MonoBehaviour
@@ -37,11 +40,9 @@ public class CameraCapture : MonoBehaviour
 
     [HideInInspector]
     public bool listenToShortcut;
-
-#if USING_URP
+    
     private string _renderPipelineAssetPath;
     private GUID _transparencyRenderer;
-#endif
 
     #region Public Methods
 

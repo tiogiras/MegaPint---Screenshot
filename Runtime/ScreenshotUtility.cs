@@ -2,7 +2,10 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+
+#if USING_URP
 using UnityEngine.Rendering.Universal;
+#endif
 
 public static class ScreenshotUtility
 {

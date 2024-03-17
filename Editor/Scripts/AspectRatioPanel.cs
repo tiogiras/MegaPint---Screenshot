@@ -28,7 +28,8 @@ internal class AspectRatioPanel : VisualElement
 
         private readonly UxmlIntAttributeDescription _aspectRatioX = new()
         {
-            name = "aspect-ratio-x", defaultValue = 16, restriction = new UxmlValueBounds {min = "1"}
+            name = "aspect-ratio-x", defaultValue = 16,
+            restriction = new UxmlValueBounds {min = "1"}
         };
 
         private readonly UxmlIntAttributeDescription _aspectRatioY = new()
@@ -36,19 +37,24 @@ internal class AspectRatioPanel : VisualElement
             name = "aspect-ratio-y", defaultValue = 9, restriction = new UxmlValueBounds {min = "1"}
         };
 
-        private readonly UxmlFloatAttributeDescription _scale = new() {name = "scale", defaultValue = 1f};
-
+        private readonly UxmlFloatAttributeDescription _scale = new()
+            {name = "scale", defaultValue = 1f};
         #region Public Methods
 
-        public override void Init(VisualElement visualElement, IUxmlAttributes attributes, CreationContext creationContext)
+        public override void Init(
+            VisualElement visualElement,
+            IUxmlAttributes attributes,
+            CreationContext creationContext)
         {
             base.Init(visualElement, attributes, creationContext);
 
             if (visualElement is not AspectRatioPanel element)
                 return;
 
-            element.aspectRatioX = Mathf.Max(1, _aspectRatioX.GetValueFromBag(attributes, creationContext));
-            element.aspectRatioY = Mathf.Max(1, _aspectRatioY.GetValueFromBag(attributes, creationContext));
+            element.aspectRatioX =
+                Mathf.Max(1, _aspectRatioX.GetValueFromBag(attributes, creationContext));
+            element.aspectRatioY =
+                Mathf.Max(1, _aspectRatioY.GetValueFromBag(attributes, creationContext));
             element._scale = _scale.GetValueFromBag(attributes, creationContext);
             element.FitToParent();
         }
@@ -101,7 +107,6 @@ internal class AspectRatioPanel : VisualElement
     }
 
     #endregion
-
     #region Private Methods
 
     private void OnAttachToPanelEvent(AttachToPanelEvent e)

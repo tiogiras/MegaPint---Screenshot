@@ -1,10 +1,13 @@
 ﻿#if UNITY_EDITOR
 using Editor.Scripts.Settings;
 using UnityEditor;
-using UnityEngine.Rendering.Universal;
-using UnityEngine.Windows;
-using File = System.IO.File;
+#endif
 
+#if USING_URP
+using UnityEngine.Rendering.Universal;
+#endif
+
+#if UNITY_EDITOR
 namespace Editor.Scripts
 {
 
@@ -27,7 +30,7 @@ internal static class ScreenshotData
             s_settings.SetValue("lastEditorWindowPath", value);
         }
     }
-    
+
     public static string RenderPipelineAssetPath
     {
         get
@@ -43,7 +46,7 @@ internal static class ScreenshotData
             s_settings.SetValue("pipelineAsset", value);
         }
     }
-    
+
     public static string RendererDataPath
     {
         get
@@ -60,15 +63,17 @@ internal static class ScreenshotData
         }
     }
 
+    #region Public Methods
+
+#if USING_URP
     public static UniversalRenderPipelineAsset RenderPipelineAsset()
     {
-        return AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(RenderPipelineAssetPath);
+        return AssetDatabase.
+            LoadAssetAtPath <UniversalRenderPipelineAsset>(RenderPipelineAssetPath);
     }
+#endif
 
-    public static ScriptableRenderer RendererData()
-    {
-        return null;
-    }
+    #endregion
 }
 
 }

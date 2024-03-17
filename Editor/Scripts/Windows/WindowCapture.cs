@@ -29,7 +29,6 @@ internal class WindowCapture : MegaPintEditorWindowBase
     private Texture2D _render;
 
     private DropdownField _windows;
-
     #region Public Methods
 
     /// <summary> Show the window </summary>
@@ -42,7 +41,6 @@ internal class WindowCapture : MegaPintEditorWindowBase
     }
 
     #endregion
-
     #region Protected Methods
 
     protected override string BasePath()
@@ -105,7 +103,6 @@ internal class WindowCapture : MegaPintEditorWindowBase
     }
 
     #endregion
-
     #region Private Methods
 
     private void RefreshWindows()
@@ -165,7 +162,8 @@ internal class WindowCapture : MegaPintEditorWindowBase
 
     private void Save()
     {
-        var path = EditorUtility.SaveFilePanelInProject("Save Screenshot", "", "png", "", ScreenshotData.LastEditorWindowPath);
+        var path = EditorUtility.SaveFilePanelInProject("Save Screenshot", "", "png", "",
+            ScreenshotData.LastEditorWindowPath);
 
         if (string.IsNullOrEmpty(path))
             return;

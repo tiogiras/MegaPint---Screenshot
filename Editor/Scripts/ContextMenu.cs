@@ -14,24 +14,6 @@ internal static partial class ContextMenu
 {
     #region Private Methods
 
-    [MenuItem("Assets/LogGUID")]
-    private static void LogGuid()
-    {
-        Object[] objs = Selection.objects;
-        foreach (Object o in objs)
-        {
-            Debug.Log($"{o.name}: [{AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(o))}]");
-        }
-    }
-
-#if USING_URP
-    [MenuItem(MenuItemPackages + "/Screenshot/Transparency Wizard", false, 140)]
-    private static void TransparencyWizard()
-    {
-        TryOpen <TransparencyWizard>(true);
-    }
-#endif
-
     [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 100)]
     private static void CaptureNow()
     {
@@ -44,7 +26,8 @@ internal static partial class ContextMenu
 
         if (activeCams is not {Count: > 0})
         {
-            EditorUtility.DisplayDialog("Missing Cameras", "No CameraCapture components selected for rendering.", "Ok");
+            EditorUtility.DisplayDialog("Missing Cameras",
+                "No CameraCapture components selected for rendering.", "Ok");
 
             return;
         }
@@ -56,13 +39,25 @@ internal static partial class ContextMenu
             var path = $"{cam.lastPath}{camName}";
 
 #if USING_URP
-            cam.RenderAndSaveUrp(path, ScreenshotData.RenderPipelineAssetPath, AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
+            cam.RenderAndSaveUrp(path, ScreenshotData.RenderPipelineAssetPath,
+                AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
 #else
             cam.RenderAndSave(path);
 #endif
         }
 
         Debug.Log($"{activeCams.Count} CameraCapture components rendered.");
+    }
+
+    [MenuItem("Assets/LogGUID")]
+    private static void LogGuid()
+    {
+        Object[] objs = Selection.objects;
+        foreach (Object o in objs)
+        {
+            Debug.Log(
+                $"{o.name}: [{AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(o))}]");
+        }
     }
 
     [MenuItem(MenuItemPackages + "/Screenshot/Shortcut Capture", false, 121)]
@@ -82,6 +77,14 @@ internal static partial class ContextMenu
     {
         Debug.Log("EXECUTE TEST");
     }
+
+#if USING_URP
+    [MenuItem(MenuItemPackages + "/Screenshot/Transparency Wizard", false, 140)]
+    private static void TransparencyWizard()
+    {
+        TryOpen <TransparencyWizard>(true);
+    }
+#endif
 
     #endregion
 }
