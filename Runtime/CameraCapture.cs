@@ -84,6 +84,7 @@ public class CameraCapture : MonoBehaviour
 
     public Texture2D RenderUrp(string renderPipelineAssetPath, GUID transparencyRenderer)
     {
+#if USING_URP
         var isUrpAsset = QualitySettings.renderPipeline is UniversalRenderPipelineAsset;
 
         if (!isUrpAsset &&
@@ -93,7 +94,8 @@ public class CameraCapture : MonoBehaviour
                 "You have no UniversalRenderPipelineAsset selected in you Quality settings. Therefor the camera can't render modes with possible transparency.");
 
             return null;
-        }
+        }  
+#endif
 
         _renderPipelineAssetPath = renderPipelineAssetPath;
         _transparencyRenderer = transparencyRenderer;
