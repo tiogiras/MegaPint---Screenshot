@@ -43,6 +43,9 @@ public class CameraCapture : MonoBehaviour
     [HideInInspector]
     public bool listenToShortcut;
 
+    [HideInInspector]
+    public int exposureTime = 250;
+
 #if USING_URP
     private string _renderPipelineAssetPath;
     private GUID _transparencyRenderer;
@@ -66,12 +69,15 @@ public class CameraCapture : MonoBehaviour
 
         PrepareCameraData(camData, out HDAdditionalCameraData.ClearColorMode colorMode, out Color bgColorHDR, out var colorBuffer);
 #endif
-
-        Texture2D render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
-
-        await Task.Delay(100);
         
-        render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
+        // ReSharper disable once RedundantAssignment
+        Texture2D render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
+        
+#if USING_HDRP
+        await Task.Delay(exposureTime);
+        
+        render = ScreenshotUtility.RenderCamera(cam, width, height, depth);  
+#endif
 
         ResetCamera(cam, bgColor, flags, destroy);
 
@@ -84,20 +90,20 @@ public class CameraCapture : MonoBehaviour
         return render;
     }
 
-    public void RenderAndSave(string path)
+    public async void RenderAndSave(string path)
     {
-        Save(Render(), path);
+        Save(await Render(), path);
     }
 
-    public void RenderAndSaveUrp(
+    public async void RenderAndSaveUrp(
         string path,
         string renderPipelineAssetPath,
         GUID transparencyRenderer)
     {
-        Save(RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
+        Save(await RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
     }
 
-    public Texture2D RenderUrp(string renderPipelineAssetPath, GUID transparencyRenderer)
+    public async Task<Texture2D> RenderUrp(string renderPipelineAssetPath, GUID transparencyRenderer)
     {
 #if USING_URP
         var isUrpAsset = QualitySettings.renderPipeline is UniversalRenderPipelineAsset;
@@ -115,7 +121,7 @@ public class CameraCapture : MonoBehaviour
         _transparencyRenderer = transparencyRenderer;
 #endif
 
-        return Render();
+        return await Render();
     }
 
     public void Save(Texture2D texture, string path)

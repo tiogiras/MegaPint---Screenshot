@@ -12,13 +12,6 @@ namespace Editor.Scripts
 
 internal static partial class ContextMenu
 {
-    [MenuItem(MenuItemPackages + "/Screenshot/TEST")]
-    private static void Test()
-    {
-         // TODO remove
-        ScreenshotUtility.WriteColorBufferFormat("    colorBufferFormat: 48", out var _);
-    }
-
     #region Private Methods
 
     [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 100)]

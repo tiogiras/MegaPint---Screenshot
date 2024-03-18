@@ -44,6 +44,9 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
     private CameraCapture _target;
 
     private VisualElement _transparencyHint;
+    private VisualElement _transparencyHintHdrp;
+
+    private IntegerField _exposureTime;
 
     private IntegerField _width;
     #region Public Methods
@@ -73,6 +76,9 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _pixelPerUnit = root.Q <FloatField>("PixelPerUnit");
 
         _transparencyHint = root.Q <VisualElement>("TransparencyHint");
+        
+        _transparencyHintHdrp = root.Q <VisualElement>("TransparencyHintHDRP");
+        _exposureTime = root.Q <IntegerField>("ExposureTime");
 
         _target = (CameraCapture)target;
 
@@ -89,9 +95,14 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _imageType.value = _target.imageType;
         _pixelPerUnit.value = _target.pixelPerUnit;
 
+#if USING_HDRP
+        _exposureTime.value = _target.exposureTime;
+#endif
+
         _btnSave.style.display = DisplayStyle.None;
 
         UpdateTransparencyHint();
+        UpdateTransparencyHintHdrp();
 
         UpdatePath();
         UpdateBackgroundColor();
@@ -136,7 +147,11 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _width.RegisterValueChangedCallback(evt =>
         {
             if (evt.newValue < 0)
+            {
                 _width.SetValueWithoutNotify(0);
+                _target.width = 0;
+                return;
+            }
 
             _target.width = evt.newValue;
         });
@@ -144,9 +159,25 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _height.RegisterValueChangedCallback(evt =>
         {
             if (evt.newValue < 0)
+            {
                 _height.SetValueWithoutNotify(0);
-
+                _target.height = 0;
+                return;
+            }
+            
             _target.height = evt.newValue;
+        });
+
+        _exposureTime.RegisterValueChangedCallback(evt =>
+        {
+            if (evt.newValue < 0)
+            {
+                _exposureTime.SetValueWithoutNotify(0);
+                _target.exposureTime = 0;
+                return;
+            }
+
+            _target.exposureTime = evt.newValue;
         });
 
         _depth.RegisterValueChangedCallback(evt => {_target.depth = int.Parse(evt.newValue);});
@@ -187,7 +218,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _btnExportPath.clicked += ChangePath;
     }
 
-    private void Render()
+    private async void Render()
     {
         var width = _target.width;
         var height = _target.height;
@@ -198,7 +229,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _render = _target.RenderUrp(ScreenshotData.RenderPipelineAssetPath,
             AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
 #else
-        _render = _target.Render();
+        _render = await _target.Render();
 #endif
 
         _preview.style.backgroundImage = _render;
@@ -247,6 +278,15 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             _transparencyHint.style.display = DisplayStyle.None;
 #else
       _transparencyHint.style.display = DisplayStyle.None;
+#endif
+    }
+    
+    private void UpdateTransparencyHintHdrp()
+    {
+#if USING_HDRP
+        _transparencyHintHdrp.style.display = DisplayStyle.Flex;
+#else
+        _transparencyHintHdrp.style.display = DisplayStyle.None;
 #endif
     }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -96,9 +95,7 @@ public static class ScreenshotUtility
             lines[i] = newColorBuffer;
             break;
         }
-
-        Debug.Log($"Setting color buffer to: {newColorBuffer}");
-
+        
         File.WriteAllLines(pipelineAssetPath, lines);
 
         AssetDatabase.SaveAssetIfDirty(pipelineAsset);
