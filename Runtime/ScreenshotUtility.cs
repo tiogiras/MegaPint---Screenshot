@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -8,6 +10,8 @@ using UnityEditor;
 
 #if USING_URP
 using UnityEngine.Rendering.Universal;
+#elif USING_HDRP
+using UnityEngine.Rendering.HighDefinition;
 #endif
 
 public static class ScreenshotUtility
@@ -66,6 +70,41 @@ public static class ScreenshotUtility
         AssetDatabase.Refresh();
 #endif
     }
+
+#if USING_HDRP
+    public static void WriteColorBufferFormat(string newColorBuffer, out string oldColorBuffer)
+    {
+        oldColorBuffer = "";
+
+        RenderPipelineAsset pipelineAsset = QualitySettings.renderPipeline;
+
+        if (pipelineAsset is not HDRenderPipelineAsset)
+            return;
+
+        var pipelineAssetPath = AssetDatabase.GetAssetPath(pipelineAsset);
+        
+        AssetDatabase.SaveAssetIfDirty(pipelineAsset);
+
+        var lines = File.ReadAllLines(pipelineAssetPath);
+
+        for (var i = 0; i < lines.Length; i++)
+        {
+            if (!lines[i].Contains("colorBufferFormat:"))
+                continue;
+
+            oldColorBuffer = lines[i];
+            lines[i] = newColorBuffer;
+            break;
+        }
+
+        Debug.Log($"Setting color buffer to: {newColorBuffer}");
+
+        File.WriteAllLines(pipelineAssetPath, lines);
+
+        AssetDatabase.SaveAssetIfDirty(pipelineAsset);
+        AssetDatabase.Refresh();
+    }
+#endif
 
 #if USING_URP
 #if UNITY_EDITOR

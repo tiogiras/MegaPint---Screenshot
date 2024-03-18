@@ -12,6 +12,13 @@ namespace Editor.Scripts
 
 internal static partial class ContextMenu
 {
+    [MenuItem(MenuItemPackages + "/Screenshot/TEST")]
+    private static void Test()
+    {
+         // TODO remove
+        ScreenshotUtility.WriteColorBufferFormat("    colorBufferFormat: 48", out var _);
+    }
+
     #region Private Methods
 
     [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 100)]
@@ -49,17 +56,6 @@ internal static partial class ContextMenu
         Debug.Log($"{activeCams.Count} CameraCapture components rendered.");
     }
 
-    [MenuItem("Assets/LogGUID")]
-    private static void LogGuid()
-    {
-        Object[] objs = Selection.objects;
-        foreach (Object o in objs)
-        {
-            Debug.Log(
-                $"{o.name}: [{AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(o))}]");
-        }
-    }
-
     [MenuItem(MenuItemPackages + "/Screenshot/Shortcut Capture", false, 121)]
     private static void OpenShortcutCapture()
     {
@@ -70,12 +66,6 @@ internal static partial class ContextMenu
     private static void OpenWindowCapture()
     {
         TryOpen <WindowCapture>(false);
-    }
-
-    [MenuItem("Window/MegaPint/Test", false, 0)]
-    private static void Test()
-    {
-        Debug.Log("EXECUTE TEST");
     }
 
 #if USING_URP

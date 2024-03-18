@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 #if USING_URP
 using UnityEngine.Rendering.Universal;
+#elif USING_HDRP
+using UnityEngine.Rendering.HighDefinition;
 #endif
 
 [RequireComponent(typeof(Camera))]
@@ -40,12 +43,14 @@ public class CameraCapture : MonoBehaviour
     [HideInInspector]
     public bool listenToShortcut;
 
+#if USING_URP
     private string _renderPipelineAssetPath;
     private GUID _transparencyRenderer;
-    
+#endif
+
     #region Public Methods
 
-    public Texture2D Render()
+    public async Task<Texture2D> Render()
     {
         var cam = GetComponent <Camera>();
 
@@ -56,14 +61,24 @@ public class CameraCapture : MonoBehaviour
         UniversalAdditionalCameraData camData = cam.GetUniversalAdditionalCameraData();
 
         PrepareCameraData(camData, out var rendererIndex);
+#elif USING_HDRP
+        var camData = GetComponent <HDAdditionalCameraData>();
+
+        PrepareCameraData(camData, out HDAdditionalCameraData.ClearColorMode colorMode, out Color bgColorHDR, out var colorBuffer);
 #endif
 
         Texture2D render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
+
+        await Task.Delay(100);
+        
+        render = ScreenshotUtility.RenderCamera(cam, width, height, depth);
 
         ResetCamera(cam, bgColor, flags, destroy);
 
 #if USING_URP
         ResetCameraData(camData, rendererIndex);
+#elif USING_HDRP
+        ResetCameraData(camData, colorMode, bgColorHDR, colorBuffer);
 #endif
 
         return render;
@@ -94,11 +109,11 @@ public class CameraCapture : MonoBehaviour
                 "You have no UniversalRenderPipelineAsset selected in you Quality settings. Therefor the camera can't render modes with possible transparency.");
 
             return null;
-        }  
-#endif
-
+        }
+        
         _renderPipelineAssetPath = renderPipelineAssetPath;
         _transparencyRenderer = transparencyRenderer;
+#endif
 
         return Render();
     }
@@ -148,12 +163,11 @@ public class CameraCapture : MonoBehaviour
         bgColor = cam.backgroundColor;
         flags = cam.clearFlags;
         destroy = new List <GameObject>();
-
+        
         switch (backgroundType)
         {
             case BackgroundType.None:
                 cam.clearFlags = CameraClearFlags.Skybox;
-
                 break;
 
             case BackgroundType.SolidColor:
@@ -217,6 +231,42 @@ public class CameraCapture : MonoBehaviour
             camData.SetRenderer(index);
 #endif
     }
+#elif USING_HDRP
+    private void PrepareCameraData(HDAdditionalCameraData camData, out HDAdditionalCameraData.ClearColorMode colorMode, out Color bgColor, out string colorBuffer)
+    {
+        colorMode = camData.clearColorMode;
+        bgColor = camData.backgroundColorHDR;
+        colorBuffer = "";
+        
+        switch (backgroundType)
+        {
+
+            case BackgroundType.None:
+                camData.clearColorMode = HDAdditionalCameraData.ClearColorMode.Sky;
+                break;
+
+            case BackgroundType.SolidColor:
+                camData.clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
+                camData.backgroundColorHDR = backgroundColor;
+                break;
+
+            case BackgroundType.Transparent:
+                camData.clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
+                camData.backgroundColorHDR = new Color(0,0,0,0);
+                break;
+
+            case BackgroundType.Image:
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        if (backgroundType is not (BackgroundType.SolidColor or BackgroundType.Transparent))
+            return;
+
+        ScreenshotUtility.WriteColorBufferFormat("    colorBufferFormat: 48", out colorBuffer);
+    }
 #endif
 
 #if USING_URP
@@ -226,6 +276,17 @@ public class CameraCapture : MonoBehaviour
             return;
 
         camData.SetRenderer(rendererIndex);
+    }
+#elif USING_HDRP
+    private void ResetCameraData(HDAdditionalCameraData camData, HDAdditionalCameraData.ClearColorMode colorMode, Color bgColor, string colorBuffer)
+    {
+        camData.clearColorMode = colorMode;
+        camData.backgroundColorHDR = bgColor;
+        
+        if (backgroundType is not (BackgroundType.SolidColor or BackgroundType.Transparent))
+            return;
+
+        ScreenshotUtility.WriteColorBufferFormat(colorBuffer, out var _);
     }
 #endif
 
