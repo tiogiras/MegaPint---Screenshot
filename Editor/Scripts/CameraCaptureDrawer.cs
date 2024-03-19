@@ -226,7 +226,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         var gcd = ScreenshotUtility.Gcd((ulong)width, (ulong)height);
 
 #if USING_URP
-        _render = _target.RenderUrp(ScreenshotData.RenderPipelineAssetPath,
+        _render = await _target.RenderUrp(ScreenshotData.RenderPipelineAssetPath,
             AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
 #else
         _render = await _target.Render();
