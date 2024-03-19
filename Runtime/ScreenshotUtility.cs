@@ -142,7 +142,7 @@ public static class ScreenshotUtility
     public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, ScriptableRenderer renderer, out int index)
     {
         var pipelineAsset =
- AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(renderPipelineAssetPath);
+            AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(renderPipelineAssetPath);
 
         index = 0;
         while (true)

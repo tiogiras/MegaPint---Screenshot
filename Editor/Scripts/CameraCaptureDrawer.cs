@@ -76,7 +76,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _pixelPerUnit = root.Q <FloatField>("PixelPerUnit");
 
         _transparencyHint = root.Q <VisualElement>("TransparencyHint");
-        
+
         _transparencyHintHdrp = root.Q <VisualElement>("TransparencyHintHDRP");
         _exposureTime = root.Q <IntegerField>("ExposureTime");
 
@@ -122,8 +122,10 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
         if (!path.StartsWith(Application.dataPath))
         {
-            EditorUtility.DisplayDialog("Folder not in project",
-                "The folder must be within the Assets folder", "ok");
+            EditorUtility.DisplayDialog(
+                "Folder not in project",
+                "The folder must be within the Assets folder",
+                "ok");
 
             return;
         }
@@ -136,84 +138,97 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
     {
         _btnRender.clicked += Render;
 
-        _btnSave.clickable = new Clickable(() =>
-        {
-            var path =
-                EditorUtility.SaveFilePanelInProject("Save Screenshot", "", "png", "",
+        _btnSave.clickable = new Clickable(
+            () =>
+            {
+                var path = EditorUtility.SaveFilePanelInProject(
+                    "Save Screenshot",
+                    "",
+                    "png",
+                    "",
                     _target.lastPath);
-            _target.Save(_render, path);
-        });
 
-        _width.RegisterValueChangedCallback(evt =>
-        {
-            if (evt.newValue < 0)
+                _target.Save(_render, path);
+            });
+
+        _width.RegisterValueChangedCallback(
+            evt =>
             {
-                _width.SetValueWithoutNotify(0);
-                _target.width = 0;
-                return;
-            }
+                if (evt.newValue < 0)
+                {
+                    _width.SetValueWithoutNotify(0);
+                    _target.width = 0;
 
-            _target.width = evt.newValue;
-        });
+                    return;
+                }
 
-        _height.RegisterValueChangedCallback(evt =>
-        {
-            if (evt.newValue < 0)
+                _target.width = evt.newValue;
+            });
+
+        _height.RegisterValueChangedCallback(
+            evt =>
             {
-                _height.SetValueWithoutNotify(0);
-                _target.height = 0;
-                return;
-            }
-            
-            _target.height = evt.newValue;
-        });
+                if (evt.newValue < 0)
+                {
+                    _height.SetValueWithoutNotify(0);
+                    _target.height = 0;
 
-        _exposureTime.RegisterValueChangedCallback(evt =>
-        {
-            if (evt.newValue < 0)
+                    return;
+                }
+
+                _target.height = evt.newValue;
+            });
+
+        _exposureTime.RegisterValueChangedCallback(
+            evt =>
             {
-                _exposureTime.SetValueWithoutNotify(0);
-                _target.exposureTime = 0;
-                return;
-            }
+                if (evt.newValue < 0)
+                {
+                    _exposureTime.SetValueWithoutNotify(0);
+                    _target.exposureTime = 0;
 
-            _target.exposureTime = evt.newValue;
-        });
+                    return;
+                }
+
+                _target.exposureTime = evt.newValue;
+            });
 
         _depth.RegisterValueChangedCallback(evt => {_target.depth = int.Parse(evt.newValue);});
 
-        _backgroundType.RegisterValueChangedCallback(evt =>
-        {
-            _target.backgroundType = (BackgroundType)evt.newValue;
-            UpdateBackgroundColor();
-            UpdateBackgroundImage();
-            UpdateTransparencyHint();
-        });
+        _backgroundType.RegisterValueChangedCallback(
+            evt =>
+            {
+                _target.backgroundType = (BackgroundType)evt.newValue;
+                UpdateBackgroundColor();
+                UpdateBackgroundImage();
+                UpdateTransparencyHint();
+            });
 
-        _backgroundColor.RegisterValueChangedCallback(evt =>
-        {
-            _target.backgroundColor = evt.newValue;
-        });
+        _backgroundColor.RegisterValueChangedCallback(
+            evt => {_target.backgroundColor = evt.newValue;});
 
-        _imageType.RegisterValueChangedCallback(evt =>
-        {
-            _target.imageType = evt.newValue;
-            UpdateBackgroundImage();
-        });
+        _imageType.RegisterValueChangedCallback(
+            evt =>
+            {
+                _target.imageType = evt.newValue;
+                UpdateBackgroundImage();
+            });
 
-        _pixelPerUnit.RegisterValueChangedCallback(evt =>
-        {
-            if (evt.newValue < 0)
-                _pixelPerUnit.SetValueWithoutNotify(0);
+        _pixelPerUnit.RegisterValueChangedCallback(
+            evt =>
+            {
+                if (evt.newValue < 0)
+                    _pixelPerUnit.SetValueWithoutNotify(0);
 
-            _target.pixelPerUnit = evt.newValue;
-        });
+                _target.pixelPerUnit = evt.newValue;
+            });
 
-        _backgroundImage.RegisterValueChangedCallback(evt =>
-        {
-            _target.backgroundImage = (Sprite)evt.newValue;
-            UpdateBackgroundImage();
-        });
+        _backgroundImage.RegisterValueChangedCallback(
+            evt =>
+            {
+                _target.backgroundImage = (Sprite)evt.newValue;
+                UpdateBackgroundImage();
+            });
 
         _btnExportPath.clicked += ChangePath;
     }
@@ -253,8 +268,10 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _imageType.style.display = isImage ? DisplayStyle.Flex : DisplayStyle.None;
 
         Sprite image = _target.backgroundImage;
+
         _imageResolution.style.display =
             isImage && image != null ? DisplayStyle.Flex : DisplayStyle.None;
+
         _pixelPerUnit.style.display = isImage && _target.imageType.Equals("Tiled")
             ? DisplayStyle.Flex : DisplayStyle.None;
 
@@ -277,10 +294,10 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         else
             _transparencyHint.style.display = DisplayStyle.None;
 #else
-      _transparencyHint.style.display = DisplayStyle.None;
+        _transparencyHint.style.display = DisplayStyle.None;
 #endif
     }
-    
+
     private void UpdateTransparencyHintHdrp()
     {
 #if USING_HDRP

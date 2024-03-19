@@ -26,8 +26,10 @@ internal static partial class ContextMenu
 
         if (activeCams is not {Count: > 0})
         {
-            EditorUtility.DisplayDialog("Missing Cameras",
-                "No CameraCapture components selected for rendering.", "Ok");
+            EditorUtility.DisplayDialog(
+                "Missing Cameras",
+                "No CameraCapture components selected for rendering.",
+                "Ok");
 
             return;
         }
