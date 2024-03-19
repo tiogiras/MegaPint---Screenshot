@@ -8,7 +8,9 @@ using UnityEditor;
 
 #if USING_URP
 using UnityEngine.Rendering.Universal;
-#elif USING_HDRP
+#endif
+
+#if USING_HDRP
 using UnityEngine.Rendering.HighDefinition;
 #endif
 
