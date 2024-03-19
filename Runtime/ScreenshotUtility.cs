@@ -2,7 +2,6 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -69,19 +68,19 @@ public static class ScreenshotUtility
         AssetDatabase.Refresh();
 #endif
     }
-
-#if USING_HDRP
+    
     public static void WriteColorBufferFormat(string newColorBuffer, out string oldColorBuffer)
     {
         oldColorBuffer = "";
 
+#if USING_HDRP
         RenderPipelineAsset pipelineAsset = QualitySettings.renderPipeline;
 
         if (pipelineAsset is not HDRenderPipelineAsset)
             return;
 
         var pipelineAssetPath = AssetDatabase.GetAssetPath(pipelineAsset);
-        
+
         AssetDatabase.SaveAssetIfDirty(pipelineAsset);
 
         var lines = File.ReadAllLines(pipelineAssetPath);
@@ -93,15 +92,16 @@ public static class ScreenshotUtility
 
             oldColorBuffer = lines[i];
             lines[i] = newColorBuffer;
+
             break;
         }
-        
+
         File.WriteAllLines(pipelineAssetPath, lines);
 
         AssetDatabase.SaveAssetIfDirty(pipelineAsset);
         AssetDatabase.Refresh();
-    }
 #endif
+    }
 
 #if USING_URP
 #if UNITY_EDITOR
@@ -139,7 +139,8 @@ public static class ScreenshotUtility
 
     public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, ScriptableRenderer renderer, out int index)
     {
-        var pipelineAsset = AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(renderPipelineAssetPath);
+        var pipelineAsset =
+ AssetDatabase.LoadAssetAtPath <UniversalRenderPipelineAsset>(renderPipelineAssetPath);
 
         index = 0;
         while (true)

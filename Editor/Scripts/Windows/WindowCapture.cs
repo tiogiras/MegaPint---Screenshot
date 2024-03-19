@@ -162,7 +162,11 @@ internal class WindowCapture : MegaPintEditorWindowBase
 
     private void Save()
     {
-        var path = EditorUtility.SaveFilePanelInProject("Save Screenshot", "", "png", "",
+        var path = EditorUtility.SaveFilePanelInProject(
+            "Save Screenshot",
+            "",
+            "png",
+            "",
             ScreenshotData.LastEditorWindowPath);
 
         if (string.IsNullOrEmpty(path))
