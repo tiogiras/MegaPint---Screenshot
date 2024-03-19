@@ -271,7 +271,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
     private void UpdateTransparencyHint()
     {
 #if USING_URP
-        if (_target.backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor)
+        if (_target.backgroundType is not BackgroundType.None)
             _transparencyHint.style.display = _camData.renderPostProcessing ? DisplayStyle.Flex
                 : DisplayStyle.None;
         else

@@ -109,7 +109,7 @@ public class CameraCapture : MonoBehaviour
         var isUrpAsset = QualitySettings.renderPipeline is UniversalRenderPipelineAsset;
 
         if (!isUrpAsset &&
-            backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor)
+            backgroundType is BackgroundType.Transparent or BackgroundType.SolidColor or BackgroundType.Image)
         {
             Debug.LogWarning(
                 "You have no UniversalRenderPipelineAsset selected in you Quality settings. Therefor the camera can't render modes with possible transparency.");
@@ -224,7 +224,7 @@ public class CameraCapture : MonoBehaviour
     {
         rendererIndex = -1;
 
-        if (backgroundType is not (BackgroundType.Transparent or BackgroundType.SolidColor))
+        if (backgroundType is BackgroundType.None)
             return;
 
 #if UNITY_EDITOR
@@ -278,7 +278,7 @@ public class CameraCapture : MonoBehaviour
 #if USING_URP
     private void ResetCameraData(UniversalAdditionalCameraData camData, int rendererIndex)
     {
-        if (backgroundType is not (BackgroundType.Transparent or BackgroundType.SolidColor))
+        if (backgroundType is BackgroundType.None)
             return;
 
         camData.SetRenderer(rendererIndex);
