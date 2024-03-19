@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
@@ -9,6 +6,7 @@ using Object = UnityEngine.Object;
 using UnityEditor;
 using UnityEditor.UIElements;
 #endif
+
 #if USING_URP
 using UnityEngine.Rendering.Universal;
 #endif
@@ -80,7 +78,7 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         _step3 = content.Q <GroupBox>("Step3");
 
 #if USING_URP
-        _pipelineAsset.value = ScreenshotData.RenderPipelineAsset();  
+        _pipelineAsset.value = ScreenshotData.RenderPipelineAsset();
 #endif
 
         RegisterCallbacks();
@@ -160,7 +158,6 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         PostProcessData postProcessData = Utility.CopyAndLoadAsset(rendererData.postProcessData,
             Path.Combine(path, "Transparency PostProcess Data.asset"));
 
-
         var uberShader = Utility.CopyAndLoadAsset <Shader>(
             "Packages/com.tiogiras.megapint-screenshot/Editor/Scripts/UberPost_Alpha.txt",
             Path.Combine(path, "UberPost_Alpha.shader"));
@@ -211,8 +208,11 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
 
         if (!path.IsPathInProject(out var pathInProject))
         {
-            EditorUtility.DisplayDialog("Not in project",
-                "The selected folder is not in the project.", "Ok");
+            EditorUtility.DisplayDialog(
+                "Not in project",
+                "The selected folder is not in the project.",
+                "Ok");
+
             return;
         }
 
@@ -223,8 +223,11 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
     {
         if (!CanChange())
         {
-            EditorUtility.DisplayDialog("Missing Reference",
-                "You must set all required references to continue the setup.", "Ok");
+            EditorUtility.DisplayDialog(
+                "Missing Reference",
+                "You must set all required references to continue the setup.",
+                "Ok");
+
             return;
         }
 

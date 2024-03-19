@@ -28,7 +28,6 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
     private List <CameraCapture> _cams = new();
     private VisualTreeAsset _listItem;
     private Label _placeholder;
-
     #region Public Methods
 
     /// <summary> Show the window </summary>
@@ -41,7 +40,6 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
     }
 
     #endregion
-
     #region Protected Methods
 
     protected override string BasePath()
@@ -124,7 +122,6 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
     }
 
     #endregion
-
     #region Private Methods
 
     private static void UpdateListItem(VisualElement onButton, VisualElement offButton, bool on)
