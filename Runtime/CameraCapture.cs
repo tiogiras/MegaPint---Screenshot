@@ -288,7 +288,7 @@ public class CameraCapture : MonoBehaviour
 
             case BackgroundType.SolidColor:
                 camData.clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
-                camData.backgroundColorHDR = new Color(0, 0, 0, 0);
+                camData.backgroundColorHDR = new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 
                 break;
 
