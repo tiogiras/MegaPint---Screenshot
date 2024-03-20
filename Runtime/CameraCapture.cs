@@ -242,8 +242,10 @@ public class CameraCapture : MonoBehaviour
         if (backgroundType is BackgroundType.None || !camData.renderPostProcessing)
             return;
 
+        if (string.IsNullOrEmpty(_renderPipelineAssetPath) || transparencyRenderer.Empty())
+            return;
+
 #if UNITY_EDITOR
-// TODO NULLREfs
         if (!ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath,
                 camData.scriptableRenderer, out rendererIndex))
             return;
