@@ -307,7 +307,7 @@ public class CameraCapture : MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
 
-        if (backgroundType is not (BackgroundType.SolidColor or BackgroundType.Transparent))
+        if (backgroundType is BackgroundType.None)
             return;
 
         ScreenshotUtility.WriteColorBufferFormat("    colorBufferFormat: 48", out colorBuffer);
@@ -322,7 +322,7 @@ public class CameraCapture : MonoBehaviour
         camData.clearColorMode = colorMode;
         camData.backgroundColorHDR = bgColor;
 
-        if (backgroundType is not (BackgroundType.SolidColor or BackgroundType.Transparent))
+        if (backgroundType is BackgroundType.None)
             return;
 
         ScreenshotUtility.WriteColorBufferFormat(colorBuffer, out var _);
