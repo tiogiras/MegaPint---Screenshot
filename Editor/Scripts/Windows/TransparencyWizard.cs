@@ -9,6 +9,9 @@ using UnityEditor.UIElements;
 
 #if USING_URP
 using UnityEngine.Rendering.Universal;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 #endif
 
 #if UNITY_EDITOR

@@ -1,5 +1,5 @@
-﻿#if UNITY_EDITOR
-using Editor.Scripts.Settings;
+﻿using Editor.Scripts.Settings;
+#if UNITY_EDITOR && USING_URP
 using UnityEditor;
 #endif
 
