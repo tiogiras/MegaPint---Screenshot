@@ -239,7 +239,10 @@ public class CameraCapture : MonoBehaviour
     {
         rendererIndex = -1;
 
-        if (backgroundType is BackgroundType.None)
+        if (backgroundType is BackgroundType.None || !camData.renderPostProcessing)
+            return;
+
+        if (string.IsNullOrEmpty(_renderPipelineAssetPath) || _transparencyRenderer.Empty())
             return;
 
 #if UNITY_EDITOR
@@ -255,7 +258,10 @@ public class CameraCapture : MonoBehaviour
     
     private void ResetCameraData(UniversalAdditionalCameraData camData, int rendererIndex)
     {
-        if (backgroundType is BackgroundType.None)
+        if (backgroundType is BackgroundType.None || !camData.renderPostProcessing)
+            return;
+
+        if (string.IsNullOrEmpty(_renderPipelineAssetPath) || _transparencyRenderer.Empty())
             return;
 
         camData.SetRenderer(rendererIndex);
@@ -293,6 +299,8 @@ public class CameraCapture : MonoBehaviour
                 break;
 
             case BackgroundType.Image:
+                camData.clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
+                camData.backgroundColorHDR = new Color(0, 0, 0, 0);
                 break;
 
             default:
