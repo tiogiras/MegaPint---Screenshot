@@ -2,6 +2,6 @@
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=2f2b50e0e132e3a4989e6dbb646711fa&amp;type=3#MegaPint" />
     <ui:VisualElement style="flex-grow: 1; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;">
         <ui:Label tabindex="-1" text="Multiple RenderPipelines detected!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(209, 0, 114); -unity-font-style: bold; font-size: 14px; margin-top: 0; margin-right: 0; margin-bottom: 10px; margin-left: 0;" />
-        <ui:Label tabindex="-1" text="You have currently imported more than one pipeline imported into your project make sure to remove all exept the one you wish to use." parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal;" />
+        <ui:Label tabindex="-1" text="You have currently imported more than one pipeline into your project, make sure to remove all exept the one you are using." parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal;" />
     </ui:VisualElement>
 </ui:UXML>
