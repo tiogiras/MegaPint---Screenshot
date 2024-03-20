@@ -258,7 +258,10 @@ public class CameraCapture : MonoBehaviour
     
     private void ResetCameraData(UniversalAdditionalCameraData camData, int rendererIndex)
     {
-        if (backgroundType is BackgroundType.None)
+        if (backgroundType is BackgroundType.None || !camData.renderPostProcessing)
+            return;
+
+        if (string.IsNullOrEmpty(_renderPipelineAssetPath) || _transparencyRenderer.Empty())
             return;
 
         camData.SetRenderer(rendererIndex);
