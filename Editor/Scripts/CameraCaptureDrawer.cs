@@ -92,6 +92,10 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _camData = _target.GetComponent <Camera>().GetUniversalAdditionalCameraData();
 #endif
 
+#if USING_HDRP
+        _backgroundColor.hdr = true;
+#endif
+
         _width.value = _target.width;
         _height.value = _target.height;
         _depth.value = _target.depth.ToString();

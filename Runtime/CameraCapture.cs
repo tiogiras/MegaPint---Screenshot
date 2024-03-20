@@ -288,7 +288,7 @@ public class CameraCapture : MonoBehaviour
 
             case BackgroundType.SolidColor:
                 camData.clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
-                camData.backgroundColorHDR = backgroundColor;
+                camData.backgroundColorHDR = new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 
                 break;
 
@@ -307,7 +307,7 @@ public class CameraCapture : MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
 
-        if (backgroundType is not (BackgroundType.SolidColor or BackgroundType.Transparent))
+        if (backgroundType is BackgroundType.None)
             return;
 
         ScreenshotUtility.WriteColorBufferFormat("    colorBufferFormat: 48", out colorBuffer);
@@ -322,7 +322,7 @@ public class CameraCapture : MonoBehaviour
         camData.clearColorMode = colorMode;
         camData.backgroundColorHDR = bgColor;
 
-        if (backgroundType is not (BackgroundType.SolidColor or BackgroundType.Transparent))
+        if (backgroundType is BackgroundType.None)
             return;
 
         ScreenshotUtility.WriteColorBufferFormat(colorBuffer, out var _);
