@@ -17,6 +17,8 @@ namespace Editor.Scripts
 internal class CameraCaptureDrawer : UnityEditor.Editor
 {
     private const string Path = "Screenshot/User Interface/CameraCapture";
+    private const string PathError = "Screenshot/User Interface/MultiplePipelines";
+    
     private ColorField _backgroundColor;
     private ObjectField _backgroundImage;
 
@@ -53,6 +55,10 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
     public override VisualElement CreateInspectorGUI()
     {
+#if USING_URP && USING_HDRP
+        return Resources.Load <VisualTreeAsset>(PathError).Instantiate();   
+#endif
+        
         var template = Resources.Load <VisualTreeAsset>(Path);
         TemplateContainer root = template.Instantiate();
 

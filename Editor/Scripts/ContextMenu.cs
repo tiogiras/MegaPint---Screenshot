@@ -17,6 +17,11 @@ internal static partial class ContextMenu
     [MenuItem(MenuItemPackages + "/Screenshot/Capture Now", false, 100)]
     private static void CaptureNow()
     {
+#if USING_URP && USING_HDRP
+        Debug.LogWarning("Cannot render CameraCaptures while more than one renderPipeline is installed.");
+        return;
+#endif
+        
         List <CameraCapture> cams = Object.FindObjectsOfType <CameraCapture>().ToList();
 
         if (cams.Count == 0)
