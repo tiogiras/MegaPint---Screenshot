@@ -171,6 +171,8 @@ internal class WindowCapture : MegaPintEditorWindowBase
 
         if (string.IsNullOrEmpty(path))
             return;
+        
+        
 
         ScreenshotData.LastEditorWindowPath = path;
 

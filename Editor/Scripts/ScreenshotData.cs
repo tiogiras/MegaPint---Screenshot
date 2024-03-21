@@ -14,53 +14,31 @@ namespace Editor.Scripts
 internal static class ScreenshotData
 {
     private static MegaPintSettingsBase s_settings;
+    
+    private static MegaPintSettingsBase _Settings => s_settings ??= MegaPintSettings.instance.GetSetting("Screenshot");
 
     public static string LastEditorWindowPath
     {
-        get
-        {
-            s_settings ??= MegaPintSettings.instance.GetSetting("Screenshot");
-
-            return s_settings.GetValue("lastEditorWindowPath", "Assets");
-        }
-        set
-        {
-            s_settings ??= MegaPintSettings.instance.GetSetting("Screenshot");
-
-            s_settings.SetValue("lastEditorWindowPath", value);
-        }
+        get => _Settings.GetValue("lastEditorWindowPath", "Assets");
+        set => _Settings.SetValue("lastEditorWindowPath", value);
     }
 
     public static string RenderPipelineAssetPath
     {
-        get
-        {
-            s_settings ??= MegaPintSettings.instance.GetSetting("Screenshot");
-
-            return s_settings.GetValue("pipelineAsset", "");
-        }
-        set
-        {
-            s_settings ??= MegaPintSettings.instance.GetSetting("Screenshot");
-
-            s_settings.SetValue("pipelineAsset", value);
-        }
+        get => _Settings.GetValue("pipelineAsset", "");
+        set => _Settings.SetValue("pipelineAsset", value);
     }
 
     public static string RendererDataPath
     {
-        get
-        {
-            s_settings ??= MegaPintSettings.instance.GetSetting("Screenshot");
+        get => _Settings.GetValue("rendererData", "");
+        set => _Settings.SetValue("rendererData", value);
+    }
 
-            return s_settings.GetValue("rendererData", "");
-        }
-        set
-        {
-            s_settings ??= MegaPintSettings.instance.GetSetting("Screenshot");
-
-            s_settings.SetValue("rendererData", value);
-        }
+    public static bool ExternalExport
+    {
+        get => _Settings.GetValue("externalExport", false);
+        set => _Settings.SetValue("externalExport", value);
     }
 
     #region Public Methods
