@@ -17,8 +17,10 @@ namespace Editor.Scripts
 internal class CameraCaptureDrawer : UnityEditor.Editor
 {
     private const string Path = "Screenshot/User Interface/CameraCapture";
+#if USING_URP && USING_HDRP
     private const string PathError = "Screenshot/User Interface/MultiplePipelines";
-    
+#endif
+
     private ColorField _backgroundColor;
     private ObjectField _backgroundImage;
 
@@ -48,7 +50,9 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
     private VisualElement _transparencyHint;
     private VisualElement _transparencyHintHdrp;
 
+#if USING_HDRP
     private IntegerField _exposureTime;
+#endif
 
     private IntegerField _width;
     #region Public Methods
@@ -84,7 +88,6 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _transparencyHint = root.Q <VisualElement>("TransparencyHint");
 
         _transparencyHintHdrp = root.Q <VisualElement>("TransparencyHintHDRP");
-        _exposureTime = root.Q <IntegerField>("ExposureTime");
 
         _target = (CameraCapture)target;
 
@@ -93,6 +96,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 #endif
 
 #if USING_HDRP
+        _exposureTime = root.Q <IntegerField>("ExposureTime");
         _backgroundColor.hdr = true;
 #endif
 
@@ -129,37 +133,37 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
     private void ChangePath()
     {
         var path = EditorUtility.OpenFolderPanel("Choose Path", _target.lastPath, "");
-
-        if (!path.StartsWith(Application.dataPath))
-        {
-            EditorUtility.DisplayDialog(
-                "Folder not in project",
-                "The folder must be within the Assets folder",
-                "ok");
-
+        
+        if (string.IsNullOrEmpty(path))
             return;
-        }
 
-        _target.lastPath = path.Remove(0, Application.dataPath.Length - 6);
-        UpdatePath();
+        if (path.IsPathInProject(out var pathInProject))
+        {
+            _target.lastPath = pathInProject;
+            UpdatePath();
+        }
+        else
+        {
+            if (!ScreenshotData.ExternalExport)
+            {
+                EditorUtility.DisplayDialog(
+                    "Folder not in project",
+                    "The folder must be within the Assets folder",
+                    "ok");
+                
+                return;
+            }
+            
+            _target.lastPath = path;
+            UpdatePath();
+        }
     }
 
     private void RegisterCallbacks()
     {
         _btnRender.clicked += Render;
 
-        _btnSave.clickable = new Clickable(
-            () =>
-            {
-                var path = EditorUtility.SaveFilePanelInProject(
-                    "Save Screenshot",
-                    "",
-                    "png",
-                    "",
-                    _target.lastPath);
-
-                _target.Save(_render, path);
-            });
+        _btnSave.clicked += Save;
 
         _width.RegisterValueChangedCallback(
             evt =>
@@ -189,6 +193,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                 _target.height = evt.newValue;
             });
 
+#if USING_HDRP
         _exposureTime.RegisterValueChangedCallback(
             evt =>
             {
@@ -202,6 +207,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
                 _target.exposureTime = evt.newValue;
             });
+#endif
 
         _depth.RegisterValueChangedCallback(evt => {_target.depth = int.Parse(evt.newValue);});
 
@@ -241,6 +247,38 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             });
 
         _btnExportPath.clicked += ChangePath;
+    }
+
+    private void Save()
+    {
+        var path = EditorUtility.SaveFilePanel(
+            "Save Screenshot",
+            _target.lastPath,
+            "",
+            "png");
+                
+        if (string.IsNullOrEmpty(path))
+            return;
+
+        if (path.IsPathInProject(out var pathInProject))
+        {
+            _target.Save(_render, pathInProject);
+            return;
+        }
+
+        if (!ScreenshotData.ExternalExport)
+        {
+            EditorUtility.DisplayDialog(
+                "Path not in project",
+                "The path must be within the Assets folder",
+                "ok");
+                    
+            return;
+        }
+                
+        _target.Save(_render, path);
+        
+        UpdatePath();
     }
 
     private async void Render()

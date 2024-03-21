@@ -44,10 +44,12 @@ internal static partial class ContextMenu
             var timestamp = $"{DateTime.Now:yy-MM-dd})({DateTime.Now:HH-mm-ss}";
             var camName = $"/{cam.gameObject.name}[{cam.GetHashCode()}]({timestamp}).png";
             var path = $"{cam.lastPath}{camName}";
-
+            
 #if USING_URP
+#if UNITY_EDITOR
             cam.RenderAndSaveUrp(path, ScreenshotData.RenderPipelineAssetPath,
                 AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
+#endif
 #else
             cam.RenderAndSave(path);
 #endif

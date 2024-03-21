@@ -48,8 +48,10 @@ public class CameraCapture : MonoBehaviour
     [HideInInspector]
     public bool listenToShortcut;
 
+#if USING_HDRP
     [HideInInspector]
     public int exposureTime = 250;
+#endif
 
 #if USING_URP
     private string _renderPipelineAssetPath;
@@ -109,6 +111,7 @@ public class CameraCapture : MonoBehaviour
         Save(await Render(), path);
     }
 
+#if UNITY_EDITOR
     public async void RenderAndSaveUrp(
         string path,
         string renderPipelineAssetPath,
@@ -139,6 +142,7 @@ public class CameraCapture : MonoBehaviour
 
         return await Render();
     }
+#endif
 
     public void Save(Texture2D texture, string path)
     {
@@ -148,9 +152,14 @@ public class CameraCapture : MonoBehaviour
         lastPath = path[..path.LastIndexOf("/", StringComparison.Ordinal)];
         ScreenshotUtility.SaveTexture(texture, path);
 
+#if UNITY_EDITOR
+        if (!path.StartsWith(Application.dataPath))
+            return;
+
         var importer = (TextureImporter)AssetImporter.GetAtPath(path);
         importer.textureType = TextureImporterType.Sprite;
         importer.SaveAndReimport();
+#endif
     }
 
     #endregion

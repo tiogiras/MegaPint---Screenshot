@@ -1,16 +1,17 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Rendering;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 #if USING_URP
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 #endif
 
 #if USING_HDRP
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 #endif
 
