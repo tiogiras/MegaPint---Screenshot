@@ -82,6 +82,7 @@ public static class ScreenshotUtility
         if (pipelineAsset is not HDRenderPipelineAsset)
             return;
 
+#if UNITY_EDITOR
         var pipelineAssetPath = AssetDatabase.GetAssetPath(pipelineAsset);
 
         AssetDatabase.SaveAssetIfDirty(pipelineAsset);
@@ -103,6 +104,7 @@ public static class ScreenshotUtility
 
         AssetDatabase.SaveAssetIfDirty(pipelineAsset);
         AssetDatabase.Refresh();
+#endif
 #endif
     }
 
