@@ -153,7 +153,7 @@ public class CameraCapture : MonoBehaviour
         ScreenshotUtility.SaveTexture(texture, path);
 
 #if UNITY_EDITOR
-        if (!path.StartsWith(Application.dataPath))
+        if (!path.StartsWith("Assets/"))
             return;
 
         var importer = (TextureImporter)AssetImporter.GetAtPath(path);
