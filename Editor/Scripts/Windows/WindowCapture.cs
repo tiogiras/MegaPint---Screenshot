@@ -162,18 +162,26 @@ internal class WindowCapture : MegaPintEditorWindowBase
 
     private void Save()
     {
-        var path = EditorUtility.SaveFilePanelInProject(
+        var path = EditorUtility.SaveFilePanel(
             "Save Screenshot",
+            ScreenshotData.LastEditorWindowPath,
             "",
-            "png",
-            "",
-            ScreenshotData.LastEditorWindowPath);
+            "png");
 
         if (string.IsNullOrEmpty(path))
             return;
 
-        ScreenshotData.LastEditorWindowPath = path;
+        if (!path.IsPathInProject(out var _) && !ScreenshotData.ExternalExport)
+        {
+            EditorUtility.DisplayDialog(
+                "Path not in project",
+                "The path must be within the Assets folder",
+                "ok");
+            
+            return;
+        }
 
+        ScreenshotData.LastEditorWindowPath = path;
         ScreenshotUtility.SaveTexture(_render, path);
     }
 
