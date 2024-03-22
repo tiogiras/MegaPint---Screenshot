@@ -55,7 +55,9 @@ public class CameraCapture : MonoBehaviour
 
 #if USING_URP
     private string _renderPipelineAssetPath;
-    private GUID _transparencyRenderer;
+#if UNITY_EDITOR
+      private GUID _transparencyRenderer;
+#endif
 #endif
 
     #region Public Methods
@@ -251,10 +253,10 @@ public class CameraCapture : MonoBehaviour
         if (backgroundType is BackgroundType.None || !camData.renderPostProcessing)
             return;
 
+#if UNITY_EDITOR
         if (string.IsNullOrEmpty(_renderPipelineAssetPath) || _transparencyRenderer.Empty())
             return;
 
-#if UNITY_EDITOR
         if (!ScreenshotUtility.TryGetScriptableRendererIndex(_renderPipelineAssetPath,
                 camData.scriptableRenderer, out rendererIndex))
             return;
@@ -269,9 +271,10 @@ public class CameraCapture : MonoBehaviour
     {
         if (backgroundType is BackgroundType.None || !camData.renderPostProcessing)
             return;
-
+#if UNITY_EDITOR
         if (string.IsNullOrEmpty(_renderPipelineAssetPath) || _transparencyRenderer.Empty())
             return;
+#endif
 
         camData.SetRenderer(rendererIndex);
     }
