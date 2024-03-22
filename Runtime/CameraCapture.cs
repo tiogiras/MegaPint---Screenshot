@@ -55,7 +55,9 @@ public class CameraCapture : MonoBehaviour
 
 #if USING_URP
     private string _renderPipelineAssetPath;
-    private GUID _transparencyRenderer;
+#if UNITY_EDITOR
+      private GUID _transparencyRenderer;
+#endif
 #endif
 
     #region Public Methods
