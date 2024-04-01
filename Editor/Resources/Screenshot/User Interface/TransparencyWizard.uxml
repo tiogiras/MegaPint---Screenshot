@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=2f2b50e0e132e3a4989e6dbb646711fa&amp;type=3#MegaPint" />
+    <ui:VisualElement focusable="true" style="flex-grow: 1; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);">
+        <ui:Label text="Transparency Wizard" display-tooltip-when-elided="true" style="font-size: 16px; -unity-text-align: upper-center; padding-left: 0; padding-right: 0; padding-top: 3px; padding-bottom: 3px; margin-top: 0; margin-bottom: 0; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); -unity-font-definition: initial; -unity-font-style: bold; color: rgb(210, 210, 210); background-image: resource(&apos;Images/Background/Background 2&apos;); margin-right: 0; margin-left: 0;" />
+        <ui:GroupBox name="Step0" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <ui:Label tabindex="-1" text="Use this wizard to set up your project if you experience issues with rendering transparent camera captures." parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal;" />
+        </ui:GroupBox>
+        <ui:GroupBox name="Step1" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <ui:Label tabindex="-1" text="Step 1" parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal; -unity-font-style: bold; font-size: 14px; -unity-text-align: upper-center;" />
+            <ui:Label tabindex="-1" text="Select your currently used RenderPipelineAsset. A newly created RendererData will be added to it in order to render transparent images." parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal; -unity-font-style: normal; -unity-text-align: upper-left; margin-left: 4px;" />
+            <ui:Label tabindex="-1" text="Universal Render Pipeline Asset" parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal; -unity-font-style: bold; -unity-text-align: upper-left; margin-left: 4px; margin-top: 20px;" />
+            <uie:ObjectField type="UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset, Unity.RenderPipelines.Universal.Runtime" name="PipelineAsset" />
+        </ui:GroupBox>
+        <ui:GroupBox name="Step2" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <ui:Label tabindex="-1" text="Step 2" parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal; -unity-font-style: bold; font-size: 14px; -unity-text-align: upper-center;" />
+            <ui:Label tabindex="-1" text="A duplication of your template will be created and setup to be used as the renderer when rendering camera captures." parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal; -unity-font-style: normal; -unity-text-align: upper-left; margin-left: 4px;" />
+            <ui:Label tabindex="-1" text="Universal Renderer Data" parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal; -unity-font-style: bold; -unity-text-align: upper-left; margin-left: 4px; margin-top: 20px;" />
+            <uie:ObjectField label="Template" type="UnityEngine.Rendering.Universal.UniversalRendererData, Unity.RenderPipelines.Universal.Runtime" name="RendererData" />
+        </ui:GroupBox>
+        <ui:GroupBox name="Step3" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <ui:Label tabindex="-1" text="Step 3" parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal; -unity-font-style: bold; font-size: 14px; -unity-text-align: upper-center;" />
+            <ui:Label tabindex="-1" text="Choose a folder to save the duplicated data and the modified shader." parse-escape-sequences="true" display-tooltip-when-elided="true" style="overflow: hidden; white-space: normal; -unity-font-style: normal; -unity-text-align: upper-left; margin-left: 4px;" />
+            <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; align-items: center; justify-content: center;">
+                <ui:Button text="Finish" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Finish" class="megapint-button-nomargin" style="margin-top: 10px;" />
+            </ui:GroupBox>
+        </ui:GroupBox>
+        <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; align-items: center; justify-content: center;">
+            <ui:Button text="Next" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Next" class="megapint-button-nomargin" style="margin-top: 10px;" />
+        </ui:GroupBox>
+    </ui:VisualElement>
+</ui:UXML>
