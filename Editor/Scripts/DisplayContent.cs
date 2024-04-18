@@ -32,10 +32,7 @@ internal static partial class DisplayContent
                     
                 },
                 guides = ActivateLinks,
-                help = root =>
-                {
-                    
-                }
+                help = ActivateLinks
             });
     }
 

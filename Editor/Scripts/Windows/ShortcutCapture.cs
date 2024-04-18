@@ -1,6 +1,8 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Editor.Scripts.GUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,9 +15,9 @@ namespace Editor.Scripts.Windows
 /// </summary>
 internal class ShortcutCapture : MegaPintEditorWindowBase
 {
-    private const string FolderBasePath = "Screenshot/User Interface/";
-    private static readonly Color s_onColor = new(.8196078431372549f, 0f, .4470588235294118f);
-    private static readonly Color s_offColor = new(.34f, .34f, .34f);
+    private const string FolderBasePath = "Screenshot/User Interface";
+    private static readonly Color s_onColor = RootElement.Colors.Primary;
+    private static readonly Color s_offColor = RootElement.Colors.Button;
 
     private VisualTreeAsset _baseWindow;
 
@@ -44,7 +46,7 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
     protected override string BasePath()
     {
-        return FolderBasePath + "ShortcutCapture";
+        return Path.Combine(FolderBasePath, "Shortcut Capture");
     }
 
     protected override void CreateGUI()
@@ -100,7 +102,7 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
     protected override bool LoadResources()
     {
         _baseWindow = Resources.Load <VisualTreeAsset>(BasePath());
-        _listItem = Resources.Load <VisualTreeAsset>(FolderBasePath + "ShortcutCaptureItem");
+        _listItem = Resources.Load <VisualTreeAsset>(Path.Combine(FolderBasePath, "Shortcut Capture/Item"));
 
         return _baseWindow != null && _listItem != null;
     }

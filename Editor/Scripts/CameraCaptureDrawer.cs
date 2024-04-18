@@ -1,6 +1,7 @@
 ﻿using Editor.Scripts.Factories;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GUIUtility = Editor.Scripts.GUI.GUIUtility;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -17,9 +18,9 @@ namespace Editor.Scripts
 [CustomEditor(typeof(CameraCapture))]
 internal class CameraCaptureDrawer : UnityEditor.Editor
 {
-    private const string Path = "Screenshot/User Interface/CameraCapture";
+    private const string Path = "Screenshot/User Interface/Camera Capture";
 #if USING_URP && USING_HDRP
-    private const string PathError = "Screenshot/User Interface/MultiplePipelines";
+    private const string PathError = "Screenshot/User Interface/Multiple Pipelines";
 #endif
 
     private ColorField _backgroundColor;
@@ -65,7 +66,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 #endif
         
         var template = Resources.Load <VisualTreeAsset>(Path);
-        TemplateContainer root = template.Instantiate();
+        VisualElement root = GUIUtility.Instantiate(template);
 
         _preview = root.Q <AspectRatioPanel>("Preview");
         _btnRender = root.Q <Button>("BTN_Render");

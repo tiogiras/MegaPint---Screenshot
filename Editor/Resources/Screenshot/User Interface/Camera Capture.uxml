@@ -1,47 +1,47 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
-    <ui:TwoPaneSplitView fixed-pane-initial-size="200" fixed-pane-initial-dimension="300" style="height: 350px; flex-shrink: 1; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);">
+    <ui:TwoPaneSplitView fixed-pane-initial-size="200" fixed-pane-initial-dimension="300" style="height: 350px; flex-shrink: 1;">
         <ui:GroupBox style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 5px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; min-width: 150px; width: 600px; flex-basis: auto; justify-content: space-between;">
             <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
-                <ui:Label tabindex="-1" text="Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
-                <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
-                <ui:IntegerField label="Width" value="1920" name="Width" />
-                <ui:IntegerField label="Height" value="1080" name="Height" />
-                <ui:DropdownField label="Depth" index="3" choices="0, 16, 24, 32" name="Depth" />
-                <ui:EnumField label="Background" type="BackgroundType, tiogiras.megapint-screenshot.runtime" name="BackgroundType" style="padding-top: 0; margin-top: 11px;" />
-                <uie:ColorField label="Color" value="#FFFFFFFF" name="BackgroundColor" />
-                <uie:ObjectField label="Sprite" type="UnityEngine.Sprite, UnityEngine.CoreModule" name="BackgroundImage" />
-                <ui:Label tabindex="-1" text="1920 x 1080" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ImageResolution" style="margin-left: 15px; font-size: 10px; color: rgba(210, 210, 210, 0.59);" />
-                <ui:DropdownField label="Image Type" index="0" choices="Simple, Tiled" name="ImageType" />
-                <ui:FloatField label="Pixel Per Unit" value="1" name="PixelPerUnit" />
+                <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Settings" style="-unity-font-style: bold;" />
+                <Editor.Scripts.GUI.Factories.Separator />
+                <ui:IntegerField label="Width" value="1920" name="Width" class="mp_font mp_textColor_normal" />
+                <ui:IntegerField label="Height" value="1080" name="Height" class="mp_font mp_textColor_normal" />
+                <ui:DropdownField label="Depth" index="3" choices="0, 16, 24, 32" name="Depth" class="mp_font mp_textColor_normal" />
+                <ui:EnumField label="Background" type="BackgroundType, tiogiras.megapint.screenshot.runtime" name="BackgroundType" class="mp_font mp_textColor_normal" style="padding-top: 0; margin-top: 11px;" />
+                <uie:ColorField label="Color" value="#FFFFFFFF" name="BackgroundColor" class="mp_font mp_textColor_normal" />
+                <uie:ObjectField label="Sprite" type="UnityEngine.Sprite, UnityEngine.CoreModule" name="BackgroundImage" class="mp_font mp_textColor_normal" />
+                <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" text="1920 x 1080" name="ImageResolution" style="margin-left: 15px; font-size: 10px;" />
+                <ui:DropdownField label="Image Type" index="0" choices="Simple, Tiled" name="ImageType" class="mp_font mp_textColor_normal" />
+                <ui:FloatField label="Pixel Per Unit" value="1" name="PixelPerUnit" class="mp_font mp_textColor_normal" />
                 <ui:VisualElement name="TransparencyHint" style="flex-grow: 1; margin-top: 10px;">
-                    <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
-                    <ui:Foldout text="Hint: Transparency" value="false" style="background-color: rgba(255, 255, 255, 0.08); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; -unity-font-style: bold; margin-left: 0; margin-top: 2px; padding-left: 20px;">
-                        <ui:Label tabindex="-1" text="You are using urp and post processing is enabled on this camera if you notice issues rendering transparency run the transparency wizard." parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal; font-size: 12px; margin-right: 3px; margin-bottom: 3px;" />
+                    <Editor.Scripts.GUI.Factories.Separator Space="1.5" />
+                    <ui:Foldout text="Hint: Transparency" value="false" class="mp_font" style="background-color: rgba(255, 255, 255, 0.08); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; -unity-font-style: bold; margin-left: 0; margin-top: 2px; padding-left: 20px;">
+                        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="You are using urp and post processing is enabled on this camera if you notice issues rendering transparency run the transparency wizard." style="white-space: normal; -unity-font-style: normal; margin-right: 3px; margin-bottom: 3px;" />
                     </ui:Foldout>
                 </ui:VisualElement>
                 <ui:VisualElement name="TransparencyHintHDRP" focusable="false" style="flex-grow: 1; margin-top: 10px;">
-                    <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
+                    <Editor.Scripts.GUI.Factories.Separator />
                     <ui:IntegerField label="Exposure Time" value="250" tooltip="Frames taken to render the capture" name="ExposureTime" />
-                    <ui:Foldout text="Hint: Transparency" value="false" style="background-color: rgba(255, 255, 255, 0.08); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; -unity-font-style: bold; margin-left: 0; margin-top: 2px; padding-left: 20px;">
-                        <ui:Label tabindex="-1" text="In order to achieve transparency in the HDRP the colorBufferFormat is changed during the render of transparent or solidColor captures. After changing the buffer format unity needs time to adjust the render. Adjust the exposure time until the images are no longer black." parse-escape-sequences="true" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal; font-size: 10px; margin-right: 3px; margin-bottom: 3px;" />
+                    <ui:Foldout text="Hint: Transparency" value="false" class="mp_font" style="background-color: rgba(255, 255, 255, 0.08); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; -unity-font-style: bold; margin-left: 0; margin-top: 2px; padding-left: 20px;">
+                        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="In order to achieve transparency in the HDRP the colorBufferFormat is changed during the render of transparent or solidColor captures. After changing the buffer format unity needs time to adjust the render. Adjust the exposure time until the images are no longer black." style="white-space: normal;" />
                     </ui:Foldout>
                 </ui:VisualElement>
             </ui:GroupBox>
             <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
-                <ui:Button text="Export Path" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_ExportPath" />
-                <ui:Label tabindex="-1" text="Path" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Path" style="-unity-text-align: middle-left; text-overflow: ellipsis; overflow: hidden; flex-shrink: 1;" />
+                <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_ExportPath" text="Export Path" />
+                <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" text="Path" name="Path" style="text-overflow: ellipsis; -unity-text-align: middle-left; flex-shrink: 1; overflow: hidden;" />
             </ui:GroupBox>
         </ui:GroupBox>
-        <ui:GroupBox style="background-image: resource(&apos;Images/Background/Background 2&apos;); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; height: auto; min-width: 200px; flex-direction: column-reverse; flex-basis: 0; flex-grow: 1;">
-            <ui:Button text="Render Camera View" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Render" />
+        <Editor.Scripts.GUI.Factories.Backgrounds.Background2 style="flex-grow: 1; flex-shrink: 0; min-width: 200px; flex-direction: column-reverse;">
+            <Editor.Scripts.GUI.Factories.Interactive.Button text="Render Camera View" name="BTN_Render" />
             <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row-reverse;">
-                <ui:Button text="Export Image" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Save" />
+                <Editor.Scripts.GUI.Factories.Interactive.Button text="Export Image" name="BTN_Save" />
             </ui:GroupBox>
-            <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
+            <Editor.Scripts.GUI.Factories.Separator />
             <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: center;">
-                <Editor.Scripts.AspectRatioPanel name="Preview" />
+                <Editor.Scripts.Factories.AspectRatioPanel name="Preview" />
             </ui:VisualElement>
-        </ui:GroupBox>
+        </Editor.Scripts.GUI.Factories.Backgrounds.Background2>
     </ui:TwoPaneSplitView>
 </ui:UXML>
