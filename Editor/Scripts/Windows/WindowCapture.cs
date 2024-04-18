@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Editor.Scripts.Factories;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;

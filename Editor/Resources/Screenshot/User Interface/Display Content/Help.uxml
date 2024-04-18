@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=2f2b50e0e132e3a4989e6dbb646711fa&amp;type=3#MegaPint" />
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
     <ui:Label tabindex="-1" text="Possible Issues" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 5px; color: rgb(209, 0, 114); font-size: 16px; -unity-font-style: bold; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); -unity-font-definition: initial; margin-left: 10px;" />
     <ui:GroupBox style="margin-left: 20px; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);">
         <ui:Foldout text="Cannot render CameraCapture" value="false" style="-unity-font-style: bold; color: rgb(210, 210, 210); font-size: 12px;">
