@@ -1,8 +1,10 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GUIUtility = Editor.Scripts.GUI.GUIUtility;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR
+using System.IO;
 using UnityEditor;
 using UnityEditor.UIElements;
 #endif
@@ -24,7 +26,7 @@ namespace Editor.Scripts.Windows
 /// </summary>
 internal class TransparencyWizard : MegaPintEditorWindowBase
 {
-    private const string FolderBasePath = "Screenshot/User Interface/";
+    private const string FolderBasePath = "Screenshot/User Interface";
 
     private VisualTreeAsset _baseWindow;
 
@@ -56,7 +58,7 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
 
     protected override string BasePath()
     {
-        return FolderBasePath + "TransparencyWizard";
+        return Path.Combine(FolderBasePath, "Transparency Wizard");
     }
 
     protected override void CreateGUI()
@@ -64,8 +66,8 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         base.CreateGUI();
 
         VisualElement root = rootVisualElement;
+        VisualElement content = GUIUtility.Instantiate(_baseWindow, root);
 
-        VisualElement content = _baseWindow.Instantiate();
         content.style.flexGrow = 1;
         content.style.flexShrink = 1;
 
@@ -87,8 +89,6 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         RegisterCallbacks();
 
         ChangeState(0);
-
-        root.Add(content);
     }
 
     protected override bool LoadResources()

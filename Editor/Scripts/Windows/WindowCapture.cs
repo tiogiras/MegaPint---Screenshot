@@ -1,6 +1,8 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Editor.Scripts.Factories;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -14,7 +16,7 @@ namespace Editor.Scripts.Windows
 /// </summary>
 internal class WindowCapture : MegaPintEditorWindowBase
 {
-    private const string FolderBasePath = "Screenshot/User Interface/";
+    private const string FolderBasePath = "Screenshot/User Interface";
 
     private readonly List <EditorWindow> _windowRefs = new();
 
@@ -45,7 +47,7 @@ internal class WindowCapture : MegaPintEditorWindowBase
 
     protected override string BasePath()
     {
-        return FolderBasePath + "WindowCapture";
+        return Path.Combine(FolderBasePath, "Window Capture");
     }
 
     protected override async void CreateGUI()

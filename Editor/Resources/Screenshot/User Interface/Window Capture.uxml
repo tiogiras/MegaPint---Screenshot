@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
+    <Editor.Scripts.GUI.Factories.Backgrounds.Background2>
+        <Editor.Scripts.GUI.Factories.Headings.MpHeading2 tabindex="-1" text="Render Editor Window" style="font-size: 16px; -unity-font-style: bold; -unity-text-align: middle-center; margin-top: 5px; margin-bottom: 5px;" />
+    </Editor.Scripts.GUI.Factories.Backgrounds.Background2>
+    <Editor.Scripts.GUI.Factories.Backgrounds.Background3 style="padding-right: 5px; padding-bottom: 5px; padding-left: 5px; flex-grow: 1;">
+        <ui:VisualElement style="align-items: center; justify-content: center; flex-grow: 1;">
+            <Editor.Scripts.Factories.AspectRatioPanel name="Preview" />
+        </ui:VisualElement>
+        <Editor.Scripts.GUI.Factories.Separator />
+        <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row-reverse; align-items: center; justify-content: flex-start;">
+            <Editor.Scripts.GUI.Factories.Interactive.Button text="Render Window" name="BTN_Render" />
+            <Editor.Scripts.GUI.Factories.Interactive.Button text="Export Image" name="BTN_Save" />
+        </ui:GroupBox>
+        <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; align-items: center; justify-content: space-between;">
+            <ui:DropdownField label="Editor Window" index="-1" name="Windows" class="mp_font mp_textColor_normal" style="flex-shrink: 1; flex-grow: 1;" />
+            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Refresh" text="Refresh" />
+        </ui:GroupBox>
+    </Editor.Scripts.GUI.Factories.Backgrounds.Background3>
+</ui:UXML>

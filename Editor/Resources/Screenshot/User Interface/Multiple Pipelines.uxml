@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
+    <ui:VisualElement style="flex-grow: 1; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;">
+        <Editor.Scripts.GUI.Factories.Headings.MpHeading1 tabindex="-1" text="Multiple RenderPipelines detected!" style="-unity-font-style: bold; -unity-text-align: middle-center; white-space: normal; margin-bottom: 10px;" />
+        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="You currently have more than one pipeline imported into your project, make sure to remove all exept the one you are using." style="white-space: normal;" />
+    </ui:VisualElement>
+</ui:UXML>

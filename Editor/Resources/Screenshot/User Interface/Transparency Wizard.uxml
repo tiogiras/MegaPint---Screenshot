@@ -1,0 +1,33 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
+    <ui:VisualElement focusable="true" style="flex-grow: 1;">
+        <Editor.Scripts.GUI.Factories.Backgrounds.Background2>
+            <Editor.Scripts.GUI.Factories.Headings.MpHeading2 tabindex="-1" text="Transparency Wizard" style="font-size: 16px; -unity-font-style: bold; -unity-text-align: middle-center; white-space: normal; margin-top: 5px; margin-bottom: 5px;" />
+        </Editor.Scripts.GUI.Factories.Backgrounds.Background2>
+        <ui:GroupBox name="Step0" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Use this wizard to set up your project if you experience issues with rendering transparent camera captures." style="white-space: normal;" />
+        </ui:GroupBox>
+        <ui:GroupBox name="Step1" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <Editor.Scripts.GUI.Factories.Headings.MpHeading2 tabindex="-1" text="Step 1" style="white-space: normal; font-size: 14px; -unity-text-align: middle-center; -unity-font-style: bold;" />
+            <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Select your currently used RenderPipelineAsset. A newly created RendererData will be added to it in order to render transparent images." style="white-space: normal; margin-left: 4px;" />
+            <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Universal Render Pipeline Asset" style="white-space: normal; margin-left: 4px; margin-top: 20px; -unity-font-style: bold;" />
+            <uie:ObjectField type="UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset, Unity.RenderPipelines.Universal.Runtime" name="PipelineAsset" class="mp_font mp_textColor_normal" />
+        </ui:GroupBox>
+        <ui:GroupBox name="Step2" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <Editor.Scripts.GUI.Factories.Headings.MpHeading2 tabindex="-1" text="Step 2" style="white-space: normal; font-size: 14px; -unity-text-align: middle-center; -unity-font-style: bold;" />
+            <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="A duplication of your template will be created and setup to be used as the renderer when rendering camera captures." style="white-space: normal; margin-left: 4px;" />
+            <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Universal Renderer Data" style="white-space: normal; margin-left: 4px; margin-top: 20px; -unity-font-style: bold;" />
+            <uie:ObjectField label="Template" type="UnityEngine.Rendering.Universal.UniversalRendererData, Unity.RenderPipelines.Universal.Runtime" name="RendererData" class="mp_font mp_textColor_normal" />
+        </ui:GroupBox>
+        <ui:GroupBox name="Step3" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <Editor.Scripts.GUI.Factories.Headings.MpHeading2 tabindex="-1" text="Step 3" style="white-space: normal; font-size: 14px; -unity-text-align: middle-center; -unity-font-style: bold;" />
+            <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Choose a folder to save the duplicated data and the modified shader." style="white-space: normal; margin-left: 4px;" />
+            <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; align-items: center; justify-content: center;">
+                <Editor.Scripts.GUI.Factories.Interactive.Button text="Finish" name="BTN_Finish" style="margin-top: 10px;" />
+            </ui:GroupBox>
+        </ui:GroupBox>
+        <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; align-items: center; justify-content: center;">
+            <Editor.Scripts.GUI.Factories.Interactive.Button text="Next" name="BTN_Next" style="margin-top: 10px;" />
+        </ui:GroupBox>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,7 +1,9 @@
 ﻿#if UNITY_EDITOR
+using Editor.Scripts.GUI;
 using Editor.Scripts.PackageManager.Cache;
 using Editor.Scripts.PackageManager.Packages;
 using Editor.Scripts.Windows;
+using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace Editor.Scripts
@@ -9,8 +11,62 @@ namespace Editor.Scripts
 
 internal static partial class DisplayContent
 {
-    private const string BasePathScreenshot = "Screenshot/User Interface/Display Content Tabs/";
-    #region Private Methods
+    // Called by reflection
+    // ReSharper disable once UnusedMember.Local
+    private static void Screenshot(DisplayContentReferences refs)
+    {
+        InitializeDisplayContent(
+            refs,
+            new TabSettings
+            {
+                info = true,
+                settings = true,
+                guides = true,
+                help = true
+            },
+            new TabActions
+            {
+                info = ScreenshotActivateLinks,
+                settings = root =>
+                {
+                    
+                },
+                guides = ScreenshotActivateLinks,
+                help = ScreenshotActivateLinks
+            });
+    }
+
+    private static void ScreenshotActivateLinks(VisualElement root)
+    {
+        GUIUtility.ActivateLinks(root,
+                                 link =>
+                                 {
+                                     switch (link.linkID)
+                                     {
+                                         case "windowCapture":
+                                             EditorApplication.ExecuteMenuItem(
+                                                 "MegaPint/Packages/Screenshot/Window Capture");
+                                             break;
+                                                     
+                                         case "shortcutCapture":
+                                             EditorApplication.ExecuteMenuItem(
+                                                 "MegaPint/Packages/Screenshot/Shortcut Capture");
+                                             break;
+                                         
+                                         case "shortcutManager":
+                                             EditorApplication.ExecuteMenuItem(
+                                                 "Edit/Shortcuts...");
+                                             break;
+                                         
+                                         case "captureNow":
+                                             EditorApplication.ExecuteMenuItem(
+                                                 "MegaPint/Packages/Screenshot/Capture Now");
+                                             break;
+                                     }
+                                 });
+    }
+
+    /*#region Private Methods
 
     private static void OnTabChangedScreenshot(int tab, VisualElement root)
     {
@@ -41,8 +97,7 @@ internal static partial class DisplayContent
         }
     }
 
-    // Called by reflection
-    // ReSharper disable once UnusedMember.Local
+
     private static void Screenshot(VisualElement root)
     {
         var tabs = root.Q <GroupBox>("Tabs");
@@ -52,7 +107,7 @@ internal static partial class DisplayContent
         
         RegisterTabCallbacks(tabs, tabContentParent, TabCount);
 
-        SetTabContentLocation(BasePathScreenshot, TabCount);
+        SetTabContentLocations(BasePathScreenshot, TabCount);
 
         s_onSelectedTabChanged += OnTabChangedScreenshot;
         s_onSelectedPackageChanged += UnsubscribeScreenshot;
@@ -66,7 +121,7 @@ internal static partial class DisplayContent
         s_onSelectedPackageChanged -= UnsubscribeScreenshot;
     }
 
-    #endregion
+    #endregion*/
 }
 
 }

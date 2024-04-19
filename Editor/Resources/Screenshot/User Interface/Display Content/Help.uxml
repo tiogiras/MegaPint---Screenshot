@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
+    <ui:VisualElement style="flex-grow: 1; margin-left: 20px; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; overflow: hidden;">
+        <ui:Foldout text="Cannot render &lt;link=&quot;info_cameraCapture&quot;&gt;CameraCapture&lt;/link&gt;" value="false" class="mp_font mp_link" style="-unity-font-style: bold; color: rgb(210, 210, 210); font-size: 12px;">
+            <ui:GroupBox style="margin-left: 0; margin-right: 0; margin-top: 5px; margin-bottom: 20px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-style: normal;">
+                <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Make sure your MegaPint settings asset is initialized (open any MegaPint window).&#10;&#10;You can only render &lt;link=&quot;info_cameraCapture&quot;&gt;CameraCapture&lt;/link&gt; components if you have one render pipeline imported in the project. Make sure to remove any unused render pipeline package." class="mp_link" style="white-space: normal;" />
+                <Editor.Scripts.GUI.Factories.Separator />
+            </ui:GroupBox>
+        </ui:Foldout>
+        <ui:Foldout text="&lt;link=&quot;info_shortcut&quot;&gt;Shortcut&lt;/link&gt; not working in playmode" value="false" class="mp_font mp_link" style="-unity-font-style: bold; color: rgb(210, 210, 210); font-size: 12px;">
+            <ui:GroupBox style="margin-left: 0; margin-right: 0; margin-top: 5px; margin-bottom: 20px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-style: normal;">
+                <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Check if you unset your shortcut for the &lt;b&gt;Capture Now&lt;/b&gt; MenuItem via &lt;link=&quot;shortcutManager&quot;&gt;Edit/Shortcuts...&lt;/link&gt;&#10;&#10;Playmode shortcuts can be disabled in the game window. Make sure to deselect this option." class="mp_link" style="white-space: normal;" />
+                <Editor.Scripts.GUI.Factories.Separator />
+            </ui:GroupBox>
+        </ui:Foldout>
+    </ui:VisualElement>
+</ui:UXML>
