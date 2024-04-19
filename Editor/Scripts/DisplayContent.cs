@@ -26,17 +26,17 @@ internal static partial class DisplayContent
             },
             new TabActions
             {
-                info = ActivateLinks,
+                info = ScreenshotActivateLinks,
                 settings = root =>
                 {
                     
                 },
-                guides = ActivateLinks,
-                help = ActivateLinks
+                guides = ScreenshotActivateLinks,
+                help = ScreenshotActivateLinks
             });
     }
 
-    private static void ActivateLinks(VisualElement root)
+    private static void ScreenshotActivateLinks(VisualElement root)
     {
         GUIUtility.ActivateLinks(root,
                                  link =>

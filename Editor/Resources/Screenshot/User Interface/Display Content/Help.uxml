@@ -1,7 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
-    <Editor.Scripts.GUI.Factories.Headings.MpHeading1 tabindex="-1" text="Possible Issues" style="white-space: normal; -unity-font-style: bold; font-size: 16px; margin-top: 5px; margin-left: 10px;" />
-    <ui:GroupBox style="margin-left: 20px; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+    <ui:VisualElement style="flex-grow: 1; margin-left: 20px; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; overflow: hidden;">
         <ui:Foldout text="Cannot render &lt;link=&quot;info_cameraCapture&quot;&gt;CameraCapture&lt;/link&gt;" value="false" class="mp_font mp_link" style="-unity-font-style: bold; color: rgb(210, 210, 210); font-size: 12px;">
             <ui:GroupBox style="margin-left: 0; margin-right: 0; margin-top: 5px; margin-bottom: 20px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-style: normal;">
                 <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Make sure your MegaPint settings asset is initialized (open any MegaPint window).&#10;&#10;You can only render &lt;link=&quot;info_cameraCapture&quot;&gt;CameraCapture&lt;/link&gt; components if you have one render pipeline imported in the project. Make sure to remove any unused render pipeline package." class="mp_link" style="white-space: normal;" />
@@ -14,5 +13,5 @@
                 <Editor.Scripts.GUI.Factories.Separator />
             </ui:GroupBox>
         </ui:Foldout>
-    </ui:GroupBox>
+    </ui:VisualElement>
 </ui:UXML>
