@@ -40,7 +40,7 @@
             </ui:GroupBox>
             <Editor.Scripts.GUI.Factories.Separator />
             <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: center;">
-                <Editor.Scripts.Factories.AspectRatioPanel name="Preview" />
+                <Editor.Scripts.GUI.Factories.AspectRatioPanel name="Preview" />
             </ui:VisualElement>
         </Editor.Scripts.GUI.Factories.Backgrounds.Background2>
     </ui:TwoPaneSplitView>

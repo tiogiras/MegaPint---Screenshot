@@ -1,4 +1,4 @@
-﻿using Editor.Scripts.Factories;
+﻿using Editor.Scripts.GUI.Factories;
 using UnityEngine;
 using UnityEngine.UIElements;
 using GUIUtility = Editor.Scripts.GUI.GUIUtility;
