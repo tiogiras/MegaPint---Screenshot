@@ -64,7 +64,6 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 #if USING_URP && USING_HDRP
         return Resources.Load <VisualTreeAsset>(PathError).Instantiate();   
 #endif
-        
         var template = Resources.Load <VisualTreeAsset>(Path);
         VisualElement root = GUIUtility.Instantiate(template);
 

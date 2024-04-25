@@ -9,12 +9,12 @@
         </ui:VisualElement>
         <Editor.Scripts.GUI.Factories.Separator />
         <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row-reverse; align-items: center; justify-content: flex-start;">
-            <Editor.Scripts.GUI.Factories.Interactive.Button text="Render Window" name="BTN_Render" />
-            <Editor.Scripts.GUI.Factories.Interactive.Button text="Export Image" name="BTN_Save" />
+            <Editor.Scripts.GUI.Factories.Interactive.Button text="Render Window" name="BTN_Render" display-tooltip-when-elided="true" tooltip="Render the slected window." />
+            <Editor.Scripts.GUI.Factories.Interactive.Button text="Export Image" name="BTN_Save" tooltip="Export the rendered image." display-tooltip-when-elided="true" />
         </ui:GroupBox>
         <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; align-items: center; justify-content: space-between;">
-            <ui:DropdownField label="Editor Window" index="-1" name="Windows" class="mp_font mp_textColor_normal" style="flex-shrink: 1; flex-grow: 1;" />
-            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Refresh" text="Refresh" />
+            <ui:DropdownField label="Editor Window" index="-1" name="Windows" class="mp_font mp_textColor_normal mp_dropdown" style="flex-shrink: 1; flex-grow: 1;" />
+            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Refresh" text="Refresh" display-tooltip-when-elided="true" tooltip="Refresh the list of opened editor windows." />
         </ui:GroupBox>
     </Editor.Scripts.GUI.Factories.Backgrounds.Background3>
 </ui:UXML>

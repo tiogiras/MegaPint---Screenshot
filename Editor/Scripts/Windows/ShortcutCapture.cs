@@ -5,6 +5,7 @@ using System.Linq;
 using Editor.Scripts.GUI;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GUIUtility = Editor.Scripts.GUI.GUIUtility;
 
 namespace Editor.Scripts.Windows
 {
@@ -55,7 +56,10 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
         VisualElement root = rootVisualElement;
 
-        VisualElement content = _baseWindow.Instantiate();
+        VisualElement content = GUIUtility.Instantiate(_baseWindow, root);
+        
+        content.style.flexGrow = 1;
+        content.style.flexShrink = 1;
 
         _cameras = content.Q <ListView>("Cameras");
         _placeholder = content.Q <Label>("Placeholder");
@@ -66,7 +70,7 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
         RegisterCallbacks();
 
-        _cameras.makeItem += () => _listItem.Instantiate();
+        _cameras.makeItem += () => GUIUtility.Instantiate(_listItem);
 
         _cameras.bindItem += (element, i) =>
         {
@@ -95,8 +99,6 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
         };
 
         RefreshCameras();
-
-        root.Add(content);
     }
 
     protected override bool LoadResources()

@@ -1,17 +1,20 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
-    <ui:VisualElement name="Root" focusable="true" style="flex-grow: 1;">
-        <Editor.Scripts.GUI.Factories.Backgrounds.Background2>
+    <ui:VisualElement name="Root" style="flex-grow: 1;">
+        <Editor.Scripts.GUI.Factories.Backgrounds.Background1>
             <Editor.Scripts.GUI.Factories.Headings.MpHeading2 tabindex="-1" text="Render Camera Captures" style="font-size: 16px; -unity-text-align: middle-center; -unity-font-style: bold; margin-top: 5px; margin-bottom: 5px; white-space: normal;" />
-        </Editor.Scripts.GUI.Factories.Backgrounds.Background2>
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="No [CameraCapture] components found in the opened scene!" name="Placeholder" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; white-space: normal;" />
-        <ui:GroupBox style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; justify-content: space-between;">
-            <Editor.Scripts.GUI.Factories.Interactive.Button text="Refresh" tooltip="Refresh the CameraCapture components found in the scene." name="BTN_Refresh" style="margin-right: 5px;" />
-            <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
-                <Editor.Scripts.GUI.Factories.Interactive.Button text="All" name="BTN_All" style="margin-right: 5px;" />
-                <Editor.Scripts.GUI.Factories.Interactive.Button text="None" name="BTN_None" style="margin-right: 5px;" />
+        </Editor.Scripts.GUI.Factories.Backgrounds.Background1>
+        <Editor.Scripts.GUI.Factories.Backgrounds.Background2 style="flex-grow: 1;">
+            <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="No [CameraCapture] components found in the opened scene!" name="Placeholder" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; white-space: normal;" />
+            <ui:GroupBox style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; justify-content: space-between;">
+                <Editor.Scripts.GUI.Factories.Interactive.Button text="Refresh" tooltip="Refresh the CameraCapture components found in the scene." name="BTN_Refresh" display-tooltip-when-elided="true" style="margin-right: 5px;" />
+                <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
+                    <Editor.Scripts.GUI.Factories.Interactive.Button text="All" name="BTN_All" display-tooltip-when-elided="true" tooltip="Enable shortcuts for all CameraCapture components." style="margin-right: 5px;" />
+                    <Editor.Scripts.GUI.Factories.Interactive.Button text="None" name="BTN_None" tooltip="Disable shortcuts for all CameraCapture components." display-tooltip-when-elided="true" style="margin-right: 5px;" />
+                </ui:GroupBox>
             </ui:GroupBox>
-        </ui:GroupBox>
-        <ui:ListView focusable="true" virtualization-method="DynamicHeight" name="Cameras" style="flex-grow: 1; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
+            <Editor.Scripts.GUI.Factories.Separator Space="2" />
+            <ui:ListView focusable="true" name="Cameras" virtualization-method="FixedHeight" show-bound-collection-size="false" fixed-item-height="20" selection-type="None" style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;" />
+        </Editor.Scripts.GUI.Factories.Backgrounds.Background2>
     </ui:VisualElement>
 </ui:UXML>

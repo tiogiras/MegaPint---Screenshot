@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
     <ui:GroupBox style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
-        <ui:Toggle label="Allow project external export" tooltip="Allow to export rendered images to paths outside the unity project." name="ExternalExport" class="mp_font" />
+        <ui:Toggle label="Allow project external export" tooltip="Allow to export rendered images to paths outside the unity project." name="ExternalExport" class="mp_font mp_toggle" />
     </ui:GroupBox>
 </ui:UXML>
