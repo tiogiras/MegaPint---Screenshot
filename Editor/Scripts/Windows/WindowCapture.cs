@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GUIUtility = Editor.Scripts.GUI.GUIUtility;
 
 namespace Editor.Scripts.Windows
 {
@@ -56,7 +57,7 @@ internal class WindowCapture : MegaPintEditorWindowBase
 
         VisualElement root = rootVisualElement;
 
-        VisualElement content = _baseWindow.Instantiate();
+        VisualElement content = GUIUtility.Instantiate(_baseWindow, root);
         content.style.flexGrow = 1;
         content.style.flexShrink = 1;
 
@@ -71,8 +72,6 @@ internal class WindowCapture : MegaPintEditorWindowBase
         _btnSave.style.display = DisplayStyle.None;
 
         RegisterCallbacks();
-
-        root.Add(content);
 
         await Task.Delay(100);
 
