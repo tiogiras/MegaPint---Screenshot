@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Editor.Scripts.GUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 using GUIUtility = Editor.Scripts.GUI.GUIUtility;
@@ -17,8 +16,6 @@ namespace Editor.Scripts.Windows
 internal class ShortcutCapture : MegaPintEditorWindowBase
 {
     private const string FolderBasePath = "Screenshot/User Interface";
-    private static readonly Color s_onColor = RootElement.Colors.Primary;
-    private static readonly Color s_offColor = RootElement.Colors.Button;
 
     private VisualTreeAsset _baseWindow;
 
@@ -130,8 +127,7 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
     private static void UpdateListItem(VisualElement onButton, VisualElement offButton, bool on)
     {
-        onButton.style.backgroundColor = on ? s_onColor : s_offColor;
-        offButton.style.backgroundColor = !on ? s_onColor : s_offColor;
+        GUIUtility.ToggleActiveButtonInGroup(on ? 0 : 1, onButton, offButton);
     }
 
     private void RefreshCameras()

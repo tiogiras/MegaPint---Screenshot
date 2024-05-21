@@ -1,8 +1,11 @@
-﻿using Editor.Scripts.Factories;
+﻿using System.Threading.Tasks;
+using Editor.Scripts.GUI.Factories;
+using Editor.Scripts.GUI.Factories.Structure;
 using UnityEngine;
 using UnityEngine.UIElements;
 using GUIUtility = Editor.Scripts.GUI.GUIUtility;
 #if UNITY_EDITOR
+using Editor.Scripts.GUI;
 using UnityEditor;
 using UnityEditor.UIElements;
 #endif
@@ -51,7 +54,9 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
     private VisualElement _transparencyHint;
     private VisualElement _transparencyHintHdrp;
-
+    
+    private VisualElement _rootTarget;
+    
 #if USING_HDRP
     private IntegerField _exposureTime;
 #endif
@@ -66,6 +71,11 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 #endif
         var template = Resources.Load <VisualTreeAsset>(Path);
         VisualElement root = GUIUtility.Instantiate(template);
+
+        _rootTarget = root;
+        
+        root.style.flexGrow = 1f;
+        root.style.flexShrink = 1f;
 
         _preview = root.Q <AspectRatioPanel>("Preview");
         _btnRender = root.Q <Button>("BTN_Render");
@@ -125,7 +135,23 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
         RegisterCallbacks();
 
+        root.schedule.Execute(
+            () =>
+            {
+                root.parent.styleSheets.Add(Resources.Load<StyleSheet>(StyleSheetClasses.BaseStyleSheetPath));
+                root.parent.styleSheets.Add(Resources.Load<StyleSheet>(StyleSheetClasses.AttributeStyleSheetPath));
+                
+                GUIUtility.ApplyRootElementTheme(root.parent);
+                
+                root.parent.AddToClassList(StyleSheetClasses.Background.Color.Tertiary);
+            });
+        
         return root;
+    }
+
+    private void ApplyTheme()
+    {
+        
     }
 
     #endregion

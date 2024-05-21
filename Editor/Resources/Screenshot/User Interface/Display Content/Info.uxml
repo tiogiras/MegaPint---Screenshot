@@ -1,12 +1,16 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
-    <ui:GroupBox style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
-        <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" name="PackageInfo" text="Package Info" style="-unity-font-style: italic; white-space: normal;" />
-        <Editor.Scripts.GUI.Factories.Separator Space="1.5" />
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="In the Guides tab you can find instructions on how to utilize the package to make screenshots of cameras and windows.&#10;&#10;If you encounter issues you may find the solution in the Help tab." class="mp_link" style="white-space: normal; margin-top: 20px;" />
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="&lt;link=&quot;windowCapture&quot;&gt;Window Capture&lt;/link&gt;" class="mp_textColor_primary mp_link" style="-unity-font-style: bold; margin-left: 15px; margin-top: 20px; white-space: normal;" />
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Render screenshots of editor windows" style="margin-left: 15px; white-space: normal;" />
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="&lt;link=&quot;shortcutCapture&quot;&gt;Shortcut Capture&lt;/link&gt;" class="mp_textColor_primary mp_link" style="-unity-font-style: bold; margin-left: 15px; margin-top: 20px; white-space: normal;" />
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Setup camera&apos;s to render screenshot via the selected &lt;link=&quot;info_shortcut&quot;&gt;shortcut&lt;/link&gt;." class="mp_link" style="margin-left: 15px; white-space: normal;" />
-    </ui:GroupBox>
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintUnityElements.uss?fileID=7433441132597879392&amp;guid=14475de81743442dad8e397f39ea6ace&amp;type=3#MegaPintUnityElements" />
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />
+    <Editor.Scripts.GUI.Factories.RootElement>
+        <ui:VisualElement style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
+            <Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" text="Package Info" name="PackageInfo" style="-unity-font-style: italic;" />
+            <Editor.Scripts.GUI.Factories.Structure.Separator />
+            <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="In the Guides tab you can find instructions on how to utilize the package to make screenshots of cameras and windows.&#10;&#10;If you encounter issues you may find the solution in the Help tab." class="mp_link" style="white-space: normal; margin-top: 20px;" />
+            <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="&lt;link=&quot;windowCapture&quot;&gt;Window Capture&lt;/link&gt;" class="mp_link" style="margin-top: 20px; margin-left: 15px; -unity-font-style: bold; white-space: normal;" />
+            <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Render screenshots of editor windows" style="white-space: normal; margin-left: 15px;" />
+            <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="&lt;link=&quot;shortcutCapture&quot;&gt;Shortcut Capture&lt;/link&gt;" class="mp_link" style="margin-top: 20px; margin-left: 15px; -unity-font-style: bold; white-space: normal;" />
+            <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Setup camera&apos;s to render screenshot via the selected &lt;link=&quot;info_shortcut&quot;&gt;shortcut&lt;/link&gt;." style="white-space: normal; margin-left: 15px;" />
+        </ui:VisualElement>
+    </Editor.Scripts.GUI.Factories.RootElement>
 </ui:UXML>
