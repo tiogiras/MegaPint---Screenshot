@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Editor.Scripts.GUI.Factories;
+using Editor.Scripts.GUI.Factories.Structure;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
