@@ -2,14 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Editor.Scripts.Windows;
+using MegaPint.Editor.Scripts.Windows;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Editor.Scripts
+namespace MegaPint.Editor.Scripts
 {
 
+/// <summary> Partial class used to store MenuItems </summary>
 internal static partial class ContextMenu
 {
     #region Private Methods
@@ -21,7 +22,7 @@ internal static partial class ContextMenu
         Debug.LogWarning("Cannot render CameraCaptures while more than one renderPipeline is installed.");
         return;
 #endif
-        
+
         List <CameraCapture> cams = Object.FindObjectsOfType <CameraCapture>().ToList();
 
         if (cams.Count == 0)
@@ -44,12 +45,10 @@ internal static partial class ContextMenu
             var timestamp = $"{DateTime.Now:yy-MM-dd})({DateTime.Now:HH-mm-ss}";
             var camName = $"/{cam.gameObject.name}[{cam.GetHashCode()}]({timestamp}).png";
             var path = $"{cam.lastPath}{camName}";
-            
+
 #if USING_URP
-#if UNITY_EDITOR
-            cam.RenderAndSaveUrp(path, ScreenshotData.RenderPipelineAssetPath,
-                AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
-#endif
+            cam.RenderAndSaveUrp(path, SaveValues.Screenshot.RenderPipelineAssetPath,
+                                 AssetDatabase.GUIDFromAssetPath(SaveValues.Screenshot.RendererDataPath));
 #else
             cam.RenderAndSave(path);
 #endif

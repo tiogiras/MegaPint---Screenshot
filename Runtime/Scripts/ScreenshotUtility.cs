@@ -1,12 +1,8 @@
 ﻿using System;
 using System.IO;
-using UnityEngine;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
-
+using UnityEngine;
 #if USING_URP
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 #endif
 
@@ -15,10 +11,18 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 #endif
 
+namespace MegaPint
+{
+
+/// <summary> Utility class for the screenshot package </summary>
 public static class ScreenshotUtility
 {
     #region Public Methods
 
+    /// <summary> Get the Gcd </summary>
+    /// <param name="a"> First value </param>
+    /// <param name="b"> Second value </param>
+    /// <returns> Gcd of a and b </returns>
     public static int Gcd(ulong a, ulong b)
     {
         while (a != 0 && b != 0)
@@ -32,6 +36,12 @@ public static class ScreenshotUtility
         return Convert.ToInt32(a | b);
     }
 
+    /// <summary> Render a camera </summary>
+    /// <param name="camera"> Targeted camera </param>
+    /// <param name="width"> Width of the rendered texture </param>
+    /// <param name="height"> Height of the rendered texture </param>
+    /// <param name="depth"> Depth of the rendered texture </param>
+    /// <returns> Rendered image </returns>
     public static Texture2D RenderCamera(Camera camera, int width, int height, int depth)
     {
         RenderTexture cameraTarget = camera.targetTexture;
@@ -55,6 +65,9 @@ public static class ScreenshotUtility
         return image;
     }
 
+    /// <summary> Save a texture </summary>
+    /// <param name="texture"> Targeted texture </param>
+    /// <param name="filePath"> Export path </param>
     public static void SaveTexture(Texture2D texture, string filePath)
     {
         var bytes = texture.EncodeToPNG();
@@ -71,7 +84,10 @@ public static class ScreenshotUtility
         AssetDatabase.Refresh();
 #endif
     }
-    
+
+    /// <summary> Write the color buffer format </summary>
+    /// <param name="newColorBuffer"> New format </param>
+    /// <param name="oldColorBuffer"> Output of the old format </param>
     public static void WriteColorBufferFormat(string newColorBuffer, out string oldColorBuffer)
     {
         oldColorBuffer = "";
@@ -110,6 +126,11 @@ public static class ScreenshotUtility
 
 #if USING_URP
 #if UNITY_EDITOR
+    /// <summary> Try to get the index of the scriptable renderer used as transparency renderer </summary>
+    /// <param name="renderPipelineAssetPath"> Path to the renderPipelineAsset </param>
+    /// <param name="renderer"> GUID of the renderer </param>
+    /// <param name="index"> Output index of the renderer </param>
+    /// <returns> If the index was found </returns>
     public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, GUID renderer, out int index)
     {
         EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(renderPipelineAssetPath));
@@ -142,6 +163,11 @@ public static class ScreenshotUtility
         return false;
     }
 
+    /// <summary> Try to get the index of the scriptable renderer used as transparency renderer </summary>
+    /// <param name="renderPipelineAssetPath"> Path to the renderPipelineAsset </param>
+    /// <param name="renderer"> GUID of the renderer </param>
+    /// <param name="index"> Output index of the renderer </param>
+    /// <returns> If the index was found </returns>
     public static bool TryGetScriptableRendererIndex(string renderPipelineAssetPath, ScriptableRenderer renderer, out int index)
     {
         var pipelineAsset =
@@ -167,4 +193,6 @@ public static class ScreenshotUtility
 #endif
 
     #endregion
+}
+
 }

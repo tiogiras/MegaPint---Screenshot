@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 #if USING_URP
 using UnityEngine.Rendering.Universal;
 #endif
@@ -15,6 +12,10 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering.HighDefinition;
 #endif
 
+namespace MegaPint
+{
+
+/// <summary> Holds settings and information to render the image of the attached <see cref="Camera" /> component </summary>
 [RequireComponent(typeof(Camera))]
 public class CameraCapture : MonoBehaviour
 {
@@ -62,6 +63,8 @@ public class CameraCapture : MonoBehaviour
 
     #region Public Methods
 
+    /// <summary> Render the camera's image </summary>
+    /// <returns> Rendered image </returns>
     public async Task <Texture2D> Render()
     {
         var cam = GetComponent <Camera>();
@@ -108,12 +111,18 @@ public class CameraCapture : MonoBehaviour
         return render;
     }
 
+    /// <summary> Render the camera and save </summary>
+    /// <param name="path"> Export path </param>
     public async void RenderAndSave(string path)
     {
         Save(await Render(), path);
     }
 
 #if UNITY_EDITOR
+    /// <summary> Render the camera and save </summary>
+    /// <param name="path"> Export path </param>
+    /// <param name="renderPipelineAssetPath"> Path to the renderPipelineAsset </param>
+    /// <param name="transparencyRenderer"> Path to the renderer </param>
     public async void RenderAndSaveUrp(
         string path,
         string renderPipelineAssetPath,
@@ -122,6 +131,10 @@ public class CameraCapture : MonoBehaviour
         Save(await RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
     }
 
+    /// <summary> Render the camera's image </summary>
+    /// <param name="renderPipelineAssetPath"> Path to the renderPipelineAsset </param>
+    /// <param name="transparencyRenderer"> Path to the renderer </param>
+    /// <returns> Rendered image </returns>
     public async Task <Texture2D> RenderUrp(
         string renderPipelineAssetPath,
         GUID transparencyRenderer)
@@ -146,6 +159,9 @@ public class CameraCapture : MonoBehaviour
     }
 #endif
 
+    /// <summary> Save the rendered image </summary>
+    /// <param name="texture"> Texture to save </param>
+    /// <param name="path"> Export path </param>
     public void Save(Texture2D texture, string path)
     {
         if (string.IsNullOrEmpty(path))
@@ -168,6 +184,11 @@ public class CameraCapture : MonoBehaviour
 
     #region Private Methods
 
+    /// <summary> Reset the camera </summary>
+    /// <param name="cam"> Targeted camera </param>
+    /// <param name="bgColor"> Background color </param>
+    /// <param name="flags"> ClearFlags </param>
+    /// <param name="destroy"> Objects to destroy </param>
     private static void ResetCamera(
         Camera cam,
         Color bgColor,
@@ -184,6 +205,12 @@ public class CameraCapture : MonoBehaviour
         }
     }
 
+    /// <summary> Prepare the camera to render </summary>
+    /// <param name="cam"> Targeted camera </param>
+    /// <param name="bgColor"> Background color </param>
+    /// <param name="flags"> ClearFlags </param>
+    /// <param name="destroy"> Objects to destroy </param>
+    /// <exception cref="ArgumentOutOfRangeException"> Background not found </exception>
     private void PrepareCamera(
         Camera cam,
         out Color bgColor,
@@ -246,6 +273,9 @@ public class CameraCapture : MonoBehaviour
     }
 
 #if USING_URP
+    /// <summary> Prepare the camera data to render </summary>
+    /// <param name="camData"> Targeted camera data </param>
+    /// <param name="rendererIndex"> Index of the transparency renderer </param>
     private void PrepareCameraData(UniversalAdditionalCameraData camData, out int rendererIndex)
     {
         rendererIndex = -1;
@@ -280,6 +310,12 @@ public class CameraCapture : MonoBehaviour
     }
 #endif
 #if USING_HDRP
+    /// <summary> Prepare the camera data for rendering </summary>
+    /// <param name="camData"> Targeted camera data </param>
+    /// <param name="colorMode"> Color Mode </param>
+    /// <param name="bgColor"> Background color </param>
+    /// <param name="colorBuffer"> Color buffer </param>
+    /// <exception cref="ArgumentOutOfRangeException"> Background not found </exception>
     private void PrepareCameraData(
         HDAdditionalCameraData camData,
         out HDAdditionalCameraData.ClearColorMode colorMode,
@@ -300,7 +336,8 @@ public class CameraCapture : MonoBehaviour
 
             case BackgroundType.SolidColor:
                 camData.clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
-                camData.backgroundColorHDR = new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+                camData.backgroundColorHDR =
+ new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 
                 break;
 
@@ -342,4 +379,6 @@ public class CameraCapture : MonoBehaviour
 #endif
 
     #endregion
+}
+
 }

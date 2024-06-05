@@ -1,25 +1,21 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using Editor.Scripts.GUI.Factories;
-using Editor.Scripts.GUI.Factories.Structure;
+using MegaPint.Editor.Scripts.GUI.Factories.Structure;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
-using GUIUtility = Editor.Scripts.GUI.GUIUtility;
+using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
 
-namespace Editor.Scripts.Windows
+namespace MegaPint.Editor.Scripts.Windows
 {
 
 /// <summary>
-///     Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the rendering of editor windows
+///     Window based on the <see cref="EditorWindowBase" /> to display and handle the rendering of editor windows
 /// </summary>
-internal class WindowCapture : MegaPintEditorWindowBase
+internal class WindowCapture : EditorWindowBase
 {
-    private const string FolderBasePath = "Screenshot/User Interface";
-
     private readonly List <EditorWindow> _windowRefs = new();
 
     private VisualTreeAsset _baseWindow;
@@ -33,11 +29,10 @@ internal class WindowCapture : MegaPintEditorWindowBase
     private Texture2D _render;
 
     private DropdownField _windows;
+
     #region Public Methods
 
-    /// <summary> Show the window </summary>
-    /// <returns> Window instance </returns>
-    public override MegaPintEditorWindowBase ShowWindow()
+    public override EditorWindowBase ShowWindow()
     {
         titleContent.text = "Window Capture";
 
@@ -45,11 +40,12 @@ internal class WindowCapture : MegaPintEditorWindowBase
     }
 
     #endregion
+
     #region Protected Methods
 
     protected override string BasePath()
     {
-        return Path.Combine(FolderBasePath, "Window Capture");
+        return Constants.Screenshot.UserInterface.WindowCapture;
     }
 
     protected override async void CreateGUI()
@@ -105,8 +101,10 @@ internal class WindowCapture : MegaPintEditorWindowBase
     }
 
     #endregion
+
     #region Private Methods
 
+    /// <summary> Refresh listed windows </summary>
     private void RefreshWindows()
     {
         EditorWindow[] windows = Resources.FindObjectsOfTypeAll <EditorWindow>();
@@ -127,6 +125,7 @@ internal class WindowCapture : MegaPintEditorWindowBase
         _preview.style.backgroundImage = null;
     }
 
+    /// <summary> Render the selected window </summary>
     private async void Render()
     {
         EditorWindow target = _windowRefs[_windows.index];
@@ -162,31 +161,34 @@ internal class WindowCapture : MegaPintEditorWindowBase
         _btnSave.style.display = DisplayStyle.Flex;
     }
 
+    /// <summary> Save the rendered image </summary>
     private void Save()
     {
         var path = EditorUtility.SaveFilePanel(
             "Save Screenshot",
-            ScreenshotData.LastEditorWindowPath,
+            SaveValues.Screenshot.LastEditorWindowPath,
             "",
             "png");
 
         if (string.IsNullOrEmpty(path))
             return;
 
-        if (!path.IsPathInProject(out var _) && !ScreenshotData.ExternalExport)
+        if (!path.IsPathInProject(out var _) && !SaveValues.Screenshot.ExternalExport)
         {
             EditorUtility.DisplayDialog(
                 "Path not in project",
                 "The path must be within the Assets folder",
                 "ok");
-            
+
             return;
         }
 
-        ScreenshotData.LastEditorWindowPath = path;
+        SaveValues.Screenshot.LastEditorWindowPath = path;
         ScreenshotUtility.SaveTexture(_render, path);
     }
 
+    /// <summary> Callback on selecting a window </summary>
+    /// <param name="evt"> Callback event </param>
     private void WindowSelected(ChangeEvent <string> evt)
     {
         _btnRender.style.display = DisplayStyle.Flex;
