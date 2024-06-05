@@ -1,29 +1,26 @@
-﻿using System.Threading.Tasks;
-using Editor.Scripts.GUI.Factories;
-using Editor.Scripts.GUI.Factories.Structure;
-using UnityEngine;
-using UnityEngine.UIElements;
-using GUIUtility = Editor.Scripts.GUI.GUIUtility;
-#if UNITY_EDITOR
-using Editor.Scripts.GUI;
+﻿#if UNITY_EDITOR
+using MegaPint.Editor.Scripts.GUI;
+using MegaPint.Editor.Scripts.GUI.Factories.Structure;
 using UnityEditor;
 using UnityEditor.UIElements;
-#endif
-
+using UnityEngine;
+using UnityEngine.UIElements;
+using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
 #if USING_URP
 using UnityEngine.Rendering.Universal;
 #endif
 
 #if UNITY_EDITOR
-namespace Editor.Scripts
+namespace MegaPint.Editor.Scripts.Drawer
 {
 
 [CustomEditor(typeof(CameraCapture))]
 internal class CameraCaptureDrawer : UnityEditor.Editor
 {
-    private const string Path = "Screenshot/User Interface/Camera Capture";
+    private readonly string _basePath = Constants.Screenshot.UserInterface.CameraCapture;
+
 #if USING_URP && USING_HDRP
-    private const string PathError = "Screenshot/User Interface/Multiple Pipelines";
+    private readonly string _pathError = Constants.Screenshot.UserInterface.MultiplePipelines;
 #endif
 
     private ColorField _backgroundColor;
@@ -54,26 +51,27 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
     private VisualElement _transparencyHint;
     private VisualElement _transparencyHintHdrp;
-    
+
     private VisualElement _rootTarget;
-    
+
 #if USING_HDRP
     private IntegerField _exposureTime;
 #endif
 
     private IntegerField _width;
+
     #region Public Methods
 
     public override VisualElement CreateInspectorGUI()
     {
 #if USING_URP && USING_HDRP
-        return Resources.Load <VisualTreeAsset>(PathError).Instantiate();   
+        return Resources.Load <VisualTreeAsset>(_pathError).Instantiate();
 #endif
-        var template = Resources.Load <VisualTreeAsset>(Path);
+        var template = Resources.Load <VisualTreeAsset>(_basePath);
         VisualElement root = GUIUtility.Instantiate(template);
 
         _rootTarget = root;
-        
+
         root.style.flexGrow = 1f;
         root.style.flexShrink = 1f;
 
@@ -138,29 +136,26 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         root.schedule.Execute(
             () =>
             {
-                root.parent.styleSheets.Add(Resources.Load<StyleSheet>(StyleSheetClasses.BaseStyleSheetPath));
-                root.parent.styleSheets.Add(Resources.Load<StyleSheet>(StyleSheetClasses.AttributeStyleSheetPath));
-                
+                root.parent.styleSheets.Add(StyleSheetValues.BaseStyleSheet);
+                root.parent.styleSheets.Add(StyleSheetValues.AttributesStyleSheet);
+
                 GUIUtility.ApplyRootElementTheme(root.parent);
-                
+
                 root.parent.AddToClassList(StyleSheetClasses.Background.Color.Tertiary);
             });
-        
+
         return root;
     }
 
-    private void ApplyTheme()
-    {
-        
-    }
-
     #endregion
+
     #region Private Methods
 
+    /// <summary> Change the export path </summary>
     private void ChangePath()
     {
         var path = EditorUtility.OpenFolderPanel("Choose Path", _target.lastPath, "");
-        
+
         if (string.IsNullOrEmpty(path))
             return;
 
@@ -171,21 +166,22 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         }
         else
         {
-            if (!ScreenshotData.ExternalExport)
+            if (!SaveValues.Screenshot.ExternalExport)
             {
                 EditorUtility.DisplayDialog(
                     "Folder not in project",
                     "The folder must be within the Assets folder",
                     "ok");
-                
+
                 return;
             }
-            
+
             _target.lastPath = path;
             UpdatePath();
         }
     }
 
+    /// <summary> Register all callbacks </summary>
     private void RegisterCallbacks()
     {
         _btnRender.clicked += Render;
@@ -276,6 +272,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _btnExportPath.clicked += ChangePath;
     }
 
+    /// <summary> Save the rendered image </summary>
     private void Save()
     {
         var path = EditorUtility.SaveFilePanel(
@@ -283,31 +280,33 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             _target.lastPath,
             "",
             "png");
-                
+
         if (string.IsNullOrEmpty(path))
             return;
 
         if (path.IsPathInProject(out var pathInProject))
         {
             _target.Save(_render, pathInProject);
+
             return;
         }
 
-        if (!ScreenshotData.ExternalExport)
+        if (!SaveValues.Screenshot.ExternalExport)
         {
             EditorUtility.DisplayDialog(
                 "Path not in project",
                 "The path must be within the Assets folder",
                 "ok");
-                    
+
             return;
         }
-                
+
         _target.Save(_render, path);
-        
+
         UpdatePath();
     }
 
+    /// <summary> Render the camera </summary>
     private async void Render()
     {
         var width = _target.width;
@@ -316,8 +315,8 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         var gcd = ScreenshotUtility.Gcd((ulong)width, (ulong)height);
 
 #if USING_URP
-        _render = await _target.RenderUrp(ScreenshotData.RenderPipelineAssetPath,
-            AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath));
+        _render = await _target.RenderUrp(SaveValues.Screenshot.RenderPipelineAssetPath,
+            AssetDatabase.GUIDFromAssetPath(SaveValues.Screenshot.RendererDataPath));
 #else
         _render = await _target.Render();
 #endif
@@ -330,12 +329,15 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _btnSave.style.display = DisplayStyle.Flex;
     }
 
+    /// <summary> Update the background color </summary>
     private void UpdateBackgroundColor()
     {
         _backgroundColor.style.display = _target.backgroundType == BackgroundType.SolidColor
-            ? DisplayStyle.Flex : DisplayStyle.None;
+            ? DisplayStyle.Flex
+            : DisplayStyle.None;
     }
 
+    /// <summary> Update the background image </summary>
     private void UpdateBackgroundImage()
     {
         var isImage = _target.backgroundType == BackgroundType.Image;
@@ -348,18 +350,22 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             isImage && image != null ? DisplayStyle.Flex : DisplayStyle.None;
 
         _pixelPerUnit.style.display = isImage && _target.imageType.Equals("Tiled")
-            ? DisplayStyle.Flex : DisplayStyle.None;
+            ? DisplayStyle.Flex
+            : DisplayStyle.None;
 
-        _imageResolution.text = _target.backgroundImage == null ? ""
+        _imageResolution.text = _target.backgroundImage == null
+            ? ""
             : $"{image.rect.width} x {image.rect.height}";
     }
 
+    /// <summary> Update the export path </summary>
     private void UpdatePath()
     {
         _path.text = _target.lastPath;
         _path.tooltip = _target.lastPath;
     }
 
+    /// <summary> Update the transparency hint </summary>
     private void UpdateTransparencyHint()
     {
 #if USING_URP
@@ -373,6 +379,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 #endif
     }
 
+    /// <summary> Update the transparency hint of the hdrp pipeline </summary>
     private void UpdateTransparencyHintHdrp()
     {
 #if USING_HDRP
@@ -386,4 +393,5 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 }
 
 }
+#endif
 #endif

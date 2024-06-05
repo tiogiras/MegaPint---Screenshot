@@ -1,14 +1,11 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UIElements;
-using GUIUtility = Editor.Scripts.GUI.GUIUtility;
-using Object = UnityEngine.Object;
-#if UNITY_EDITOR
-using System.IO;
+﻿#if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
-#endif
-
+using UnityEngine;
+using UnityEngine.UIElements;
+using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
+using Object = UnityEngine.Object;
 #if USING_URP
 using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
@@ -16,18 +13,15 @@ using System.IO;
 using System.Linq;
 #endif
 
-#if UNITY_EDITOR
-namespace Editor.Scripts.Windows
+namespace MegaPint.Editor.Scripts.Windows
 {
 
 /// <summary>
-///     Window based on the <see cref="MegaPintEditorWindowBase" /> to display a window that fixes an issue regarding
+///     Window based on the <see cref="EditorWindowBase" /> to display a window that fixes an issue regarding
 ///     transparency in urp
 /// </summary>
-internal class TransparencyWizard : MegaPintEditorWindowBase
+internal class TransparencyWizard : EditorWindowBase
 {
-    private const string FolderBasePath = "Screenshot/User Interface";
-
     private VisualTreeAsset _baseWindow;
 
     private Button _btnFinish;
@@ -42,11 +36,10 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
     private GroupBox _step1;
     private GroupBox _step2;
     private GroupBox _step3;
+
     #region Public Methods
 
-    /// <summary> Show the window </summary>
-    /// <returns> Window instance </returns>
-    public override MegaPintEditorWindowBase ShowWindow()
+    public override EditorWindowBase ShowWindow()
     {
         titleContent.text = "Transparency Wizard";
 
@@ -54,11 +47,12 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
     }
 
     #endregion
+
     #region Protected Methods
 
     protected override string BasePath()
     {
-        return Path.Combine(FolderBasePath, "Transparency Wizard");
+        return Constants.Screenshot.UserInterface.TransparencyWizard;
     }
 
     protected override void CreateGUI()
@@ -83,7 +77,7 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         _step3 = content.Q <GroupBox>("Step3");
 
 #if USING_URP
-        _pipelineAsset.value = ScreenshotData.RenderPipelineAsset();
+        _pipelineAsset.value = SaveValues.Screenshot.RenderPipelineAsset();
 #endif
 
         RegisterCallbacks();
@@ -115,14 +109,20 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
     }
 
     #endregion
+
     #region Private Methods
 
+    /// <summary> Callback when pipeline asset was changed </summary>
+    /// <param name="evt"> Callback event </param>
     private static void PipelineAssetChanged(ChangeEvent <Object> evt)
     {
-        ScreenshotData.RenderPipelineAssetPath =
+        SaveValues.Screenshot.RenderPipelineAssetPath =
             evt.newValue == null ? "" : AssetDatabase.GetAssetPath(evt.newValue);
     }
 
+    /// <summary> Can change to next step </summary>
+    /// <returns> If the next step is available </returns>
+    /// <exception cref="System.ArgumentOutOfRangeException"> Step not found </exception>
     private bool CanChange()
     {
         return _state switch
@@ -134,6 +134,8 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
                };
     }
 
+    /// <summary> Change step </summary>
+    /// <param name="state"> Next step </param>
     private void ChangeState(int state)
     {
         _state = state;
@@ -149,21 +151,23 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         SetSize();
     }
 
+    /// <summary> Execute the transparency wizard </summary>
+    /// <param name="path"> Path of the asset </param>
     private void ExecuteWizard(string path)
     {
 #if USING_URP
         var rendererDataTemplate = (UniversalRendererData)_rendererData.value;
 
-        ScreenshotData.RendererDataPath = Path.Combine(path, "Transparency Renderer Data.asset");
+        SaveValues.Screenshot.RendererDataPath = Path.Combine(path, "Transparency Renderer Data.asset");
         UniversalRendererData rendererData =
-            Utility.CopyAndLoadAsset(rendererDataTemplate, ScreenshotData.RendererDataPath);
+            Utility.CopyAndLoadAsset(rendererDataTemplate, SaveValues.Screenshot.RendererDataPath);
 
         PostProcessData postProcessData = Utility.CopyAndLoadAsset(rendererData.postProcessData,
             Path.Combine(path, "Transparency PostProcess Data.asset"));
 
         var uberShader = Utility.CopyAndLoadAsset <Shader>(
-            "Packages/com.tiogiras.megapint-screenshot/Editor/Scripts/UberPost_Alpha.txt",
-            Path.Combine(path, "UberPost_Alpha.shader"));
+            "Packages/com.tiogiras.megapint-screenshot/Editor/Scripts/Uber Post Alpha.txt",
+            Path.Combine(path, "Uber Post Alpha.shader"));
 
         rendererData.postProcessData = postProcessData;
         EditorUtility.SetDirty(rendererData);
@@ -171,7 +175,7 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         postProcessData.shaders.uberPostPS = uberShader;
         EditorUtility.SetDirty(postProcessData);
 
-        List <string> lines = File.ReadAllLines(ScreenshotData.RenderPipelineAssetPath).ToList();
+        List <string> lines = File.ReadAllLines(SaveValues.Screenshot.RenderPipelineAssetPath).ToList();
 
         var foundRenderers = false;
         var index = -1;
@@ -193,10 +197,10 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
                 foundRenderers = true;
         }
 
-        GUID guid = AssetDatabase.GUIDFromAssetPath(ScreenshotData.RendererDataPath);
+        GUID guid = AssetDatabase.GUIDFromAssetPath(SaveValues.Screenshot.RendererDataPath);
         lines.Insert(index, $"  - {{fileID: 11400000, guid: {guid}, type: 2}}");
 
-        File.WriteAllLines(ScreenshotData.RenderPipelineAssetPath, lines);
+        File.WriteAllLines(SaveValues.Screenshot.RenderPipelineAssetPath, lines);
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -205,6 +209,7 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         Close();
     }
 
+    /// <summary> Finish the setup </summary>
     private void Finish()
     {
         var path = EditorUtility.SaveFolderPanel("Target folder for settings", "Assets", "");
@@ -222,6 +227,7 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         ExecuteWizard(pathInProject);
     }
 
+    /// <summary> Next step </summary>
     private void Next()
     {
         if (!CanChange())
@@ -237,12 +243,16 @@ internal class TransparencyWizard : MegaPintEditorWindowBase
         ChangeState(_state + 1);
     }
 
+    /// <summary> Set window size </summary>
     private void SetSize()
     {
         maxSize = Size();
         minSize = Size();
     }
 
+    /// <summary> Get the current window size based on the current step </summary>
+    /// <returns> Window size </returns>
+    /// <exception cref="System.ArgumentOutOfRangeException"> Step not found </exception>
     private Vector2 Size()
     {
         return _state switch

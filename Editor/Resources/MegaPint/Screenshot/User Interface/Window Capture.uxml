@@ -2,15 +2,15 @@
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintUnityElements.uss?fileID=7433441132597879392&amp;guid=14475de81743442dad8e397f39ea6ace&amp;type=3#MegaPintUnityElements" />
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />
-    <Editor.Scripts.GUI.Factories.RootElement style="flex-grow: 1;">
-        <Editor.Scripts.GUI.Factories.Backgrounds.BackgroundSecondary class="mp_border-color--black" style="border-bottom-width: 1px;">
-            <Editor.Scripts.GUI.Factories.Headings.HeadingPrimary tabindex="-1" text="Render Editor Window" style="-unity-text-align: middle-center; font-size: 16px; margin-top: 5px; margin-bottom: 5px; -unity-font-style: bold;" />
-        </Editor.Scripts.GUI.Factories.Backgrounds.BackgroundSecondary>
-        <Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary style="flex-grow: 1; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;">
+    <MegaPint.Editor.Scripts.GUI.Factories.RootElement style="flex-grow: 1;">
+        <MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundSecondary class="mp_border-color--black" style="border-bottom-width: 1px;">
+            <MegaPint.Editor.Scripts.GUI.Factories.Headings.HeadingPrimary tabindex="-1" text="Render Editor Window" style="-unity-text-align: middle-center; font-size: 16px; margin-top: 5px; margin-bottom: 5px; -unity-font-style: bold;" />
+        </MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundSecondary>
+        <MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary style="flex-grow: 1; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;">
             <ui:VisualElement style="align-items: center; justify-content: center; flex-grow: 1;">
-                <Editor.Scripts.GUI.Factories.Structure.AspectRatioPanel name="Preview" />
+                <MegaPint.Editor.Scripts.GUI.Factories.Structure.AspectRatioPanel name="Preview" />
             </ui:VisualElement>
-            <Editor.Scripts.GUI.Factories.Structure.Separator />
+            <MegaPint.Editor.Scripts.GUI.Factories.Structure.Separator />
             <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row-reverse; align-items: center; justify-content: flex-start;">
                 <ui:Button text="Render Window" parse-escape-sequences="true" display-tooltip-when-elided="true" tooltip="Render the slected window." name="BTN_Render" />
                 <ui:Button text="Export Image" parse-escape-sequences="true" display-tooltip-when-elided="true" tooltip="Export the rendered image." name="BTN_Save" />
@@ -19,6 +19,6 @@
                 <ui:DropdownField label="Editor Window" index="-1" name="Windows" style="flex-shrink: 1; flex-grow: 1;" />
                 <ui:Button text="Refresh" parse-escape-sequences="true" display-tooltip-when-elided="true" tooltip="Refresh the list of opened editor windows." name="BTN_Refresh" />
             </ui:GroupBox>
-        </Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary>
-    </Editor.Scripts.GUI.Factories.RootElement>
+        </MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary>
+    </MegaPint.Editor.Scripts.GUI.Factories.RootElement>
 </ui:UXML>

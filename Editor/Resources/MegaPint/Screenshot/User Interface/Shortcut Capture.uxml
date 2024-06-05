@@ -2,13 +2,13 @@
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintUnityElements.uss?fileID=7433441132597879392&amp;guid=14475de81743442dad8e397f39ea6ace&amp;type=3#MegaPintUnityElements" />
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />
-    <Editor.Scripts.GUI.Factories.RootElement style="flex-grow: 1;">
+    <MegaPint.Editor.Scripts.GUI.Factories.RootElement style="flex-grow: 1;">
         <ui:VisualElement name="Root" style="flex-grow: 1;">
-            <Editor.Scripts.GUI.Factories.Backgrounds.BackgroundPrimary class="mp_border-color--black" style="border-bottom-width: 1px;">
-                <Editor.Scripts.GUI.Factories.Headings.HeadingPrimary tabindex="-1" text="Render Camera Captures" style="margin-top: 5px; margin-bottom: 5px; white-space: normal; font-size: 16px; -unity-text-align: middle-center; -unity-font-style: bold;" />
-            </Editor.Scripts.GUI.Factories.Backgrounds.BackgroundPrimary>
-            <Editor.Scripts.GUI.Factories.Backgrounds.BackgroundSecondary style="flex-grow: 1;">
-                <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="No [CameraCapture] components found in the opened scene!" name="Placeholder" style="white-space: normal; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
+            <MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundPrimary class="mp_border-color--black" style="border-bottom-width: 1px;">
+                <MegaPint.Editor.Scripts.GUI.Factories.Headings.HeadingPrimary tabindex="-1" text="Render Camera Captures" style="margin-top: 5px; margin-bottom: 5px; white-space: normal; font-size: 16px; -unity-text-align: middle-center; -unity-font-style: bold;" />
+            </MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundPrimary>
+            <MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundSecondary style="flex-grow: 1;">
+                <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="No [CameraCapture] components found in the opened scene!" name="Placeholder" style="white-space: normal; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
                 <ui:GroupBox style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; justify-content: space-between;">
                     <ui:Button text="Refresh" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Refresh" tooltip="Refresh the CameraCapture components found in the scene." />
                     <ui:VisualElement style="flex-direction: row;">
@@ -16,9 +16,9 @@
                         <ui:Button text="None" parse-escape-sequences="true" display-tooltip-when-elided="true" tooltip="Disable shortcuts for all CameraCapture components." name="BTN_None" style="margin-right: 5px;" />
                     </ui:VisualElement>
                 </ui:GroupBox>
-                <Editor.Scripts.GUI.Factories.Structure.Separator />
+                <MegaPint.Editor.Scripts.GUI.Factories.Structure.Separator />
                 <ui:ListView focusable="true" name="Cameras" virtualization-method="FixedHeight" show-bound-collection-size="false" fixed-item-height="20" selection-type="None" style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;" />
-            </Editor.Scripts.GUI.Factories.Backgrounds.BackgroundSecondary>
+            </MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundSecondary>
         </ui:VisualElement>
-    </Editor.Scripts.GUI.Factories.RootElement>
+    </MegaPint.Editor.Scripts.GUI.Factories.RootElement>
 </ui:UXML>
