@@ -68,7 +68,7 @@ internal static partial class ContextMenu
     {
         TryOpen <WindowCapture>(false);
     }
-
+    
 #if USING_URP
     [MenuItem(MenuItemPackages + "/Screenshot/Transparency Wizard", false, 140)]
     private static void TransparencyWizard()

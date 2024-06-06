@@ -11,9 +11,21 @@ internal static partial class Constants
     {
         public static class Links
         {
-            public const string WindowCapture = "MegaPint/Packages/Screenshot/Window Capture";
-            public const string ShortcutCapture = "MegaPint/Packages/Screenshot/Shortcut Capture";
-            public const string CaptureNow = "MegaPint/Packages/Screenshot/Capture Now";
+            public static readonly string WindowCapture = Utility.CombineMenuItemPath(
+                ContextMenu.MenuItemPackages,
+                "Screenshot/Window Capture");
+
+            public static readonly string ShortcutCapture = Utility.CombineMenuItemPath(
+                ContextMenu.MenuItemPackages,
+                "Screenshot/Shortcut Capture");
+
+            public static readonly string CaptureNow = Utility.CombineMenuItemPath(
+                ContextMenu.MenuItemPackages,
+                "Screenshot/Capture Now");
+
+            public static readonly string TransparencyWizard = Utility.CombineMenuItemPath(
+                ContextMenu.MenuItemPackages,
+                "Screenshot/Transparency Wizard");
         }
 
         public static class UserInterface
