@@ -48,7 +48,7 @@ internal static partial class SaveValues
             get
             {
                 if (MegaPintSettings.Exists())
-                    return s_generalSettings ??= MegaPintSettings.instance.GetSetting("Screenshot");
+                    return s_settings ??= MegaPintSettings.instance.GetSetting("Screenshot");
 
                 return null;
             }

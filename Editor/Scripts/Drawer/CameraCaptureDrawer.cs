@@ -163,6 +163,8 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         {
             _target.lastPath = pathInProject;
             UpdatePath();
+            
+            ApplyModifiedProperties();
         }
         else
         {
@@ -178,9 +180,18 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
             _target.lastPath = path;
             UpdatePath();
+            
+            ApplyModifiedProperties();
         }
     }
 
+    /// <summary> Applies all changes to the serializedObject </summary>
+    private void ApplyModifiedProperties()
+    {
+        serializedObject.ApplyModifiedProperties();
+        EditorUtility.SetDirty(serializedObject.targetObject);
+    }
+    
     /// <summary> Register all callbacks </summary>
     private void RegisterCallbacks()
     {
@@ -195,11 +206,15 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                 {
                     _width.SetValueWithoutNotify(0);
                     _target.width = 0;
+                    
+                    ApplyModifiedProperties();
 
                     return;
                 }
 
                 _target.width = evt.newValue;
+                
+                ApplyModifiedProperties();
             });
 
         _height.RegisterValueChangedCallback(
@@ -210,10 +225,14 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                     _height.SetValueWithoutNotify(0);
                     _target.height = 0;
 
+                    ApplyModifiedProperties();
+                    
                     return;
                 }
 
                 _target.height = evt.newValue;
+                
+                ApplyModifiedProperties();
             });
 
 #if USING_HDRP
@@ -225,14 +244,23 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                     _exposureTime.SetValueWithoutNotify(0);
                     _target.exposureTime = 0;
 
+                    ApplyModifiedProperties();
+
                     return;
                 }
 
                 _target.exposureTime = evt.newValue;
+
+                ApplyModifiedProperties();
             });
 #endif
 
-        _depth.RegisterValueChangedCallback(evt => {_target.depth = int.Parse(evt.newValue);});
+        _depth.RegisterValueChangedCallback(
+            evt =>
+            {
+                _target.depth = int.Parse(evt.newValue);
+                ApplyModifiedProperties();
+            });
 
         _backgroundType.RegisterValueChangedCallback(
             evt =>
@@ -241,16 +269,24 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                 UpdateBackgroundColor();
                 UpdateBackgroundImage();
                 UpdateTransparencyHint();
+                
+                ApplyModifiedProperties();
             });
 
         _backgroundColor.RegisterValueChangedCallback(
-            evt => {_target.backgroundColor = evt.newValue;});
+            evt =>
+            {
+                _target.backgroundColor = evt.newValue;
+                ApplyModifiedProperties();
+            });
 
         _imageType.RegisterValueChangedCallback(
             evt =>
             {
                 _target.imageType = evt.newValue;
                 UpdateBackgroundImage();
+                
+                ApplyModifiedProperties();
             });
 
         _pixelPerUnit.RegisterValueChangedCallback(
@@ -260,6 +296,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                     _pixelPerUnit.SetValueWithoutNotify(0);
 
                 _target.pixelPerUnit = evt.newValue;
+                ApplyModifiedProperties();
             });
 
         _backgroundImage.RegisterValueChangedCallback(
@@ -267,6 +304,8 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             {
                 _target.backgroundImage = (Sprite)evt.newValue;
                 UpdateBackgroundImage();
+                
+                ApplyModifiedProperties();
             });
 
         _btnExportPath.clicked += ChangePath;
