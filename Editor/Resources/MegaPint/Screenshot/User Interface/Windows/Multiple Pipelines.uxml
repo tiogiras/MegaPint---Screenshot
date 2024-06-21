@@ -4,7 +4,7 @@
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />
     <MegaPint.Editor.Scripts.GUI.Factories.RootElement style="flex-grow: 1;">
         <ui:VisualElement style="flex-grow: 1; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;">
-            <MegaPint.Editor.Scripts.GUI.Factories.Headings.HeadingIdentity tabindex="-1" text="Multiple RenderPipelines detected!" style="margin-bottom: 10px; white-space: normal; -unity-font-style: bold; -unity-text-align: middle-center;" />
+            <MegaPint.Editor.Scripts.GUI.Factories.Headings.HeadingPrimary tabindex="-1" text="Multiple RenderPipelines detected!" style="-unity-font-style: bold; margin-bottom: 10px;" />
             <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="You currently have more than one pipeline imported into your project, make sure to remove all exept the one you are using." style="white-space: normal;" />
         </ui:VisualElement>
     </MegaPint.Editor.Scripts.GUI.Factories.RootElement>
