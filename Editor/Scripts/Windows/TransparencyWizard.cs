@@ -1,9 +1,10 @@
 ﻿#if UNITY_EDITOR
 using System;
-using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEditor;
+using UnityEditor.UIElements;
+using MegaPint.Editor.Scripts.GUI.Utility;
 using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
 using Object = UnityEngine.Object;
 #if USING_URP
@@ -43,14 +44,8 @@ internal class TransparencyWizard : EditorWindowBase
     {
         titleContent.text = "Transparency Wizard";
 
-        //minSize = new Vector2(700, 350); // TODO get correct values
+        this.CenterOnMainWin();
 
-        if (!SaveValues.Screenshot.ApplyPSTransparencyWizard)
-            return this;
-
-        //this.CenterOnMainWin(800, 450); // TODO get correct values
-        SaveValues.Screenshot.ApplyPSTransparencyWizard = false;
-        
         return this;
     }
 
@@ -167,10 +162,12 @@ internal class TransparencyWizard : EditorWindowBase
         var rendererDataTemplate = (UniversalRendererData)_rendererData.value;
 
         SaveValues.Screenshot.RendererDataPath = Path.Combine(path, "Transparency Renderer Data.asset");
+
         UniversalRendererData rendererData =
             Utility.CopyAndLoadAsset(rendererDataTemplate, SaveValues.Screenshot.RendererDataPath);
 
-        PostProcessData postProcessData = Utility.CopyAndLoadAsset(rendererData.postProcessData,
+        PostProcessData postProcessData = Utility.CopyAndLoadAsset(
+            rendererData.postProcessData,
             Path.Combine(path, "Transparency PostProcess Data.asset"));
 
         var uberShader = Utility.CopyAndLoadAsset <Shader>(
@@ -198,6 +195,7 @@ internal class TransparencyWizard : EditorWindowBase
                     continue;
 
                 index = i;
+
                 break;
             }
 

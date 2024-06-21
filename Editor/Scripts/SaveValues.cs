@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using MegaPint.Editor.Scripts.Settings;
 #if USING_URP
+using UnityEditor;
 using UnityEngine.Rendering.Universal;
 #endif
 
@@ -18,7 +19,6 @@ internal static partial class SaveValues
         private static CacheValue <bool> s_externalExport = new() {defaultValue = false};
 
         private static CacheValue <bool> s_applyPSShortcutWindow = new() {defaultValue = false};
-        private static CacheValue <bool> s_applyPSTransparencyWizard = new() {defaultValue = false};
         private static CacheValue <bool> s_applyPSWindowCapture = new() {defaultValue = false};
 
         private static SettingsBase s_settings;
@@ -51,12 +51,6 @@ internal static partial class SaveValues
         {
             get => ValueProperty.Get("applyPS_ShortCutWindow", ref s_applyPSShortcutWindow, _Settings);
             set => ValueProperty.Set("applyPS_ShortCutWindow", value, ref s_applyPSShortcutWindow, _Settings);
-        }
-
-        public static bool ApplyPSTransparencyWizard
-        {
-            get => ValueProperty.Get("applyPS_TransparencyWizard", ref s_applyPSTransparencyWizard, _Settings);
-            set => ValueProperty.Set("applyPS_TransparencyWizard", value, ref s_applyPSTransparencyWizard, _Settings);
         }
 
         public static bool ApplyPSWindowCapture
