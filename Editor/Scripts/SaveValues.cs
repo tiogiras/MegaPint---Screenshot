@@ -39,8 +39,8 @@ internal static partial class SaveValues
 
         public static bool ExternalExport
         {
-            get => ValueProperty.Get("saveMode", ref s_externalExport, _Settings);
-            set => ValueProperty.Set("saveMode", value, ref s_externalExport, _Settings);
+            get => ValueProperty.Get("externalExport", ref s_externalExport, _Settings);
+            set => ValueProperty.Set("externalExport", value, ref s_externalExport, _Settings);
         }
 
         private static SettingsBase _Settings
