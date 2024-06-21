@@ -17,6 +17,10 @@ internal static partial class SaveValues
         private static CacheValue <string> s_rendererData = new() {defaultValue = ""};
         private static CacheValue <bool> s_externalExport = new() {defaultValue = false};
 
+        private static CacheValue <bool> s_applyPSShortcutWindow = new() {defaultValue = false};
+        private static CacheValue <bool> s_applyPSTransparencyWizard = new() {defaultValue = false};
+        private static CacheValue <bool> s_applyPSWindowCapture = new() {defaultValue = false};
+
         private static SettingsBase s_settings;
 
         public static string LastEditorWindowPath
@@ -41,6 +45,24 @@ internal static partial class SaveValues
         {
             get => ValueProperty.Get("externalExport", ref s_externalExport, _Settings);
             set => ValueProperty.Set("externalExport", value, ref s_externalExport, _Settings);
+        }
+
+        public static bool ApplyPSShortcutWindow
+        {
+            get => ValueProperty.Get("applyPS_ShortCutWindow", ref s_applyPSShortcutWindow, _Settings);
+            set => ValueProperty.Set("applyPS_ShortCutWindow", value, ref s_applyPSShortcutWindow, _Settings);
+        }
+
+        public static bool ApplyPSTransparencyWizard
+        {
+            get => ValueProperty.Get("applyPS_TransparencyWizard", ref s_applyPSTransparencyWizard, _Settings);
+            set => ValueProperty.Set("applyPS_TransparencyWizard", value, ref s_applyPSTransparencyWizard, _Settings);
+        }
+
+        public static bool ApplyPSWindowCapture
+        {
+            get => ValueProperty.Get("applyPS_WindowCapture", ref s_applyPSWindowCapture, _Settings);
+            set => ValueProperty.Set("applyPS_WindowCapture", value, ref s_applyPSWindowCapture, _Settings);
         }
 
         private static SettingsBase _Settings

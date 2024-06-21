@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
+using MegaPint.Editor.Scripts.GUI.Utility;
 using UnityEngine;
 using UnityEngine.UIElements;
 using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
@@ -32,6 +33,14 @@ internal class ShortcutCapture : EditorWindowBase
     {
         titleContent.text = "Shortcut Capture";
 
+        minSize = new Vector2(250, 300);
+
+        if (!SaveValues.Screenshot.ApplyPSShortcutWindow)
+            return this;
+
+        this.CenterOnMainWin(400, 500);
+        SaveValues.Screenshot.ApplyPSShortcutWindow = false;
+        
         return this;
     }
 
