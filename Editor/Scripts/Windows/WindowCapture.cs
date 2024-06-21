@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaPint.Editor.Scripts.GUI.Factories.Structure;
+using MegaPint.Editor.Scripts.GUI.Utility;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -35,6 +36,14 @@ internal class WindowCapture : EditorWindowBase
     public override EditorWindowBase ShowWindow()
     {
         titleContent.text = "Window Capture";
+
+        minSize = new Vector2(450, 350);
+
+        if (!SaveValues.Screenshot.ApplyPSWindowCapture)
+            return this;
+
+        this.CenterOnMainWin(700, 475);
+        SaveValues.Screenshot.ApplyPSWindowCapture = false;
 
         return this;
     }

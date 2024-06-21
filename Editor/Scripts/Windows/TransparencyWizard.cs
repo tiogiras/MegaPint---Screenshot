@@ -43,6 +43,14 @@ internal class TransparencyWizard : EditorWindowBase
     {
         titleContent.text = "Transparency Wizard";
 
+        //minSize = new Vector2(700, 350); // TODO get correct values
+
+        if (!SaveValues.Screenshot.ApplyPSTransparencyWizard)
+            return this;
+
+        //this.CenterOnMainWin(800, 450); // TODO get correct values
+        SaveValues.Screenshot.ApplyPSTransparencyWizard = false;
+        
         return this;
     }
 
