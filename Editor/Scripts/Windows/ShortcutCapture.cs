@@ -1,22 +1,20 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
+using MegaPint.Editor.Scripts.GUI.Utility;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
 
-namespace Editor.Scripts.Windows
+namespace MegaPint.Editor.Scripts.Windows
 {
 
 /// <summary>
-///     Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the shortcut capture
+///     Window based on the <see cref="EditorWindowBase" /> to display and handle the shortcut capture
 ///     feature
 /// </summary>
-internal class ShortcutCapture : MegaPintEditorWindowBase
+internal class ShortcutCapture : EditorWindowBase
 {
-    private const string FolderBasePath = "Screenshot/User Interface/";
-    private static readonly Color s_onColor = new(.8196078431372549f, 0f, .4470588235294118f);
-    private static readonly Color s_offColor = new(.34f, .34f, .34f);
-
     private VisualTreeAsset _baseWindow;
 
     private Button _btnAll;
@@ -28,23 +26,31 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
     private List <CameraCapture> _cams = new();
     private VisualTreeAsset _listItem;
     private Label _placeholder;
+
     #region Public Methods
 
-    /// <summary> Show the window </summary>
-    /// <returns> Window instance </returns>
-    public override MegaPintEditorWindowBase ShowWindow()
+    public override EditorWindowBase ShowWindow()
     {
         titleContent.text = "Shortcut Capture";
 
+        minSize = new Vector2(250, 300);
+
+        if (!SaveValues.Screenshot.ApplyPSShortcutWindow)
+            return this;
+
+        this.CenterOnMainWin(400, 500);
+        SaveValues.Screenshot.ApplyPSShortcutWindow = false;
+        
         return this;
     }
 
     #endregion
+
     #region Protected Methods
 
     protected override string BasePath()
     {
-        return FolderBasePath + "ShortcutCapture";
+        return Constants.Screenshot.UserInterface.ShortcutCapture;
     }
 
     protected override void CreateGUI()
@@ -53,7 +59,10 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
         VisualElement root = rootVisualElement;
 
-        VisualElement content = _baseWindow.Instantiate();
+        VisualElement content = GUIUtility.Instantiate(_baseWindow, root);
+
+        content.style.flexGrow = 1;
+        content.style.flexShrink = 1;
 
         _cameras = content.Q <ListView>("Cameras");
         _placeholder = content.Q <Label>("Placeholder");
@@ -64,7 +73,7 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
 
         RegisterCallbacks();
 
-        _cameras.makeItem += () => _listItem.Instantiate();
+        _cameras.makeItem += () => GUIUtility.Instantiate(_listItem);
 
         _cameras.bindItem += (element, i) =>
         {
@@ -93,14 +102,12 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
         };
 
         RefreshCameras();
-
-        root.Add(content);
     }
 
     protected override bool LoadResources()
     {
         _baseWindow = Resources.Load <VisualTreeAsset>(BasePath());
-        _listItem = Resources.Load <VisualTreeAsset>(FolderBasePath + "ShortcutCaptureItem");
+        _listItem = Resources.Load <VisualTreeAsset>(Constants.Screenshot.UserInterface.ShortcutCaptureItem);
 
         return _baseWindow != null && _listItem != null;
     }
@@ -122,14 +129,19 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
     }
 
     #endregion
+
     #region Private Methods
 
+    /// <summary> Update the list item </summary>
+    /// <param name="onButton"> On button </param>
+    /// <param name="offButton"> Off button </param>
+    /// <param name="on"> State of the toggle </param>
     private static void UpdateListItem(VisualElement onButton, VisualElement offButton, bool on)
     {
-        onButton.style.backgroundColor = on ? s_onColor : s_offColor;
-        offButton.style.backgroundColor = !on ? s_onColor : s_offColor;
+        GUIUtility.ToggleActiveButtonInGroup(on ? 0 : 1, onButton, offButton);
     }
 
+    /// <summary> Refresh listed cameras </summary>
     private void RefreshCameras()
     {
         List <CameraCapture> cams = FindObjectsOfType <CameraCapture>().ToList();
@@ -149,16 +161,20 @@ internal class ShortcutCapture : MegaPintEditorWindowBase
         _placeholder.style.display = hasCams ? DisplayStyle.None : DisplayStyle.Flex;
     }
 
+    /// <summary> Select all cameras </summary>
     private void SelectAll()
     {
         SetAllCameraListeners(true);
     }
 
+    /// <summary> Deselect all cameras </summary>
     private void SelectNone()
     {
         SetAllCameraListeners(false);
     }
 
+    /// <summary> Set listening on all cameras </summary>
+    /// <param name="listening"> new listening value </param>
     private void SetAllCameraListeners(bool listening)
     {
         if (_cams is not {Count: > 0})

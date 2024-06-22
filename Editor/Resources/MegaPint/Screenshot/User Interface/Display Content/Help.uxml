@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintUnityElements.uss?fileID=7433441132597879392&amp;guid=14475de81743442dad8e397f39ea6ace&amp;type=3#MegaPintUnityElements" />
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />
+    <MegaPint.Editor.Scripts.GUI.Factories.RootElement>
+        <ui:VisualElement style="flex-grow: 1; margin-left: 20px; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; overflow: hidden;">
+            <ui:Foldout text="Cannot render &lt;link=&quot;info_cameraCapture&quot;&gt;CameraCapture&lt;/link&gt;" value="false" class="mp_link mp_border-color--secondary mp_background-color--quaternary" style="-unity-font-style: bold; font-size: 12px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; margin-bottom: 5px;">
+                <ui:GroupBox style="margin-left: 0; margin-right: 0; margin-top: 5px; margin-bottom: 15px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-style: normal;">
+                    <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Make sure your MegaPint settings asset is initialized (open any MegaPint window).&#10;&#10;You can only render &lt;link=&quot;info_cameraCapture&quot;&gt;CameraCapture&lt;/link&gt; components if you have one render pipeline imported in the project. Make sure to remove any unused render pipeline package." class="mp_link" style="white-space: normal;" />
+                </ui:GroupBox>
+            </ui:Foldout>
+            <ui:Foldout text="&lt;link=&quot;info_shortcut&quot;&gt;Shortcut&lt;/link&gt; not working in playmode" value="false" class="mp_link mp_border-color--secondary mp_background-color--quaternary" style="-unity-font-style: bold; font-size: 12px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px;">
+                <ui:GroupBox style="margin-left: 0; margin-right: 0; margin-top: 5px; margin-bottom: 15px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-style: normal;">
+                    <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Check if you unset your shortcut for the &lt;b&gt;Capture Now&lt;/b&gt; MenuItem via &lt;link=&quot;shortcutManager&quot;&gt;Edit/Shortcuts...&lt;/link&gt;&#10;&#10;Playmode shortcuts can be disabled in the game window. Make sure to deselect this option." class="mp_link" style="white-space: normal;" />
+                </ui:GroupBox>
+            </ui:Foldout>
+        </ui:VisualElement>
+    </MegaPint.Editor.Scripts.GUI.Factories.RootElement>
+</ui:UXML>

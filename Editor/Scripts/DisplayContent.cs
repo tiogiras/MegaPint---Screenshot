@@ -1,69 +1,73 @@
 ﻿#if UNITY_EDITOR
-using Editor.Scripts.PackageManager.Cache;
-using Editor.Scripts.PackageManager.Packages;
-using Editor.Scripts.Windows;
+using MegaPint.Editor.Scripts.GUI.Utility;
+using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace Editor.Scripts
+namespace MegaPint.Editor.Scripts
 {
 
+/// <summary> Partial class used to display the right pane in the BaseWindow </summary>
 internal static partial class DisplayContent
 {
-    private const string BasePathScreenshot = "Screenshot/User Interface/Display Content Tabs/";
     #region Private Methods
-
-    private static void OnTabChangedScreenshot(int tab, VisualElement root)
-    {
-        switch (tab)
-        {
-            case 0:
-
-                root.Q <Label>("PackageText").text =
-                    PackageCache.Get(PackageKey.Screenshot).Description;
-
-                root.Q <Button>("BTN_WindowCapture").clickable = new Clickable(
-                    () => {ContextMenu.TryOpen <WindowCapture>(false);});
-                
-                root.Q <Button>("BTN_ShortcutCapture").clickable = new Clickable(
-                    () => {ContextMenu.TryOpen <ShortcutCapture>(false);});
-                
-                break;
-            case 1:
-                
-                var toggle = root.Q <Toggle>("ExternalExport");
-                
-                toggle.value = ScreenshotData.ExternalExport;
-
-                toggle.RegisterValueChangedCallback(
-                    evt => ScreenshotData.ExternalExport = evt.newValue);
-                
-                break;
-        }
-    }
 
     // Called by reflection
     // ReSharper disable once UnusedMember.Local
-    private static void Screenshot(VisualElement root)
+    private static void Screenshot(DisplayContentReferences refs)
     {
-        var tabs = root.Q <GroupBox>("Tabs");
-        var tabContentParent = root.Q <GroupBox>("TabContent");
+        InitializeDisplayContent(
+            refs,
+            new TabSettings {info = true, settings = true, guides = true, help = true},
+            new TabActions
+            {
+                info = ScreenshotActivateLinks,
+                settings = root =>
+                {
+                    var externalExport = root.Q <Toggle>("ExternalExport");
+                    
+                    externalExport.value = SaveValues.Screenshot.ExternalExport;
 
-        const int TabCount = 4;
-        
-        RegisterTabCallbacks(tabs, tabContentParent, TabCount);
-
-        SetTabContentLocation(BasePathScreenshot, TabCount);
-
-        s_onSelectedTabChanged += OnTabChangedScreenshot;
-        s_onSelectedPackageChanged += UnsubscribeScreenshot;
-
-        SwitchTab(tabContentParent, 0);
+                    externalExport.RegisterValueChangedCallback(
+                        evt =>
+                        {
+                            SaveValues.Screenshot.ExternalExport = evt.newValue;
+                        });
+                },
+                guides = ScreenshotActivateLinks,
+                help = ScreenshotActivateLinks
+            });
     }
 
-    private static void UnsubscribeScreenshot()
+    /// <summary> Activate all links in the text </summary>
+    /// <param name="root"> RootVisualElement </param>
+    private static void ScreenshotActivateLinks(VisualElement root)
     {
-        s_onSelectedTabChanged -= OnTabChangedScreenshot;
-        s_onSelectedPackageChanged -= UnsubscribeScreenshot;
+        root.ActivateLinks(
+            link =>
+            {
+                switch (link.linkID)
+                {
+                    case "windowCapture":
+                        EditorApplication.ExecuteMenuItem(Constants.Screenshot.Links.WindowCapture);
+
+                        break;
+
+                    case "shortcutCapture":
+                        EditorApplication.ExecuteMenuItem(Constants.Screenshot.Links.ShortcutCapture);
+
+                        break;
+
+                    case "shortcutManager":
+                        EditorApplication.ExecuteMenuItem(Constants.BasePackage.Links.Shortcuts);
+
+                        break;
+
+                    case "captureNow":
+                        EditorApplication.ExecuteMenuItem(Constants.Screenshot.Links.CaptureNow);
+
+                        break;
+                }
+            });
     }
 
     #endregion
