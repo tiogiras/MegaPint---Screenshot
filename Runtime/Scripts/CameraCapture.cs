@@ -65,7 +65,9 @@ public class CameraCapture : MonoBehaviour
 
     /// <summary> Render the camera's image </summary>
     /// <returns> Rendered image </returns>
+#pragma warning disable CS1998
     public async Task <Texture2D> Render()
+#pragma warning restore CS1998
     {
         var cam = GetComponent <Camera>();
 
