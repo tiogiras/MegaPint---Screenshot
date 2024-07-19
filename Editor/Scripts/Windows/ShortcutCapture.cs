@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MegaPint.Editor.Scripts.GUI.Utility;
@@ -15,6 +16,12 @@ namespace MegaPint.Editor.Scripts.Windows
 /// </summary>
 internal class ShortcutCapture : EditorWindowBase
 {
+    public static Action onOpen;
+    public static Action onClose;
+    
+    public static Action onRefresh;
+    public static Action<string, bool> onChangeState;
+
     private VisualTreeAsset _baseWindow;
 
     private Button _btnAll;
@@ -34,6 +41,8 @@ internal class ShortcutCapture : EditorWindowBase
         titleContent.text = "Shortcut Capture";
 
         minSize = new Vector2(250, 300);
+
+        onOpen?.Invoke();
 
         if (!SaveValues.Screenshot.ApplyPSShortcutWindow)
             return this;
@@ -90,6 +99,8 @@ internal class ShortcutCapture : EditorWindowBase
                 () =>
                 {
                     camera.listenToShortcut = true;
+                    onChangeState?.Invoke(camera.gameObject.name, true);
+                    
                     UpdateListItem(onButton, offButton, true);
                 });
 
@@ -97,6 +108,8 @@ internal class ShortcutCapture : EditorWindowBase
                 () =>
                 {
                     camera.listenToShortcut = false;
+                    onChangeState?.Invoke(camera.gameObject.name, false);
+                    
                     UpdateListItem(onButton, offButton, false);
                 });
         };
@@ -126,6 +139,8 @@ internal class ShortcutCapture : EditorWindowBase
 
         _btnAll.clicked -= SelectAll;
         _btnNone.clicked -= SelectNone;
+        
+        onClose?.Invoke();
     }
 
     #endregion
@@ -144,6 +159,8 @@ internal class ShortcutCapture : EditorWindowBase
     /// <summary> Refresh listed cameras </summary>
     private void RefreshCameras()
     {
+        onRefresh?.Invoke();
+        
         List <CameraCapture> cams = FindObjectsOfType <CameraCapture>().ToList();
 
         var hasCams = cams is {Count: > 0};
@@ -181,7 +198,10 @@ internal class ShortcutCapture : EditorWindowBase
             return;
 
         foreach (CameraCapture cam in _cams)
+        {
             cam.listenToShortcut = listening;
+            onChangeState?.Invoke(cam.gameObject.name, listening);
+        }
 
         _cameras.RefreshItems();
     }
