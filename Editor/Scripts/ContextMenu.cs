@@ -16,6 +16,8 @@ internal static partial class ContextMenu
 {
     public static class Screenshot
     {
+        public static Action<int> onCaptureNow;
+        
         private static readonly MenuItemSignature s_captureNowSignature = new()
         {
             package = PackageKey.Screenshot, signature = "Capture Now"
@@ -45,13 +47,18 @@ internal static partial class ContextMenu
         {
 #if USING_URP && USING_HDRP
         Debug.LogWarning("Cannot render CameraCaptures while more than one renderPipeline is installed.");
+        onCaptureNow?.Invoke(0);
+
         return;
 #endif
 
             List <CameraCapture> cams = Object.FindObjectsOfType <CameraCapture>().ToList();
 
             if (cams.Count == 0)
+            {
+                onCaptureNow?.Invoke(0);
                 return;
+            }
 
             List <CameraCapture> activeCams = cams.Where(cam => cam.listenToShortcut).ToList();
 
@@ -62,6 +69,8 @@ internal static partial class ContextMenu
                     "No CameraCapture components selected for rendering.",
                     "Ok");
 
+                onCaptureNow?.Invoke(0);
+                
                 return;
             }
 
@@ -80,7 +89,8 @@ internal static partial class ContextMenu
             }
 
             Debug.Log($"{activeCams.Count} CameraCapture components rendered.");
-
+            
+            onCaptureNow?.Invoke(activeCams.Count);
             onMenuItemInvoked?.Invoke(s_captureNowSignature);
         }
 
