@@ -202,7 +202,7 @@ internal class WindowCapture : EditorWindowBase
         {
             EditorUtility.DisplayDialog(
                 "Path not in project",
-                "The path must be within the Assets folder",
+                "The path must be within the Assets folder!\nYou can enable project external export in the screenshot settings.",
                 "ok");
 
             return;
