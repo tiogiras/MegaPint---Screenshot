@@ -176,7 +176,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             {
                 EditorUtility.DisplayDialog(
                     "Folder not in project",
-                    "The folder must be within the Assets folder",
+                    "The folder must be within the Assets folder!\nYou can enable project external export in the screenshot settings.",
                     "ok");
 
                 return;
@@ -339,7 +339,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         {
             EditorUtility.DisplayDialog(
                 "Path not in project",
-                "The path must be within the Assets folder",
+                "The path must be within the Assets folder!\nYou can enable project external export in the screenshot settings.",
                 "ok");
 
             return;
