@@ -18,9 +18,9 @@ internal class ShortcutCapture : EditorWindowBase
 {
     public static Action onOpen;
     public static Action onClose;
-    
+
     public static Action onRefresh;
-    public static Action<string, bool> onChangeState;
+    public static Action <string, bool> onChangeState;
 
     private VisualTreeAsset _baseWindow;
 
@@ -49,7 +49,7 @@ internal class ShortcutCapture : EditorWindowBase
 
         this.CenterOnMainWin(400, 500);
         SaveValues.Screenshot.ApplyPSShortcutWindow = false;
-        
+
         return this;
     }
 
@@ -100,7 +100,7 @@ internal class ShortcutCapture : EditorWindowBase
                 {
                     camera.listenToShortcut = true;
                     onChangeState?.Invoke(camera.gameObject.name, true);
-                    
+
                     UpdateListItem(onButton, offButton, true);
                 });
 
@@ -109,7 +109,7 @@ internal class ShortcutCapture : EditorWindowBase
                 {
                     camera.listenToShortcut = false;
                     onChangeState?.Invoke(camera.gameObject.name, false);
-                    
+
                     UpdateListItem(onButton, offButton, false);
                 });
         };
@@ -139,7 +139,7 @@ internal class ShortcutCapture : EditorWindowBase
 
         _btnAll.clicked -= SelectAll;
         _btnNone.clicked -= SelectNone;
-        
+
         onClose?.Invoke();
     }
 
@@ -160,7 +160,7 @@ internal class ShortcutCapture : EditorWindowBase
     private void RefreshCameras()
     {
         onRefresh?.Invoke();
-        
+
         List <CameraCapture> cams = FindObjectsOfType <CameraCapture>().ToList();
 
         var hasCams = cams is {Count: > 0};

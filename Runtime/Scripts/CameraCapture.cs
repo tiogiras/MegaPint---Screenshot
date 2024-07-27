@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.UI;
 #if USING_URP
 using UnityEngine.Rendering.Universal;
 #endif
@@ -12,10 +6,20 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering.HighDefinition;
 #endif
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace MegaPint
 {
 
 /// <summary> Holds settings and information to render the image of the attached <see cref="Camera" /> component </summary>
+[AddComponentMenu("MegaPint/Camera Capture")]
 [RequireComponent(typeof(Camera))]
 public class CameraCapture : MonoBehaviour
 {

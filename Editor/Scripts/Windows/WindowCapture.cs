@@ -20,11 +20,11 @@ internal class WindowCapture : EditorWindowBase
 {
     public static Action onOpen;
     public static Action onClose;
-    
+
     public static Action onRefresh;
-    public static Action<string> onRender;
+    public static Action <string> onRender;
     public static Action onExport;
-    
+
     private readonly List <EditorWindow> _windowRefs = new();
 
     private VisualTreeAsset _baseWindow;
@@ -48,7 +48,7 @@ internal class WindowCapture : EditorWindowBase
         minSize = new Vector2(450, 350);
 
         onOpen?.Invoke();
-        
+
         if (!SaveValues.Screenshot.ApplyPSWindowCapture)
             return this;
 
@@ -117,7 +117,7 @@ internal class WindowCapture : EditorWindowBase
         _btnSave.clicked -= Save;
 
         _windows.UnregisterValueChangedCallback(WindowSelected);
-        
+
         onClose?.Invoke();
     }
 
@@ -129,7 +129,7 @@ internal class WindowCapture : EditorWindowBase
     private void RefreshWindows()
     {
         onRefresh?.Invoke();
-        
+
         EditorWindow[] windows = Resources.FindObjectsOfTypeAll <EditorWindow>();
 
         _windowRefs.Clear();
@@ -157,7 +157,7 @@ internal class WindowCapture : EditorWindowBase
             return;
 
         onRender?.Invoke(target.titleContent.text);
-        
+
         if (!target.hasFocus)
         {
             target.Focus();
