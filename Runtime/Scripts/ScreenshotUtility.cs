@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using UnityEditor;
-using UnityEngine;
-#if USING_URP
+﻿#if USING_URP
 using UnityEngine.Rendering.Universal;
 #endif
 
@@ -11,11 +7,21 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 #endif
 
+using System;
+using System.IO;
+using System.Runtime.CompilerServices;
+using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+[assembly: InternalsVisibleTo("tiogiras.megapint.editor")]
+
 namespace MegaPint
 {
 
 /// <summary> Utility class for the screenshot package </summary>
-public static class ScreenshotUtility
+internal static class ScreenshotUtility
 {
     #region Public Methods
 

@@ -24,14 +24,11 @@ internal static partial class DisplayContent
                 settings = root =>
                 {
                     var externalExport = root.Q <Toggle>("ExternalExport");
-                    
+
                     externalExport.value = SaveValues.Screenshot.ExternalExport;
 
                     externalExport.RegisterValueChangedCallback(
-                        evt =>
-                        {
-                            SaveValues.Screenshot.ExternalExport = evt.newValue;
-                        });
+                        evt => {SaveValues.Screenshot.ExternalExport = evt.newValue;});
                 },
                 guides = ScreenshotActivateLinks,
                 help = ScreenshotActivateLinks
