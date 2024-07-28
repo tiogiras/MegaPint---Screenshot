@@ -84,7 +84,9 @@ public class CameraCapture : MonoBehaviour
 #if USING_URP
         UniversalAdditionalCameraData camData = cam.GetUniversalAdditionalCameraData();
 
+Debug.Log("Preparing the camera data"); // TODO remove
         PrepareCameraData(camData, out var rendererIndex);
+Debug.Log("camera data prepared"); // TODO remove
 #endif
 #if USING_HDRP
         var camDataHdrp = GetComponent <HDAdditionalCameraData>();
@@ -108,7 +110,9 @@ public class CameraCapture : MonoBehaviour
         ResetCamera(cam, bgColor, flags, destroy);
 
 #if USING_URP
+Debug.Log("Resetting camera data"); // TODO remove
         ResetCameraData(camData, rendererIndex);
+        Debug.Log("camera data reset"); // TODO remove
 #endif
 #if USING_HDRP
         ResetCameraData(camDataHdrp, colorMode, bgColorHDR, colorBuffer);
@@ -134,6 +138,7 @@ public class CameraCapture : MonoBehaviour
         string renderPipelineAssetPath,
         GUID transparencyRenderer)
     {
+        Debug.Log("Rendering and Saving..."); // TODO remove
         Save(await RenderUrp(renderPipelineAssetPath, transparencyRenderer), path);
     }
 
@@ -161,6 +166,8 @@ public class CameraCapture : MonoBehaviour
         _transparencyRenderer = transparencyRenderer;
 #endif
 
+        Debug.Log("awaiting render..."); // TODO remove
+        
         return await Render();
     }
 #endif
