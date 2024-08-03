@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaPint.Editor.Scripts.GUI.Factories.Structure;
@@ -17,6 +18,13 @@ namespace MegaPint.Editor.Scripts.Windows
 /// </summary>
 internal class WindowCapture : EditorWindowBase
 {
+    public static Action onOpen;
+    public static Action onClose;
+
+    public static Action onRefresh;
+    public static Action <string> onRender;
+    public static Action onExport;
+
     private readonly List <EditorWindow> _windowRefs = new();
 
     private VisualTreeAsset _baseWindow;
@@ -38,6 +46,8 @@ internal class WindowCapture : EditorWindowBase
         titleContent.text = "Window Capture";
 
         minSize = new Vector2(450, 350);
+
+        onOpen?.Invoke();
 
         if (!SaveValues.Screenshot.ApplyPSWindowCapture)
             return this;
@@ -107,6 +117,8 @@ internal class WindowCapture : EditorWindowBase
         _btnSave.clicked -= Save;
 
         _windows.UnregisterValueChangedCallback(WindowSelected);
+
+        onClose?.Invoke();
     }
 
     #endregion
@@ -116,6 +128,8 @@ internal class WindowCapture : EditorWindowBase
     /// <summary> Refresh listed windows </summary>
     private void RefreshWindows()
     {
+        onRefresh?.Invoke();
+
         EditorWindow[] windows = Resources.FindObjectsOfTypeAll <EditorWindow>();
 
         _windowRefs.Clear();
@@ -141,6 +155,8 @@ internal class WindowCapture : EditorWindowBase
 
         if (target == null)
             return;
+
+        onRender?.Invoke(target.titleContent.text);
 
         if (!target.hasFocus)
         {
@@ -186,12 +202,13 @@ internal class WindowCapture : EditorWindowBase
         {
             EditorUtility.DisplayDialog(
                 "Path not in project",
-                "The path must be within the Assets folder",
+                "The path must be within the Assets folder!\nYou can enable project external export in the screenshot settings.",
                 "ok");
 
             return;
         }
 
+        onExport?.Invoke();
         SaveValues.Screenshot.LastEditorWindowPath = path;
         ScreenshotUtility.SaveTexture(_render, path);
     }

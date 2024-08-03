@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System;
 using MegaPint.Editor.Scripts.GUI;
 using MegaPint.Editor.Scripts.GUI.Factories.Structure;
 using UnityEditor;
@@ -17,6 +18,9 @@ namespace MegaPint.Editor.Scripts.Drawer
 [CustomEditor(typeof(CameraCapture))]
 internal class CameraCaptureDrawer : UnityEditor.Editor
 {
+    public static Action <string> onCameraCaptureRendered;
+    public static Action <string> onCameraCaptureExported;
+
     private readonly string _basePath = Constants.Screenshot.UserInterface.CameraCapture;
 
 #if USING_URP && USING_HDRP
@@ -163,7 +167,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         {
             _target.lastPath = pathInProject;
             UpdatePath();
-            
+
             ApplyModifiedProperties();
         }
         else
@@ -172,7 +176,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             {
                 EditorUtility.DisplayDialog(
                     "Folder not in project",
-                    "The folder must be within the Assets folder",
+                    "The folder must be within the Assets folder!\nYou can enable project external export in the screenshot settings.",
                     "ok");
 
                 return;
@@ -180,7 +184,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
 
             _target.lastPath = path;
             UpdatePath();
-            
+
             ApplyModifiedProperties();
         }
     }
@@ -191,7 +195,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         serializedObject.ApplyModifiedProperties();
         EditorUtility.SetDirty(serializedObject.targetObject);
     }
-    
+
     /// <summary> Register all callbacks </summary>
     private void RegisterCallbacks()
     {
@@ -206,14 +210,14 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                 {
                     _width.SetValueWithoutNotify(0);
                     _target.width = 0;
-                    
+
                     ApplyModifiedProperties();
 
                     return;
                 }
 
                 _target.width = evt.newValue;
-                
+
                 ApplyModifiedProperties();
             });
 
@@ -226,12 +230,12 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                     _target.height = 0;
 
                     ApplyModifiedProperties();
-                    
+
                     return;
                 }
 
                 _target.height = evt.newValue;
-                
+
                 ApplyModifiedProperties();
             });
 
@@ -269,7 +273,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
                 UpdateBackgroundColor();
                 UpdateBackgroundImage();
                 UpdateTransparencyHint();
-                
+
                 ApplyModifiedProperties();
             });
 
@@ -285,7 +289,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             {
                 _target.imageType = evt.newValue;
                 UpdateBackgroundImage();
-                
+
                 ApplyModifiedProperties();
             });
 
@@ -304,7 +308,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
             {
                 _target.backgroundImage = (Sprite)evt.newValue;
                 UpdateBackgroundImage();
-                
+
                 ApplyModifiedProperties();
             });
 
@@ -326,6 +330,7 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         if (path.IsPathInProject(out var pathInProject))
         {
             _target.Save(_render, pathInProject);
+            onCameraCaptureExported?.Invoke(_target.gameObject.name);
 
             return;
         }
@@ -334,12 +339,13 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         {
             EditorUtility.DisplayDialog(
                 "Path not in project",
-                "The path must be within the Assets folder",
+                "The path must be within the Assets folder!\nYou can enable project external export in the screenshot settings.",
                 "ok");
 
             return;
         }
 
+        onCameraCaptureExported?.Invoke(_target.gameObject.name);
         _target.Save(_render, path);
 
         UpdatePath();
@@ -366,6 +372,8 @@ internal class CameraCaptureDrawer : UnityEditor.Editor
         _preview.FitToParent();
 
         _btnSave.style.display = DisplayStyle.Flex;
+
+        onCameraCaptureRendered?.Invoke(_target.gameObject.name);
     }
 
     /// <summary> Update the background color </summary>
